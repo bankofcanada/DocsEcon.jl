@@ -12,9 +12,9 @@ makedocs(
         "index.md",
         # "Tutorials" => tutorials,
         "Reference" => [
-            "TimeSeriesEcon" => "timeseriesecon.md",
-            "ModelBaseEcon" => "modelbaseecon.md",
-            "StateSpaceEcon" => "statespaceecon.md",
+            "TimeSeriesEcon" => "Reference/timeseriesecon.md",
+            "ModelBaseEcon" => "Reference/modelbaseecon.md",
+            "StateSpaceEcon" => "Reference/statespaceecon.md",
         ],
         "Index" => "indexpage.md"
     ]
