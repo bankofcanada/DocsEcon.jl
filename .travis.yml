@@ -10,14 +10,13 @@ notifications:
 branches:
   only:
   - master
-codecov: true
 julia:
   # - nightly
   - 1.0
-  - latest
-# jobs:
-#   allow_failures:
-#     - julia: latest
+  # - latest
+jobs:
+  allow_failures:
+    - julia: latest
 #   include:
 #   - stage: "Documentation"
 #     julia: 1.0
@@ -28,4 +27,4 @@ julia:
 #     after_success: skip
 # after_success:
 #   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-# #   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
+#   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
