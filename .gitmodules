@@ -1,0 +1,3 @@
+[submodule "src/Tutorials"]
+	path = src/Tutorials
+	url = https://github.com/bbejanov/TutorialsEconTest.jl.git
