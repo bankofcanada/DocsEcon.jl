@@ -13,10 +13,11 @@ branches:
 julia:
   # - nightly
   - 1.0
-  # - latest
+  - 1.5
 jobs:
   allow_failures:
-    - julia: latest
+    - os: windows
+    - julia: 1.5
   include:
   - stage: "Documentation"
     julia: 1.0
@@ -25,6 +26,3 @@ jobs:
       - julia --color=yes --project -e 'using Pkg; Pkg.instantiate()'
       - julia --color=yes --project makedocs.jl
     after_success: skip
-# after_success:
-#   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-#   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
