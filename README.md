@@ -2,4 +2,4 @@
 
 # Documentation for StateSpaceEcon
 
-<a href="https://bbejanov.github.io/DocsEconTest.jl/dev/" target="_blank">Read the documentation</a>
+[Read the documentation](https://bbejanov.github.io/DocsEconTest.jl/dev/)
