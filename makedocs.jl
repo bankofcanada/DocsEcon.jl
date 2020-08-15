@@ -20,3 +20,6 @@ makedocs(
     ]
 )
 
+deploydocs(
+    repo = "github.com/bbejanov/DocsEconTest.jl.git"
+)
