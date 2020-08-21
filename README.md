@@ -2,4 +2,4 @@
 
 # Documentation for StateSpaceEcon
 
-[Read the documentation](https://bbejanov.github.io/DocsEconTest.jl/dev/)
+[Read the documentation](https://bankofcanada.github.io/DocsEcon.jl/dev/)
