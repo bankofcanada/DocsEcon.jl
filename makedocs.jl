@@ -1,8 +1,8 @@
 
 using Documenter
-using StateSpaceEcon
-using ModelBaseEcon
 using TimeSeriesEcon
+using ModelBaseEcon
+using StateSpaceEcon
 
 # Scans the src/Tutorials path and populates the tutorials array used below
 # include("scan_tutorials.jl")
