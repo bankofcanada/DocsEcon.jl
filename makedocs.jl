@@ -13,7 +13,7 @@ makedocs(
     modules=[StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon],
     doctest=false,
     pages=[
-        # "index.md",
+        "index.md",
         "Tutorials" => [
             "Tutorials/index.md",
             "Tutorials/README.md",
@@ -24,6 +24,10 @@ makedocs(
             "TimeSeriesEcon" => "Reference/TimeSeriesEcon.md",
             "ModelBaseEcon" => "Reference/ModelBaseEcon.md",
             "StateSpaceEcon" => "Reference/StateSpaceEcon.md",
+        ],
+        "Design Papers" => [
+            "DesignPapers/index.md",
+            "DesignPapers/final_conditions.md",
         ],
         "Index" => "indexpage.md"
     ]
