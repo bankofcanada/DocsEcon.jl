@@ -7,14 +7,14 @@ implementation details.
 ## Introduction
 
 In the stacked time algorithm all equations for all time periods are solved
-simultaneously as a single, very large system of equations. Because of lags in
-some of the variables, we must impose initial conditions, i.e. values for the
+simultaneously as one, very large system of equations. Because of lags in some
+of the variables, we must impose initial conditions, i.e. values for the
 variables before the first period of the simulation. This is not unique to
 stacked time algorithm - all solution methods require initial conditions.
 
-Similarly, because of the presence of leads in the equations, we must provide
-final conditions. Final conditions are equations in terms of variable values at
-times beyond the last period of the simulation.
+Similarly, because of leads in some of the variables, we must provide final
+conditions. Final conditions are equations in terms of variables at times beyond
+the last period of the simulation.
 
 As a running example, consider a model with one variable ``y_t``, one shock
 ``sy_t``, and one equation:
@@ -33,8 +33,10 @@ system of equations:
 0.5 y_3 - y_4 + 0.5 y_5 = s_4
 ```
 
-We see that we have 3 equations with 5 unknowns. In order to find a unique
-solution, we need two more equations. The first one is the initial condition.
+We see that we have 3 equations with 5 unknowns - we assume that the values of
+the shocks (``s_t``)are given as exogenous data. In order to find a unique
+solution for ``y_t`` for all ``t=1..5``, we need two more equations. The first
+one is the initial condition.
 
 ```math
 y_1 = Y_1,
@@ -45,13 +47,13 @@ the final condition, which would help us solve for ``y_5``.
 
 ## Types of Final Conditions
 
-There are three types of final conditions currently implemented in
+There are four types of final conditions currently implemented in
 StateSpaceEcon.
 
 ### `fcgiven`
 
 This is the simplest one of them. It cen be used when the values of the variable
-past the end of the simulation are known and we simply assign them.
+after the end of the simulation are known and we simply assign them.
 
 In our running example, the following equation corresponds to `fcgiven`.
 
@@ -62,56 +64,68 @@ y_5 = Y_5
 ### `fclevel`
 
 This is almost the same as `fcgiven` in that here again we simply assign known
-values to the variable in the periods of the final conditions. This time the
-values come from the steady state of the system.
-
-The equation in our example is 
+values to the variables in the final conditions. This time the values come from
+the steady state solution of the system. This works if the steady state of
+``y_t`` is a constant.
 
 ```math
 y_5 = Ys_{level}
 ```
 
-Where ``Ys_{level}`` is the steady state of ``y``. This works if the steady state of
-``y`` is a constant level.
+Where ``Ys_{level}`` is the steady state of ``y``.
 
 ### `fcslope`
 
 In this case we write an equation which sets the first difference of ``y_t`` at
-the end of the simulation (and for all final conditions periods) to the slope of
-the steady state. This works if the steady state of ``y_t`` is a constant level
-or a constant rate of change, i.e. a balanced path of linear growth.
-
-The equation is
+the end of the simulation (for all final conditions periods) to the slope of the
+steady state. This works if the steady state solution of ``y_t`` is a balanced
+path with linear growth. It can also be used with constant steady state - in
+that case the "linear growth" has slope 0.
 
 ```math
 y_5 - y_4 = Ys_{slope},
 ```
 where ``Ys_{slope}`` is the slope of the steady state of ``y_t``.
 
+### `fcnatural`
+
+This is the case when we believe that the solution path beyond the simulation
+period is a straight line, but we don't know the slope, i.e., we allow the slope
+to be solved for. Practically, this final condition simply imposes the
+constraint that the second difference of the variable is constant zero after the
+last simulation period.
+
+```math
+   y_5 - 2 y_4 + y_3 = 0
+```
+
 ## The Stacked Time System of Equations
 
-Once we stack all equations for all time periods into a single system of
-equations, we get a system with more unknowns than equations, as we saw above.
-In addition to initial and final conditions, we also have exogenous constraints.
+Once we stack all equations for all simulation time periods into a single system
+of equations, we get a system with more unknowns than equations, as we saw
+above. In addition to initial and final conditions, we also have to impose
+exogenous constraints.
 
 ### Vector of Unknowns
 
 Let us denote by ``x`` the vector of all unknowns. To be specific, the variables
-and shocks are assigned consecutive and unique indices starting from 1 to ``N``.
-Also, the time periods of the simulation, including the necessary number of time
+and shocks are assigned consecutive and unique indices from 1 to ``N``. Also,
+the time periods of the simulation, together with the necessary number of time
 periods before (initial conditions) and after (final conditions) the simulation,
-are numbered sequentially starting from 1 to ``T``. Thus vector ``x`` has ``NT``
-components. We have adopted the convention that the first ``T`` components
-correspond to values of the first variable, components from ``T+1`` to ``2T``
-are variable 2 and so on.
+are numbered sequentially starting from 1 to ``T``. Thus vector ``x`` has
+``N T`` components. We have adopted the convention that the first ``T``
+components correspond to values of the first variable, components from ``T+1``
+to ``2T`` are for variable 2 and so on.
 
 We divide the unknowns into three groups based on how they are treated by the
 solver. The first group are unknowns whose values are already known. These
 include initial conditions and exogenous constraints. We denote these ``x_e``.
 
-The second group is the "active unknowns". These are the ones we are actually solving for in the simulation. We denote their vector ``x_s``.
+The second group is the "active unknowns". These are the ones we are actually
+solving for in the simulation. We denote them ``x_s``.
 
-The third group consists of the unknowns determined by final conditions. We denote that vector ``x_c``
+The third group consists of the unknowns determined by final conditions. We
+denote that vector ``x_c``.
 
 In our example, the vectors of unknowns would look like this:
 
@@ -124,8 +138,8 @@ In our example, the vectors of unknowns would look like this:
 
 In what follows, we will renumber the unknowns in ``x`` such that ``x_e`` are in
 the beginning, ``x_s`` are in the middle and ``x_c`` are at the end. In the code
-we don't actually do this, but it makes it easier to present and follow the
-linear algebra in the following sections.
+we don't actually do this, but it makes it easier to discuss the linear algebra
+in the following sections.
 
 ```math
     x = [ x_e... , x_s... , x_c... ]
@@ -139,11 +153,11 @@ this exposition we put them in the same order as we did with the unknowns above.
 ### The System of Equations
 
 Without loss of generality we have a system of equations ``F(x) = 0``. Starting
-with an initial guess ``x^0``, The Newton-Raphson method consists in the
+with an initial guess ``x^0``, the Newton-Raphson method consists in the
 iteration
 
 ```math
-    x^{n+1} = x^{n} - [J(x^n)]^{-1} F(x^n),
+    x^{n+1} = x^{n} - [J(x^n)]^{-1} F(x^n),\qquad\mathrm{for }n=0,1,2...,
 ```
 
 where ``J(x^n)`` is the Jacobian of ``F`` evaluated at ``x^n``.
@@ -202,7 +216,6 @@ In this case we have
 
 Once again we assume that the correct values for ``x_c`` are assigned in the
 initial guess, ``x^0``. Therefore the update ``\delta x_c`` is always zero.
-
 Therefore in this case we simply solve
 
 ```math
@@ -220,7 +233,9 @@ This is identical to case 1.
 
 ### Case 3: `fcslope`
 
-This is the interesting case.  We have the following equations
+This is an interesting case. Pay attention because this part is tricky.
+
+We have the following equations.
 
 ```math
 \begin{align}
@@ -229,17 +244,17 @@ This is the interesting case.  We have the following equations
 \end
 ```
 
-We eliminate ``\delta x_c`` from the system. To do so, we multiply the
-second equation by ``C_s C^{-1}`` and subtract the result from the first equation.
+We eliminate ``\delta x_c`` from the system. To do so, we multiply the second
+equation by ``C_s C^{-1}`` and subtract the result from the first equation.
 
 ```math
     \left( S - C_s C^{-1} S_c \right) \cdot \delta x_s = F_s - C_s C^{-1} F_c
 ```
 
-Now pay attention because this part is tricky.
+#### Solve for ``\delta x_s``
 
-Suppose that ``F_c = 0``. We will discuss later how we make sure that's the case. 
-Then the solution for ``\delta x_s`` is given by
+Suppose that ``F_c = 0``. We will discuss later how we make sure that's the
+case. Then the solution for ``\delta x_s`` is given by
 
 ```math
     \left( S - C_s C^{-1} S_c \right) \cdot \delta x_s = F_s
@@ -247,24 +262,26 @@ Then the solution for ``\delta x_s`` is given by
 
 The only difference with case 1 and 2 is that the system matrix is modified by
 subtracting ``C_s C^{-1} S_c``. The matrix ``C^{-1} S_c`` is constant. This
-matrix is specific to the `fcslope` final conditions for the given model. It
-only depends on the number of variables and the number of final conditions
-periods (that is the same as the maximum lag in the model). It can be
-pre-computed and stored. The matrix ``C_s`` on the other hand depends on ``x^n``
-and so it needs to be re-computed at every iteration.
+matrix is specific to the `fcslope` type of final conditions for the given
+model. It only depends on the number of variables and the number of final
+conditions periods. It can be pre-computed and stored. The matrix ``C_s`` on the
+other hand depends on ``x^n`` and so it needs to be re-computed at every
+iteration.
+
+#### Solve for ``\delta x_c``
 
 How do we make sure that ``F_c = 0``? Remember that the final conditions
 equation in our example model is ``y_5 - y_4 = Ys_{slope}``. Imagine how this
 would generalize to an arbitrary model. Now notice that the residual ``F_c``
-depends on ``x^n`` and the slope of the steady state. If we know the ``x^n_s``
-part of ``x^n``, we can solve for the rest of it such that the final conditions
-equations are satisfied. In outer words, this would make sure that ``F_c = 0``.
-One way to do this is to simply start from the values of the variables at the
-last period of the simulation (which are in ``x^n_s``, that's ``y_4`` in our
-example) and compute all future values (which are in ``x^n_c``,that's ``y_5`` in
-the example) by adding the corresponding steady state slope (or
-``y_5 = y_4 + Ys_{slope}``). We must do this on every iteration before we
-evaluate ``F(x^n)`` and ``J(x^n)``.
+depends on ``x^n`` and the slope of the steady state. Since we know the
+``x^n_s`` part of ``x^n`` prior to solving the system, we can set ``x^n_c`` part
+of it such that the final conditions equations are satisfied. In other words,
+this would make sure that ``F_c = 0``. One way to do this is to simply start
+from the values of the variables at the last period of the simulation (which are
+in ``x^n_s``, that's ``y_4`` in our example) and compute all future values
+(which are in ``x^n_c``,that's ``y_5`` in the example) by adding the
+corresponding steady state slope (``y_5 = y_4 + Ys_{slope}``). We must do
+this on every iteration before we evaluate ``F(x^n)`` and ``J(x^n)``.
 
 Actually, we only need to do this to the initial guess ``x^0``. After that, once
 we compute ``\delta x_s`` by solving the above system, we can solve the
@@ -274,9 +291,89 @@ following system for ``\delta x_c``.
     C \cdot \delta x_c = - S_c \cdot \delta x_s
 ```
 
-If we assume that ``x^n_c`` is such that the ``F_c`` computed from it is 0, and
-we compute ``x^{n+1}_c = x^n_c + \detla x_c``, with ``\delta x_c`` coming from
-the above equation, then we can prove that this ``x^{n+1}_c`` would also produce
-a ``F_c = 0``. at the following iteration of Newton-Raphson.
+With this, the ``x^{n+1}`` computed according to the update
+``x^{n+1}_c = x^n_c + \detla x_c`` is such that ``F_c`` will be zero at the next
+iteration.
 
+#### The Matrices ``C``, ``S_c`` and ``C^{-1}S_c``
 
+These matrices are everywhere 0 except for some non-zero blocks, which we
+discuss here.
+
+As an example, suppose we have 4 periods of final conditions. The in matrix ``C``
+we will have a block like this one for each variable in the model.  Note that the
+shape of each block, ``C_b``, will be the same for each variable.
+
+```math
+C_b = \begin{bmatrix}
+    1 & 0 & 0 & 0 \\ -1 & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 0 & -1 & 1
+    \end{bmatrix}
+```
+
+Th block of ``S_c`` corresponding to our variable will have all zeros
+everywhere, except in the column corresponding to the last period of the
+simulation. (In the example model above, that would be ``t=4``)
+
+```math
+S_{c,b} = \begin{bmatrix}
+            0 & \cdots & 0 & -1 \\
+            0 & \cdots & 0 & 0 \\
+            0 & \cdots & 0 & 0 \\
+            0 & \cdots & 0 & 0
+          \end{bmatrix}
+```
+
+Now it is straight forward to compute ``C^{-1} S_c``.
+
+```math
+ \left(C^{-1}S_c\right)_b = \begin{bmatrix}
+            0 & \cdots & 0 & -1 \\
+            0 & \cdots & 0 & -1 \\
+            0 & \cdots & 0 & -1 \\
+            0 & \cdots & 0 & -1 \\
+        \end{bmatrix},
+```
+
+where the column with ``-1`` corresponds to the last period of the simulation
+(just before the final conditions periods).
+
+### Case 4: `fcnatural`
+
+This case is identical to case 3. The only thing that changes is the matrices.
+
+This time for our example we will use 5 periods of final conditions, so that the
+patterns would be more obvious. We have the following.
+
+```math
+C_b = \begin{bmatrix}
+    -1 &  0 &  0 &  0 &  0 \\
+     2 & -1 &  0 &  0 &  0 \\
+     0 &  2 & -1 &  0 &  0 \\
+     0 &  0 &  2 & -1 &  0 \\
+     0 &  0 &  0 &  2 & -1 \\
+    \end{bmatrix}
+```
+
+For ``S_c`` this time we need the last two periods of the simulation.
+
+```math
+S_{c,b} = \begin{bmatrix}
+            0 & \cdots & 0 & -1 & 2 \\
+            0 & \cdots & 0 & 0 & -1 \\
+            0 & \cdots & 0 & 0 &  0 \\
+            0 & \cdots & 0 & 0 &  0 \\
+            0 & \cdots & 0 & 0 &  0 \\
+          \end{bmatrix}
+```
+
+Finally, we have
+
+```math
+ \left(C^{-1}S_c\right)_b = \begin{bmatrix}
+            0 & \cdots & 0 & 1 & -2 \\
+            0 & \cdots & 0 & 2 & -3 \\
+            0 & \cdots & 0 & 3 & -4 \\
+            0 & \cdots & 0 & 4 & -5 \\
+            0 & \cdots & 0 & 5 & -6 \\
+        \end{bmatrix},
+```
