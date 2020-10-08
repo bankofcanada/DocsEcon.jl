@@ -28,6 +28,7 @@ makedocs(
         "Design Papers" => [
             "DesignPapers/index.md",
             "DesignPapers/final_conditions.md",
+            "DesignPapers/log_variables.md",
         ],
         "Index" => "indexpage.md"
     ]
