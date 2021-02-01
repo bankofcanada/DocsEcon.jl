@@ -160,14 +160,14 @@ julia&gt; ed_0 = copy(ed)
 [ Info: Simulating 2020Q1:2025Q4
 [ Info: 1, || Fx || = 45.198000000000434, || Δx || = 45.198000000000434
 [ Info: 2, || Fx || = 8.731149137020111e-11, || Δx || = 2.1342729637645792e-13
- 68.911378 seconds (118.90 M allocations: 5.831 GiB, 5.79% gc time)
+ 64.558176 seconds (118.89 M allocations: 5.830 GiB, 5.80% gc time)
 
 julia&gt; @test sol_0[m.variables] ≈ ed[m.variables]
 Test Passed</code></pre><p>The compilation is done once and the compiled code is used in every call after that. So the second call to <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.StackedTimeSolver.simulate-Tuple{Model,Plan,AbstractArray{Float64,2}}"><code>simulate</code></a> is much, much faster.</p><pre><code class="language-julia-repl">julia&gt; sol_0 = @time simulate(m, ed_0, p_0; verbose=true, tol=1e-12);
 [ Info: Simulating 2020Q1:2025Q4
 [ Info: 1, || Fx || = 45.198000000000434, || Δx || = 45.198000000000434
 [ Info: 2, || Fx || = 8.731149137020111e-11, || Δx || = 2.1342729637645792e-13
-  0.193488 seconds (713.49 k allocations: 122.301 MiB, 23.65% gc time)</code></pre><h2 id="Recover-the-Baseline-Case"><a class="docs-heading-anchor" href="#Recover-the-Baseline-Case">Recover the Baseline Case</a><a id="Recover-the-Baseline-Case-1"></a><a class="docs-heading-anchor-permalink" href="#Recover-the-Baseline-Case" title="Permalink"></a></h2><p>Next simulation is a sanity check test. If we run a simulation with the shocks set to the values we just backed out, the resulting variable paths must match the ones we started with.</p><p>Once again we start with an exogenous data set everywhere to 0. Then we assign only the initial conditions and the shocks we just backed out.</p><pre><code class="language-julia-repl">julia&gt; p_r = Plan(m, sim);
+  0.170208 seconds (713.49 k allocations: 122.301 MiB, 25.73% gc time)</code></pre><h2 id="Recover-the-Baseline-Case"><a class="docs-heading-anchor" href="#Recover-the-Baseline-Case">Recover the Baseline Case</a><a id="Recover-the-Baseline-Case-1"></a><a class="docs-heading-anchor-permalink" href="#Recover-the-Baseline-Case" title="Permalink"></a></h2><p>Next simulation is a sanity check test. If we run a simulation with the shocks set to the values we just backed out, the resulting variable paths must match the ones we started with.</p><p>Once again we start with an exogenous data set everywhere to 0. Then we assign only the initial conditions and the shocks we just backed out.</p><pre><code class="language-julia-repl">julia&gt; p_r = Plan(m, sim);
 
 julia&gt; ed_r = zerodata(m, p_r);
 
@@ -199,7 +199,7 @@ julia&gt; set_fp!(ed_r, :dfpsrp);</code></pre><p>And finally we can run the simu
 [ Info: 5, || Fx || = 0.0015865798933418773, || Δx || = 0.0007094046715426379
 [ Info: 6, || Fx || = 9.118281241171644e-9, || Δx || = 3.875892742216169e-9
 [ Info: 7, || Fx || = 1.3096723705530167e-10
-  1.422552 seconds (2.04 M allocations: 396.330 MiB, 21.55% gc time)
+  1.356542 seconds (2.04 M allocations: 396.330 MiB, 21.48% gc time)
 
 julia&gt; @test sol_r ≈ sol_0
 Test Passed</code></pre><h2 id="Simulate-a-shock"><a class="docs-heading-anchor" href="#Simulate-a-shock">Simulate a shock</a><a id="Simulate-a-shock-1"></a><a class="docs-heading-anchor-permalink" href="#Simulate-a-shock" title="Permalink"></a></h2><p>The last exercise is to simulate the impulse response to a unit shock in <code>rffintay</code>.</p><pre><code class="language-julia-repl">julia&gt; m.rffintay
@@ -216,7 +216,7 @@ julia&gt; sol_1 = @time simulate(m, ed_1, p_1;  verbose=true, tol=1e-9);
 [ Info: 3, || Fx || = 0.16150616919912864, || Δx || = 0.012842617242842844
 [ Info: 4, || Fx || = 4.5114006752555724e-7, || Δx || = 4.091677242338456e-9
 [ Info: 5, || Fx || = 1.6007106751203537e-10
-  0.866917 seconds (1.51 M allocations: 303.345 MiB, 9.05% gc time)</code></pre><p>Finally, we can plot the impulse response function to see what we&#39;ve done.</p><pre><code class="language-julia-repl">julia&gt; # compute the differences between the base case and the shocked simulation.
+  0.851840 seconds (1.51 M allocations: 303.345 MiB, 9.22% gc time)</code></pre><p>Finally, we can plot the impulse response function to see what we&#39;ve done.</p><pre><code class="language-julia-repl">julia&gt; # compute the differences between the base case and the shocked simulation.
        dd = hcat(SimData(p.range),
            d_rff=sol_1.rff - sol_0.rff,
            d_rg10=sol_1.rg10 - sol_0.rg10,
@@ -226,4 +226,4 @@ julia&gt; sol_1 = @time simulate(m, ed_1, p_1;  verbose=true, tol=1e-9);
 
 julia&gt; # produce the plot
        plot(dd[sim], vars=(:d_rff, :d_rg10, :d_lur, :d_pic4),
-            legend=false, size=(600, 400));</code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../US_SW07/main/">« Smets and Wouters 2007</a><a class="docs-footer-nextpage" href="../../TimeSeriesEcon/main/">TimeSeriesEcon »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 1 February 2021 19:17">Monday 1 February 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+            legend=false, size=(600, 400));</code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../US_SW07/main/">« Smets and Wouters 2007</a><a class="docs-footer-nextpage" href="../../TimeSeriesEcon/main/">TimeSeriesEcon »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 1 February 2021 21:48">Monday 1 February 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
