@@ -1,6 +1,6 @@
 name: 'Build and Deploy DocsEcon.jl'
-description: 'Build and deploy the documentation and tutorials for StateSpaceEcon'
-author: 'Boyan Bejanov'
+# description: 'Build and deploy the documentation and tutorials for StateSpaceEcon'
+# author: 'Boyan Bejanov'
 
 # Controls when the workflow will run
 on:
