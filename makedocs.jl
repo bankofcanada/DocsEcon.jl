@@ -35,6 +35,8 @@ makedocs(
     ]
 )
 
+##
+
 if get(ENV, "CI", nothing) == "true"
     deploydocs(repo="github.com/bankofcanada/DocsEcon.jl.git")
 end
