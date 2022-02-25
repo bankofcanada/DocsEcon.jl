@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/bankofcanada/DocsEcon.jl.svg?branch=master)](https://travis-ci.org/bankofcanada/DocsEcon.jl)
+[![Docs](https://github.com/bankofcanada/DocsEcon.jl/actions/workflows/docs.yml/badge.svg)](https://github.com/bankofcanada/DocsEcon.jl/actions/workflows/docs.yml)
+[![Tests](https://github.com/bankofcanada/DocsEcon.jl/actions/workflows/test.yml/badge.svg)](https://github.com/bankofcanada/DocsEcon.jl/actions/workflows/test.yml)
 
 # Documentation for StateSpaceEcon
 

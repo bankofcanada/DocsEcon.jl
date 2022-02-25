@@ -8,11 +8,11 @@ using StateSpaceEcon
 # include("scan_tutorials.jl")
 
 makedocs(
-    sitename="StateSpaceEcon",
-    format=Documenter.HTML(prettyurls=get(ENV, "CI", nothing) == "true"),
-    modules=[StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon],
-    doctest=false,
-    pages=[
+    sitename = "StateSpaceEcon",
+    format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
+    modules = [StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon],
+    doctest = false,
+    pages = [
         "index.md",
         "Tutorials" => [
             "Tutorials/index.md",
@@ -38,5 +38,6 @@ makedocs(
 ##
 
 if get(ENV, "CI", nothing) == "true"
-    deploydocs(repo="github.com/bankofcanada/DocsEcon.jl.git")
+    deploydocs(repo = "github.com/bankofcanada/DocsEcon.jl.git",
+        push_preview = true)
 end
