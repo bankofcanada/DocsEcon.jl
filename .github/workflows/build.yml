@@ -24,6 +24,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Setup Julia environment
         # You may pin to the exact commit or the version.
@@ -37,8 +39,13 @@ jobs:
           # Display InteractiveUtils.versioninfo() after installing
           show-versioninfo: false # optional, default is false
 
+      - name: Instantiate repo
+        run: |
+           using Pkg
+           Pkg.instantiate()
+        shell: julia --color=yes --code-coverage --project {0}
+
       - name: Run makedocs.jl
         run: |
-          julia --color=yes --code-coverage --project -e 'using Pkg; Pkg.instantiate()'
           julia --color=yes --code-coverage --project makedocs.jl
         shell: bash
