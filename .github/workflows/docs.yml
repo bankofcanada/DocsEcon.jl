@@ -39,13 +39,13 @@ jobs:
           # Display InteractiveUtils.versioninfo() after installing
           show-versioninfo: false # optional, default is false
 
-      - name: Instantiate repo
+      - name: Instantiate project environment
         run: |
            using Pkg
            Pkg.instantiate()
         shell: julia --color=yes --code-coverage --project {0}
 
-      - name: Run makedocs.jl
+      - name: Make and deploy documentation
         run: |
           julia --color=yes --code-coverage --project makedocs.jl
         shell: bash
