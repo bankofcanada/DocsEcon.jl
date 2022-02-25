@@ -38,6 +38,6 @@ jobs:
           show-versioninfo: false # optional, default is false
 
       - name: Run makedocs.jl
-      - run: |
+        run: |
           julia --color=yes --code-coverage --project makedocs.jl
         shell: bash
