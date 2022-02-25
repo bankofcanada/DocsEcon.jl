@@ -43,9 +43,12 @@ jobs:
         run: |
            using Pkg
            Pkg.instantiate()
-        shell: julia --color=yes --code-coverage --project {0}
+        shell: julia --color=yes --project {0}
 
       - name: Make and deploy documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
         run: |
-          julia --color=yes --code-coverage --project makedocs.jl
+          julia --color=yes --project makedocs.jl
         shell: bash
