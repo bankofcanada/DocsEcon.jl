@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Smets and Wouters 2007 · StateSpaceEcon</title><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.png" alt="StateSpaceEcon logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">StateSpaceEcon</a></span></div><form class="docs-search" action="../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../">Welcome</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../../">Introduction</a></li><li><a class="tocitem" href="../../README/">README</a></li><li><a class="tocitem" href="../../TimeSeriesEcon/main/">TimeSeriesEcon</a></li><li class="is-active"><a class="tocitem" href>Smets and Wouters 2007</a><ul class="internal"><li><a class="tocitem" href="#Part-1:-The-model"><span>Part 1: The model</span></a></li><li><a class="tocitem" href="#Part-2:-The-steady-state-solution"><span>Part 2: The steady state solution</span></a></li><li><a class="tocitem" href="#Part-3:-Impulse-response"><span>Part 3: Impulse response</span></a></li><li><a class="tocitem" href="#Part-4:-Stochastic-shocks-simulation"><span>Part 4: Stochastic shocks simulation</span></a></li><li><a class="tocitem" href="#Part-5:-Backing-out-historical-shocks"><span>Part 5: Backing out historical shocks</span></a></li><li><a class="tocitem" href="#Appendix"><span>Appendix</span></a></li></ul></li><li><a class="tocitem" href="../../FRB-US/main/">FRB/US</a></li></ul></li><li><span class="tocitem">Reference</span><ul><li><a class="tocitem" href="../../../Reference/TimeSeriesEcon/">TimeSeriesEcon</a></li><li><a class="tocitem" href="../../../Reference/ModelBaseEcon/">ModelBaseEcon</a></li><li><a class="tocitem" href="../../../Reference/StateSpaceEcon/">StateSpaceEcon</a></li></ul></li><li><span class="tocitem">Design Papers</span><ul><li><a class="tocitem" href="../../../DesignPapers/">Design Papers</a></li><li><a class="tocitem" href="../../../DesignPapers/final_conditions/">Final Conditions</a></li><li><a class="tocitem" href="../../../DesignPapers/log_variables/">Log-variables</a></li></ul></li><li><a class="tocitem" href="../../../indexpage/">Index</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Smets and Wouters 2007</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Smets and Wouters 2007</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/bankofcanada/TutorialsEcon.jl/blob/master/US_SW07/main.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Smets-and-Wouters-2007"><a class="docs-heading-anchor" href="#Smets-and-Wouters-2007">Smets and Wouters 2007</a><a id="Smets-and-Wouters-2007-1"></a><a class="docs-heading-anchor-permalink" href="#Smets-and-Wouters-2007" title="Permalink"></a></h1><p>You can follow the tutorial by reading this page and copying and pasting code into your Julia REPL session. In this case, you will need the model file, <a href="../SW07.jl"><code>SW07.jl</code></a>.</p><p>All the code contained here is also available in this file: <a href="../main.jl"><code>main.jl</code></a>.</p><ul><li><a href="#Smets-and-Wouters-2007">Smets and Wouters 2007</a></li><li class="no-marker"><ul><li><a href="#Part-1:-The-model">Part 1: The model</a></li><li class="no-marker"><ul><li><a href="#Loading-the-model">Loading the model</a></li><li><a href="#Examining-the-model">Examining the model</a></li><li><a href="#Setting-the-model-parameters">Setting the model parameters</a></li><li><a href="#Model-flags-and-options">Model flags and options</a></li></ul></li><li><a href="#Part-2:-The-steady-state-solution">Part 2: The steady state solution</a></li><li class="no-marker"><ul><li><a href="#steady_state_constraints">Steady state constraints</a></li><li><a href="#Solving-for-the-steady-state">Solving for the steady state</a></li><li><a href="#Examining-the-steady-state">Examining the steady state</a></li></ul></li><li><a href="#Part-3:-Impulse-response">Part 3: Impulse response</a></li><li class="no-marker"><ul><li><a href="#Simulation-plan">Simulation plan</a></li><li><a href="#Exogenous-data">Exogenous data</a></li></ul></li><li><a href="#Part-4:-Stochastic-shocks-simulation">Part 4: Stochastic shocks simulation</a></li><li><a href="#Part-5:-Backing-out-historical-shocks">Part 5: Backing out historical shocks</a></li><li><a href="#Appendix">Appendix</a></li><li class="no-marker"><ul><li><a href="#replication_data">Replication Data</a></li><li><a href="#References">References</a></li></ul></li></ul></li></ul><h2 id="Part-1:-The-model"><a class="docs-heading-anchor" href="#Part-1:-The-model">Part 1: The model</a><a id="Part-1:-The-model-1"></a><a class="docs-heading-anchor-permalink" href="#Part-1:-The-model" title="Permalink"></a></h2><h3 id="Loading-the-model"><a class="docs-heading-anchor" href="#Loading-the-model">Loading the model</a><a id="Loading-the-model-1"></a><a class="docs-heading-anchor-permalink" href="#Loading-the-model" title="Permalink"></a></h3><p>The model is described in its own dedicated module, which is contained in its own file, <a href="../SW07.jl"><code>SW07.jl</code></a>. We can load the module with <code>using SW07</code>; the model itself is a global variable called <code>model</code> within that module.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; using SW07</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m = SW07.model</code><code class="nohighlight hljs ansi" style="display:block;">41 variable(s), 7 shock(s), 51 parameter(s), 41 equations(s).</code></pre><h3 id="Examining-the-model"><a class="docs-heading-anchor" href="#Examining-the-model">Examining the model</a><a id="Examining-the-model-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-model" title="Permalink"></a></h3><p>This model is too big to fit all of its details in the REPL window, so only summary information is displayed. We can see the entire model with <code>fullprint</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; fullprint(m)</code><code class="nohighlight hljs ansi" style="display:block;">41 variable(s): a, b, c, cf, dc, dinve, dw
+    dy, epinfma, ewma, g, inve, invef, k
+    kf, kp, kpf, lab, labf, labobs, mc, ms
+    pinf, pinf4, pinfobs, pk, pkf, qs, r
+    rk, rkf, robs, rrf, spinf, sw, w, wf
+    y, yf, zcap, zcapf
+7 shock(s): ea, eb, eg, em, epinf, eqs
+    ew
+51 parameter(s): calfa = 0.1901, cfc = 1.6064
+    cg = 0.18, cgy = 0.5187, chabb = 0.7133
+    cindp = 0.2432, cindw = 0.5845, clandap = @alias cfc
+    clandaw = 1.5, cmap = 0.701, cmaw = 0.8503
+    constebeta = 0.1657, cbeta = @link 100 / (constebeta + 100)
+    constelab = 0.5509, constepinf = 0.7869
+    cpie = @link constepinf / 100 + 1, cprobp = 0.6523
+    cprobw = 0.7061, crdy = 0.2247, crhoa = 0.9577
+    crhob = 0.2194, crhog = 0.9767, crhoms = 0.1479
+    crhopinf = 0.8895, crhoqs = 0.7113, crhow = 0.9688
+    crpi = 2.0443, crr = 0.8103, cry = 0.0882
+    csadjcost = 5.7606, csigl = 1.8383, csigma = 1.3808
+    ctou = 0.025, ctrend = 0.4312, cgamma = @link ctrend / 100 + 1
+    cbetabar = @link cbeta * cgamma ^ -csigma
+    cik = @link (1 - (1 - ctou) / cgamma) * cgamma
+    cikbar = @link 1 - (1 - ctou) / cgamma
+    cr = @link cpie / (cbeta * cgamma ^ -csigma)
+    crk = @link cbeta ^ -1 * cgamma ^ csigma - (1 - ctou)
+    curvp = 10, curvw = 10, cw = @link ((calfa ^ calfa * (1 - calfa) ^ (1 - calfa)) / (clandap * crk ^ calfa)) ^ (1 / (1 - calfa))
+    clk = @link ((1 - calfa) / calfa) * (crk / cw)
+    cky = @link cfc * clk ^ (calfa - 1)
+    ccy = @link (1 - cg) - cik * cky, ciy = @link cik * cky
+    crkky = @link crk * cky, cwhlc = @link ((((1 / clandaw) * (1 - calfa)) / calfa) * crk * cky) / ccy
+    cwly = @link 1 - crk * cky, czcap = 0.5462
+41 equations(s): 
+   E1:   0 * (1 - calfa) * a[t] + 1 * a[t] = calfa * rkf[t] + (1 - calfa) * wf[t]
+   E2:   zcapf[t] = (1 / (czcap / (1 - czcap))) * rkf[t]
+   E3:   rkf[t] = (wf[t] + labf[t]) - kf[t]
+   E4:   kf[t] = kpf[t - 1] + zcapf[t]
+   E5:   invef[t] = (1 / (1 + cbetabar * cgamma)) * (invef[t - 1] + cbetabar * cgamma * invef[t + 1] + (1 / (cgamma ^ 2 * csadjcost)) * pkf[t]) + qs[t]
+   E6:   pkf[t] = (-(rrf[t]) - 0 * b[t]) + (1 / ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma)))) * b[t] + (crk / (crk + (1 - ctou))) * rkf[t + 1] + ((1 - ctou) / (crk + (1 - ctou))) * pkf[t + 1]
+   E7:   cf[t] = ((((chabb / cgamma) / (1 + chabb / cgamma)) * cf[t - 1] + (1 / (1 + chabb / cgamma)) * cf[t + 1] + (((csigma - 1) * cwhlc) / (csigma * (1 + chabb / cgamma))) * (labf[t] - labf[t + 1])) - ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma))) * (rrf[t] + 0 * b[t])) + b[t]
+   E8:   yf[t] = ccy * cf[t] + ciy * invef[t] + g[t] + crkky * zcapf[t]
+   E9:   yf[t] = cfc * (calfa * kf[t] + (1 - calfa) * labf[t] + a[t])
+   E10:   wf[t] = (csigl * labf[t] + (1 / (1 - chabb / cgamma)) * cf[t]) - ((chabb / cgamma) / (1 - chabb / cgamma)) * cf[t - 1]
+   E11:   kpf[t] = (1 - cikbar) * kpf[t - 1] + cikbar * invef[t] + cikbar * (cgamma ^ 2 * csadjcost) * qs[t]
+   E12:   mc[t] = ((calfa * rk[t] + (1 - calfa) * w[t]) - 1 * a[t]) - 0 * (1 - calfa) * a[t]
+   E13:   zcap[t] = (1 / (czcap / (1 - czcap))) * rk[t]
+   E14:   rk[t] = (w[t] + lab[t]) - k[t]
+   E15:   k[t] = kp[t - 1] + zcap[t]
+   E16:   inve[t] = (1 / (1 + cbetabar * cgamma)) * (inve[t - 1] + cbetabar * cgamma * inve[t + 1] + (1 / (cgamma ^ 2 * csadjcost)) * pk[t]) + qs[t]
+   E17:   pk[t] = ((-(r[t]) + pinf[t + 1]) - 0 * b[t]) + (1 / ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma)))) * b[t] + (crk / (crk + (1 - ctou))) * rk[t + 1] + ((1 - ctou) / (crk + (1 - ctou))) * pk[t + 1]
+   E18:   c[t] = ((((chabb / cgamma) / (1 + chabb / cgamma)) * c[t - 1] + (1 / (1 + chabb / cgamma)) * c[t + 1] + (((csigma - 1) * cwhlc) / (csigma * (1 + chabb / cgamma))) * (lab[t] - lab[t + 1])) - ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma))) * ((r[t] - pinf[t + 1]) + 0 * b[t])) + b[t]
+   E19:   y[t] = ccy * c[t] + ciy * inve[t] + g[t] + 1 * crkky * zcap[t]
+   E20:   y[t] = cfc * (calfa * k[t] + (1 - calfa) * lab[t] + a[t])
+   E21:   pinf[t] = (1 / (1 + cbetabar * cgamma * cindp)) * (cbetabar * cgamma * pinf[t + 1] + cindp * pinf[t - 1] + ((((1 - cprobp) * (1 - cbetabar * cgamma * cprobp)) / cprobp) / ((cfc - 1) * curvp + 1)) * mc[t]) + spinf[t]
+   E22:   w[t] = (((1 / (1 + cbetabar * cgamma)) * w[t - 1] + ((cbetabar * cgamma) / (1 + cbetabar * cgamma)) * w[t + 1] + (cindw / (1 + cbetabar * cgamma)) * pinf[t - 1]) - ((1 + cbetabar * cgamma * cindw) / (1 + cbetabar * cgamma)) * pinf[t]) + ((cbetabar * cgamma) / (1 + cbetabar * cgamma)) * pinf[t + 1] + (((1 - cprobw) * (1 - cbetabar * cgamma * cprobw)) / ((1 + cbetabar * cgamma) * cprobw)) * (1 / ((clandaw - 1) * curvw + 1)) * (((csigl * lab[t] + (1 / (1 - chabb / cgamma)) * c[t]) - ((chabb / cgamma) / (1 - chabb / cgamma)) * c[t - 1]) - w[t]) + 1 * sw[t]
+   E23:   r[t] = crpi * (1 - crr) * pinf[t] + cry * (1 - crr) * (y[t] - yf[t]) + crdy * (((y[t] - yf[t]) - y[t - 1]) + yf[t - 1]) + crr * r[t - 1] + ms[t]
+   E24:   a[t] = crhoa * a[t - 1] + ea[t]
+   E25:   b[t] = crhob * b[t - 1] + eb[t]
+   E26:   g[t] = crhog * g[t - 1] + eg[t] + cgy * ea[t]
+   E27:   qs[t] = crhoqs * qs[t - 1] + eqs[t]
+   E28:   ms[t] = crhoms * ms[t - 1] + em[t]
+   E29:   spinf[t] = (crhopinf * spinf[t - 1] + epinfma[t]) - cmap * epinfma[t - 1]
+   E30:   epinfma[t] = epinf[t]
+   E31:   sw[t] = (crhow * sw[t - 1] + ewma[t]) - cmaw * ewma[t - 1]
+   E32:   ewma[t] = ew[t]
+   E33:   kp[t] = (1 - cikbar) * kp[t - 1] + cikbar * inve[t] + cikbar * cgamma ^ 2 * csadjcost * qs[t]
+   E34:   dy[t] = (y[t] - y[t - 1]) + ctrend
+   E35:   dc[t] = (c[t] - c[t - 1]) + ctrend
+   E36:   dinve[t] = (inve[t] - inve[t - 1]) + ctrend
+   E37:   dw[t] = (w[t] - w[t - 1]) + ctrend
+   E38:   pinfobs[t] = 1 * pinf[t] + constepinf
+   E39:   pinf4[t] = pinf[t] + pinf[t - 1] + pinf[t - 2] + pinf[t - 3]
+   E40:   robs[t] = 1 * r[t] + constebeta
+   E41:   labobs[t] = lab[t] + constelab</code></pre><p>We can also examine individual components using the commands <code>parameters</code>, <code>variables</code>, <code>shocks</code>, <code>equations</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; parameters(m)</code><code class="nohighlight hljs ansi" style="display:block;">Parameters{ModelParam} with 51 entries:
+  :calfa      =&gt; 0.1901
+  :cfc        =&gt; 1.6064
+  :cg         =&gt; 0.18
+  :cgy        =&gt; 0.5187
+  :chabb      =&gt; 0.7133
+  :cindp      =&gt; 0.2432
+  :cindw      =&gt; 0.5845
+  :clandap    =&gt; @alias cfc
+  :clandaw    =&gt; 1.5
+  :cmap       =&gt; 0.701
+  :cmaw       =&gt; 0.8503
+  :constebeta =&gt; 0.1657
+  :cbeta      =&gt; @link 100 / (constebeta + 100)
+  :constelab  =&gt; 0.5509
+  :constepinf =&gt; 0.7869
+  :cpie       =&gt; @link constepinf / 100 + 1
+  :cprobp     =&gt; 0.6523
+  :cprobw     =&gt; 0.7061
+  :crdy       =&gt; 0.2247
+  ⋮           =&gt; ⋮</code></pre><h3 id="Setting-the-model-parameters"><a class="docs-heading-anchor" href="#Setting-the-model-parameters">Setting the model parameters</a><a id="Setting-the-model-parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-the-model-parameters" title="Permalink"></a></h3><p>We must not change any part of the model in the active Julia session except for the model parameters and <a href="#steady_state_constraints">steady state constraints</a>. If we want to add variables, shocks, or equations, we must do so in the model module file and restart Julia to load the new model.</p><p>When it comes to the model parameters, we can access them by their names from the model object using dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.crr # read a parameter value</code><code class="nohighlight hljs ansi" style="display:block;">0.8103</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.cgy = 0.5187 # modify a parameter value</code><code class="nohighlight hljs ansi" style="display:block;">0.5187</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>In this model the values of the parameters have been set according to the <a href="#replication_data"><code>replication data</code></a>.</p></div></div><h3 id="Model-flags-and-options"><a class="docs-heading-anchor" href="#Model-flags-and-options">Model flags and options</a><a id="Model-flags-and-options-1"></a><a class="docs-heading-anchor-permalink" href="#Model-flags-and-options" title="Permalink"></a></h3><p>In addition to model parameters, which are values that appear in the model equations, the model object also holds two other sets of parameters, namely flags and options.</p><p>Flags are (usually boolean) values which characterize the type of model we have. For example, a linear model should have its <code>linear</code> flag set to <code>true</code>. Typically, this is done in the model file before calling <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@initialize-Tuple{Symbol}"><code>@initialize</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.flags</code><code class="nohighlight hljs ansi" style="display:block;">ModelFlags
+        linear = false
+   ssZeroSlope = true</code></pre><p>Options are values that adjust the operations of the algorithms. For example, we have <code>tol</code> and <code>maxiter</code>, which set the desired accuracy and maximum number of iterations for the iterative solvers. These can be adjusted as needed at any time. Another useful option is <code>verbose</code>, which controls the level of verbosity of the different commands.</p><p>Many functions in <code>StateSpaceEcon</code> have optional arguments of the same name as a model option. When the argument is not explicitly given in the function call, these functions will use the value from the model option of the same name.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.verbose = true</code><code class="nohighlight hljs ansi" style="display:block;">true</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.options</code><code class="nohighlight hljs ansi" style="display:block;">6 Options:
+    shift = 10
+    tol = 1.0e-10
+    maxiter = 20
+    verbose = true
+    substitutions = false
+    warn = Options(no_t=true)</code></pre><h2 id="Part-2:-The-steady-state-solution"><a class="docs-heading-anchor" href="#Part-2:-The-steady-state-solution">Part 2: The steady state solution</a><a id="Part-2:-The-steady-state-solution-1"></a><a class="docs-heading-anchor-permalink" href="#Part-2:-The-steady-state-solution" title="Permalink"></a></h2><p>The steady state is a special solution of the dynamic system that remains constant over time. It is important on its own, but also it can be useful in several ways. For example, linearizing the model requires a particular solution about which to linearize, and the steady state is typically used for this purpose.</p><p>In addition to the steady state, we also consider another kind of special solution which grows linearly in time. If we know that the steady state solution is constant (i.e., its slope is zero), we can set the model flag <code>ssZeroSlope</code> to <code>true</code>. This is not required; however in a large model it might help the steady state solver converge faster to the solution.</p><p>The model object <code>m</code> stores information about the steady state. This includes the steady state solution itself, as well as a (possibly empty) set of additional constraints that apply only to the steady state. This information can be accessed via <code>m.sstate</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate</code><code class="nohighlight hljs ansi" style="display:block;">Steady state not solved.
+No additional constraints.</code></pre><h3 id="steady_state_constraints"><a class="docs-heading-anchor" href="#steady_state_constraints">Steady state constraints</a><a id="steady_state_constraints-1"></a><a class="docs-heading-anchor-permalink" href="#steady_state_constraints" title="Permalink"></a></h3><p>Sometimes the steady state is not unique, and we can use steady state constraints to specify the particular steady state we want. Also, if the model is non-linear, these constraints can be used to help the steady state solver converge. Steady state constraints can be added with the <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@steadystate-Tuple{Any, Symbol, Expr}"><code>@steadystate</code></a> macro. The constraint can be as simple as giving a specific value; we can also write an equation with multiple variables. We&#39;re allowed to use model parameters in these equations as well.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @steadystate m a = 5</code><code class="nohighlight hljs ansi" style="display:block;">a = 5</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate</code><code class="nohighlight hljs ansi" style="display:block;">Steady state not solved.
+1 additional constraint.
+    a = 5</code></pre><p>We can clean up the constraints by emptying the constraints container.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; empty!(m.sstate.constraints)</code><code class="nohighlight hljs ansi" style="display:block;">SteadyStateEquation[]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate</code><code class="nohighlight hljs ansi" style="display:block;">Steady state not solved.
+No additional constraints.</code></pre><div class="admonition is-info"><header class="admonition-header">Important note</header><div class="admonition-body"><p>Steady state constraints that are always valid can be pre-defined in the model file. In that case, all calls to the <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@steadystate-Tuple{Any, Symbol, Expr}"><code>@steadystate</code></a> macro must be made after calling <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@initialize-Tuple{Symbol}"><code>@initialize</code></a>.</p></div></div><h3 id="Solving-for-the-steady-state"><a class="docs-heading-anchor" href="#Solving-for-the-steady-state">Solving for the steady state</a><a id="Solving-for-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-for-the-steady-state" title="Permalink"></a></h3><p>The steady state solution is stored within the model object. Before solving, we have to specify an initial condition. If the model is linear, this makes no difference, but in a non-linear model a good or a bad initial guess might be the difference between success and failure of the steady state solver.</p><p>We specify the initial guess by calling <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.clear_sstate!-Tuple{Model}"><code>clear_sstate!</code></a>. This call removes any previously stored solution, sets the initial guess, and runs the pre-solve pass of the steady state solver. The initial guess can be given with the <code>lvl</code> and <code>slp</code> arguments; if not provided, an initial guess is chosen automatically.</p><p>Once that&#39;s done, we call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.sssolve!-Tuple{Model}"><code>sssolve!</code></a> to find the steady state. This function returns a <code>Vector{Float64}</code> containing the steady state solution, and it also writes that solution into the model object. The vector is of length <code>2*nvariables(m)</code> and contains the level and the slope for each variable.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; clear_sstate!(m)</code><code class="nohighlight hljs ansi" style="display:block;">┌ Info: Presolved 24: a[t] = crhoa * a[t - 1] + ea[t] for #a#lvl# = 0.0
+└   pt_info = (#ea#lvl# = 0.0, #a#lvl# = 0.0, #a#slp# = 0.0)
+┌ Info: Presolved 25: b[t] = crhob * b[t - 1] + eb[t] for #b#lvl# = 0.0
+└   pt_info = (#b#lvl# = 0.0, #eb#lvl# = 0.0, #b#slp# = 0.0)
+┌ Info: Presolved 26: g[t] = crhog * g[t - 1] + eg[t] + cgy * ea[t] for #g#lvl# = 0.0
+└   pt_info = (#eg#lvl# = 0.0, #ea#lvl# = 0.0, #g#lvl# = 0.0, #g#slp# = 0.0)
+┌ Info: Presolved 27: qs[t] = crhoqs * qs[t - 1] + eqs[t] for #qs#lvl# = 0.0
+└   pt_info = (#qs#lvl# = 0.0, #qs#slp# = 0.0, #eqs#lvl# = 0.0)
+┌ Info: Presolved 28: ms[t] = crhoms * ms[t - 1] + em[t] for #ms#lvl# = 0.0
+└   pt_info = (#ms#lvl# = 0.0, #ms#slp# = 0.0, #em#lvl# = 0.0)
+┌ Info: Presolved 30: epinfma[t] = epinf[t] for #epinfma#lvl# = 0.0
+└   pt_info = (#epinf#lvl# = 0.0, #epinfma#lvl# = 0.0)
+┌ Info: Presolved 32: ewma[t] = ew[t] for #ewma#lvl# = 0.0
+└   pt_info = (#ewma#lvl# = 0.0, #ew#lvl# = 0.0)
+┌ Info: Presolved 29: spinf[t] = (crhopinf * spinf[t - 1] + epinfma[t]) - cmap * epinfma[t - 1] for #spinf#lvl# = 0.0
+└   pt_info = (#spinf#lvl# = 0.0, #spinf#slp# = 0.0, #epinfma#lvl# = 0.0, #epinfma#slp# = 0.0)
+┌ Info: Presolved 31: sw[t] = (crhow * sw[t - 1] + ewma[t]) - cmaw * ewma[t - 1] for #sw#lvl# = 0.0
+└   pt_info = (#ewma#lvl# = 0.0, #ewma#slp# = 0.0, #sw#lvl# = 0.0, #sw#slp# = 0.0)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sssolve!(m);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Presolved 9 equations for 64 variables.
+[ Info: Solving 32 equations for 32 variables.
+[ Info: 1, NR, || Fx || = 0.7869, || Δx || = 0.6868999999999991
+[ Info: 2, NR, || Fx || = 1.4593187769307276e-16, || Δx || = 2.964295475749054e-14</code></pre><p>If in doubt, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.check_sstate-Tuple{Model}"><code>check_sstate</code></a> to make sure the steady state solution stored in the model object indeed satisfies the steady state system of equations. This function returns the number of equations that are not satisfied. A value of 0 is what we want to see. In verbose mode, it also lists the problematic equations and their residuals.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; check_sstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
+0</code></pre><h3 id="Examining-the-steady-state"><a class="docs-heading-anchor" href="#Examining-the-steady-state">Examining the steady state</a><a id="Examining-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-steady-state" title="Permalink"></a></h3><p>We can access the steady state solution via <code>m.sstate</code> using the dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.dc</code><code class="nohighlight hljs ansi" style="display:block;">  dc = 0.4312</code></pre><p>We can also assign new values to the steady state solution, but we should be careful to make sure it remains a valid steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.dc.level = 0.43121</code><code class="nohighlight hljs ansi" style="display:block;">0.43121</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) &gt; 0</code><code class="nohighlight hljs ansi" style="display:block;">┌ Warning: The following steady state equation is not satisfied: 
+│ E35  res= 1e-05      dc[t] = (c[t] - c[t - 1]) + ctrend
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/diagnose.jl:45
+Test Passed</code></pre><p>As the code above shows, a wrong steady state solution (based on the specified precision in the <code>tol</code> option) will result in one or more equation not being satisfied. Let&#39;s put back the correct value.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.dc.level = 0.4312</code><code class="nohighlight hljs ansi" style="display:block;">0.4312</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) == 0</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
+Test Passed</code></pre><p>We can examine the entire steady state solution with <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.printsstate-Tuple{IO, ModelBaseEcon.AbstractModel}"><code>printsstate</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; printsstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">Steady State Solution:
+        a = 0.0   
+        b = 0.0   
+        c = 0.0   
+       cf = 0.0   
+       dc = 0.4312
+    dinve = 0.4312
+       dw = 0.4312
+       dy = 0.4312
+  epinfma = 0.0   
+     ewma = 0.0   
+        g = 0.0   
+     inve = 0.0   
+    invef = 0.0   
+        k = 0.0   
+       kf = 0.0   
+       kp = 0.0   
+      kpf = 0.0   
+      lab = 0.0   
+     labf = 0.0   
+   labobs = 0.5509
+       mc = 0.0   
+       ms = 0.0   
+     pinf = 0.0   
+    pinf4 = 0.0   
+  pinfobs = 0.7869
+       pk = 0.0   
+      pkf = 0.0   
+       qs = 0.0   
+        r = 0.0   
+       rk = 0.0   
+      rkf = 0.0   
+     robs = 0.1657
+      rrf = 0.0   
+    spinf = 0.0   
+       sw = 0.0   
+        w = 0.0   
+       wf = 0.0   
+        y = 0.0   
+       yf = 0.0   
+     zcap = 0.0   
+    zcapf = 0.0   
+       ea = 0.0   
+       eb = 0.0   
+       eg = 0.0   
+       em = 0.0   
+    epinf = 0.0   
+      eqs = 0.0   
+       ew = 0.0</code></pre><h2 id="Part-3:-Impulse-response"><a class="docs-heading-anchor" href="#Part-3:-Impulse-response">Part 3: Impulse response</a><a id="Part-3:-Impulse-response-1"></a><a class="docs-heading-anchor-permalink" href="#Part-3:-Impulse-response" title="Permalink"></a></h2><h3 id="Simulation-plan"><a class="docs-heading-anchor" href="#Simulation-plan">Simulation plan</a><a id="Simulation-plan-1"></a><a class="docs-heading-anchor-permalink" href="#Simulation-plan" title="Permalink"></a></h3><p>Before we can simulate the model, we have to decide on the length of the simulation and what data is available for each period, i.e., what values are known (exogenous). This is done with an object of type <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.Plan"><code>Plan</code></a>.</p><p>To create a plan, all we need is the model object and a range for the simulation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2039Q4</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2039Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q2:2040Q1
+  1999Q2:2040Q1 → ea, eb, eg, em, epinf, eqs, ew</code></pre><p>The plan shows us the list of exogenous values (variable or shocks) for each period or sub-range of the simulation. By default, all shocks are exogenous and all variables are endogenous.</p><p>We also see that the range of the plan has been extended before and after the simulation range. This is necessary because we need to set initial and final conditions. The number of periods for initial conditions is equal to the largest lag in the model. Similarly, final conditions have to be imposed over as many periods as the largest lead.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p.range          # the full range of the plan</code><code class="nohighlight hljs ansi" style="display:block;">1999Q2:2040Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; init_rng = first(p.range):first(sim_rng)-1   # the range for initial conditions</code><code class="nohighlight hljs ansi" style="display:block;">1999Q2:1999Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; final_rng = last(sim_rng)+1:last(p.range)     # the range for final conditions</code><code class="nohighlight hljs ansi" style="display:block;">2040Q1:2040Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test length(init_rng) == m.maxlag</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test length(final_rng) == m.maxlead</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h3 id="Exogenous-data"><a class="docs-heading-anchor" href="#Exogenous-data">Exogenous data</a><a id="Exogenous-data-1"></a><a class="docs-heading-anchor-permalink" href="#Exogenous-data" title="Permalink"></a></h3><p>We have to provide the data for the simulation. We start with all zeros and fill in the external data, which must include initial conditions for all variable and shocks, exogenous values (according to the plan), and possibly final conditions.</p><h4 id="Initial-conditions"><a class="docs-heading-anchor" href="#Initial-conditions">Initial conditions</a><a id="Initial-conditions-1"></a><a class="docs-heading-anchor-permalink" href="#Initial-conditions" title="Permalink"></a></h4><p>In this example, we want to simulate an impulse response, so it makes sense to start from the steady state, so that is what we set as the initial condition. We leave the initial conditions for the shocks at 0.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for var in variables(m)
+           exog[init_rng, var] .= m.sstate[var].level
+       end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog</code><code class="nohighlight hljs ansi" style="display:block;">164×48 MVTSeries{Quarterly} with range 1999Q2:2040Q1 and variables (a,b,c,cf,…):
+           a     b     c     cf     dc     … em     epinf     eqs     ew
+  1999Q2 : 0.0   0.0   0.0   0.0    0.4312 … 0.0    0.0       0.0     0.0
+  1999Q3 : 0.0   0.0   0.0   0.0    0.4312 … 0.0    0.0       0.0     0.0
+  1999Q4 : 0.0   0.0   0.0   0.0    0.4312 … 0.0    0.0       0.0     0.0
+  2000Q1 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2000Q2 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2000Q3 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2000Q4 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2001Q1 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2001Q2 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+           ⋮     ⋮     ⋮     ⋮      ⋮      ⋱ ⋮      ⋮         ⋮       ⋮
+  2038Q1 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2038Q2 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2038Q3 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2038Q4 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2039Q1 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2039Q2 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2039Q3 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2039Q4 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0
+  2040Q1 : 0.0   0.0   0.0   0.0    0.0    … 0.0    0.0       0.0     0.0</code></pre><div class="admonition is-success"><header class="admonition-header">Pro tip</header><div class="admonition-body"><p>The above works because the steady state is stationary, i.e., all slopes are zero. If we had a model with linear growth steady state, we could do something like the following (see <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.@rec-Tuple{Any, Any}"><code>@rec</code></a>):</p><pre><code class="language-julia hljs">for var in variables(m)
+    ss = m.sstate[var]
+    exog[init_rng, var] = ss.level
+    if ss.slope != 0
+        # recursively update by adding the slope each period
+        @rec init_rng[2:end] exog[t, var] = exog[t - 1, var] + ss.slope
+    end
+end</code></pre></div></div><h4 id="Final-conditions"><a class="docs-heading-anchor" href="#Final-conditions">Final conditions</a><a id="Final-conditions-1"></a><a class="docs-heading-anchor-permalink" href="#Final-conditions" title="Permalink"></a></h4><p>For the final conditions we can use the steady state again, because we expect that the economy will eventually return to it if the simulation is sufficiently long past the last shock. We can do this by assigning the values of the steady state to the final periods after the simulation, similarly to what we did with the initial conditions.</p><p>Alternatively, we can specify that we want to use the steady state in the call to simulate by passing <code>fctype=fclevel</code>. Yet another possibility is to set the final condition so that the solution slope matches the slope of the steady state by setting <code>fctype=fcslope</code>. In both cases, we do not need to set anything in the exogenous data array because those values would be ignored.</p><div class="admonition is-success"><header class="admonition-header">Pro tip</header><div class="admonition-body"><p>In the Smets and Wouters 2007 model the two ways of using the steady state for final conditions (level or slope) are equivalent, because the steady state here is stationary and unique. In models where the steady state has non-zero slope, or the steady state has zero slope but the level is not unique, we should use <code>fctype=fcslope</code>.</p></div></div><h4 id="A-quick-sanity-check"><a class="docs-heading-anchor" href="#A-quick-sanity-check">A quick sanity check</a><a id="A-quick-sanity-check-1"></a><a class="docs-heading-anchor-permalink" href="#A-quick-sanity-check" title="Permalink"></a></h4><p>If we were to run a simulation where the economy started in the steady state and there were no shocks at all, we&#39;d expect that the economy would remain in steady state forever.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = simulate(m, p, exog; fctype=fcslope);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
+[ Info: 1, || Fx || = 0.7869, || Δx || = 0.7869
+[ Info: 2, || Fx || = 5.551115123125783e-17</code></pre><p>The simulated data, <code>ss</code>, should equal (up to the accuracy of the solution) the steady state data. Similar to <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.zerodata"><code>zerodata</code></a>, we can use <a href="Tutorials/US_SW07/@ref"><code>steadystatedata</code></a> to create a data set containing the steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test ss ≈ steadystatedata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h4 id="Exogenous-data-2"><a class="docs-heading-anchor" href="#Exogenous-data-2">Exogenous data</a><a class="docs-heading-anchor-permalink" href="#Exogenous-data-2" title="Permalink"></a></h4><p>All shocks are exogenous by default. All we have left to do is to set the value of the shock.</p><p>Let&#39;s say that we want to shock <code>epinf</code> for the first four quarters by <code>0.1</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[sim_rng[1:4], :epinf] .= 0.1;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">164×7 MVTSeries{Quarterly} with range 1999Q2:2040Q1 and variables (ea,eb,eg,…):
+           ea     eb     eg     em     epinf     eqs     ew
+  1999Q2 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  1999Q3 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  1999Q4 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2000Q1 : 0.0    0.0    0.0    0.0    0.1       0.0     0.0
+  2000Q2 : 0.0    0.0    0.0    0.0    0.1       0.0     0.0
+  2000Q3 : 0.0    0.0    0.0    0.0    0.1       0.0     0.0
+  2000Q4 : 0.0    0.0    0.0    0.0    0.1       0.0     0.0
+  2001Q1 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2001Q2 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+           ⋮      ⋮      ⋮      ⋮      ⋮         ⋮       ⋮
+  2038Q1 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2038Q2 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2038Q3 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2038Q4 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2039Q1 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2039Q2 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2039Q3 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2039Q4 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0
+  2040Q1 : 0.0    0.0    0.0    0.0    0.0       0.0     0.0</code></pre><h4 id="Running-the-simulation"><a class="docs-heading-anchor" href="#Running-the-simulation">Running the simulation</a><a id="Running-the-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Running-the-simulation" title="Permalink"></a></h4><p>We call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.StackedTimeSolver.simulate"><code>simulate</code></a>, providing the model, the exogenous data, and the plan. We also specify the type of final condition we want to impose.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; irf = simulate(m, p, exog; fctype=fcslope);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
+[ Info: 1, || Fx || = 0.7869, || Δx || = 3.5420332924785383
+[ Info: 2, || Fx || = 4.440892098500626e-16</code></pre><p>We can now take a look at how some of the observable variables in the model have responded to this shock. We use <code>plot</code> from the <code>Plots</code> package to for that. We specify the variables we want to plot using <code>vars</code> and the names of the datasets being plotted (for the legend) in the <code>names</code> option.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, irf,
+            vars=(:pinfobs, :dy, :labobs, :robs),
+            names=(&quot;SS&quot;, &quot;IRF&quot;),
+            legend=[true false false false],
+            size=(600, 400)
+           );</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p><h2 id="Part-4:-Stochastic-shocks-simulation"><a class="docs-heading-anchor" href="#Part-4:-Stochastic-shocks-simulation">Part 4: Stochastic shocks simulation</a><a id="Part-4:-Stochastic-shocks-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Part-4:-Stochastic-shocks-simulation" title="Permalink"></a></h2><p>Now let&#39;s run a simulation with stochastic shocks. We will have random shocks over two years and then have no shocks for several years afterwards to allow time for the economy to return to its steady state.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2049Q4      # simulate 50 years starting 2000</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2049Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; shk_rng = 2004Q1 .+ (0:7)    # shock 8 quarters starting in 2004</code><code class="nohighlight hljs ansi" style="display:block;">2004Q1:2005Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q2:2050Q1
+  1999Q2:2050Q1 → ea, eb, eg, em, epinf, eqs, ew</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; init_rng = first(p.range):first(sim_rng) - 1</code><code class="nohighlight hljs ansi" style="display:block;">1999Q2:1999Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; final_rng = last(sim_rng) + 1:last(p.range)</code><code class="nohighlight hljs ansi" style="display:block;">2050Q1:2050Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in variables(m)
+           exog[init_rng, v] .= m.sstate[v].level
+       end</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>The distributions of the shocks are assumed normal with mean zero and standard deviations that have been estimated in the <a href="#replication_data"><code>replication data</code></a>. We use packages <code>Distributions</code> and <code>Random</code> to draw the necessary random values.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; shk_dist = (ea = Normal(0.0, 0.4618),
+                   eb = Normal(0.0, 1.8513),
+                   eg = Normal(0.0, 0.6090),
+                   eqs = Normal(0.0, 0.6017),
+                   em = Normal(0.0, 0.2397),
+                   epinf = Normal(0.0, 0.1455),
+                   ew = Normal(0.0, 0.2089));</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for (shk, dist) in pairs(shk_dist)
+           exog[shk_rng, shk] .= rand(dist, length(shk_rng))
+       end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[shk_rng, shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">8×7 MVTSeries{Quarterly} with range 2004Q1:2005Q4 and variables (ea,eb,eg,…):
+           ea         eb         … eqs         ew
+  2004Q1 :  0.400541   0.929972  … -1.93228    -0.210944
+  2004Q2 : -0.416425  -0.957092  … -0.0445346  -0.113601
+  2004Q3 : -0.22835   -1.03766   …  0.090842   -0.256263
+  2004Q4 : -0.416966  -0.0357149 …  0.462875   -0.113164
+  2005Q1 :  0.399181   0.237086  … -0.186619   -0.143408
+  2005Q2 :  1.02145    3.43006   … -0.362649   -0.148931
+  2005Q3 :  0.246053  -1.53244   … -0.769979   -0.0683226
+  2005Q4 : -0.125487   0.203821  …  0.600086    0.107549</code></pre><p>Now we are ready to simulate. We can set the shocks to be anticipated or unanticipated by setting the <code>anticipate</code> parameter in <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.StackedTimeSolver.simulate"><code>simulate</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_a = simulate(m, p, exog; fctype=fcslope, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
+[ Info: 1, || Fx || = 3.4300570896373013, || Δx || = 26.057492780374034
+[ Info: 2, || Fx || = 3.552713678800501e-15</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_u = simulate(m, p, exog; fctype=fcslope, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
+[ Info: 1, || Fx || = 0.7869, || Δx || = 0.7869
+[ Info: 2, || Fx || = 5.551115123125783e-17
+[ Info: Simulating 2004Q1:2049Q4
+[ Info: 1, || Fx || = 1.9322751013592159, || Δx || = 11.77306893354936
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2004Q2:2049Q4
+[ Info: 1, || Fx || = 0.9570917769894483, || Δx || = 8.8031182804498
+[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: Simulating 2004Q3:2049Q4
+[ Info: 1, || Fx || = 1.0376561273740716, || Δx || = 9.927689412318376
+[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: Simulating 2004Q4:2049Q4
+[ Info: 1, || Fx || = 1.1318687108312346, || Δx || = 3.274238170598078
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2005Q1:2049Q4
+[ Info: 1, || Fx || = 1.1596333945166188, || Δx || = 2.526966976742685
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2005Q2:2049Q4
+[ Info: 1, || Fx || = 3.4300570896373013, || Δx || = 32.7942042371277
+[ Info: 2, || Fx || = 7.105427357601002e-15
+[ Info: Simulating 2005Q3:2049Q4
+[ Info: 1, || Fx || = 1.532438441322665, || Δx || = 12.2449880268444
+[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: Simulating 2005Q4:2049Q4
+[ Info: 1, || Fx || = 0.73908883477159, || Δx || = 5.533764706644866
+[ Info: 2, || Fx || = 3.552713678800501e-15</code></pre><p>As before, we can review the responses of the observed variables to these shocks using <code>plot</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; observed = (:dy, :dc, :dinve, :labobs, :pinfobs, :dw, :robs);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = steadystatedata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, sim_a, sim_u,
+            vars=observed,
+            names=(&quot;SS&quot;, &quot;Anticipated&quot;, &quot;Unanticipated&quot;),
+            legend=[true (false for i = 1:6)...],
+           );</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../stoch_shk.png"><img src="../stoch_shk.png" alt="Stochastic Shock Response Graph"/></a></p><p>We see that when the shocks are anticipated, the variables start to react to them right away; in the unanticipated case, there is no movement until the shocks actually hit.</p><h2 id="Part-5:-Backing-out-historical-shocks"><a class="docs-heading-anchor" href="#Part-5:-Backing-out-historical-shocks">Part 5: Backing out historical shocks</a><a id="Part-5:-Backing-out-historical-shocks-1"></a><a class="docs-heading-anchor-permalink" href="#Part-5:-Backing-out-historical-shocks" title="Permalink"></a></h2><p>Now let&#39;s pretend that the simulated values are historical data and that we do not know the magnitude of the shocks. We can treat the observed (simulated) values of the variables as known by making them exogenous. At the same time we will make the shocks endogenous, so that we can solve for their values during the simulation.</p><p>The &quot;historic&quot; (simulated, assumed observed) range is from the first period of the simulation until the last shock in the previous exercise.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; hist_rng = first(sim_rng):last(shk_rng)</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2005Q4</code></pre><p>We use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.exogenize!-Tuple{Plan, Any, Any}"><code>exogenize!</code></a> and <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.endogenize!-Tuple{Plan, Any, Any}"><code>endogenize!</code></a> to set up a plan in which observed variables are exogenous and shocks are endogenous throughout the historic range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; endogenize!(p, shocks(m), hist_rng);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exogenize!(p, observed, hist_rng);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q2:2050Q1
+  1999Q2:1999Q4 → ea, eb, eg, em, epinf, eqs, ew
+  2000Q1:2005Q4 → dc, dinve, dw, dy, labobs, pinfobs, robs
+  2006Q1:2050Q1 → ea, eb, eg, em, epinf, eqs, ew</code></pre><p>As we can see above, the plan now reflects our intentions.</p><p>Finally, we need to set up the exogenous data. This time we do not specify the shocks; instead, we assign the known data for the observed variables for the historic range. We start with initial conditions.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in variables(m)
+           exog[init_rng, v] .= m.sstate[v].level
+       end</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>We take the observed data from the simulation above. We show the anticipated version first.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
+           exog[hist_rng, v] .= sim_a[v]
+       end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; back_a = simulate(m, p, exog; fctype=fcslope, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
+[ Info: 1, || Fx || = 7.722730139950951, || Δx || = 26.057492780374016
+[ Info: 2, || Fx || = 3.552713678800501e-15</code></pre><p>Now we show the unanticipated case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
+           exog[hist_rng, v] .= sim_u[v]
+       end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; back_u = simulate(m, p, exog; fctype=fcslope, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
+[ Info: 1, || Fx || = 8.721809257879567, || Δx || = 8.721809257879567
+[ Info: 2, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2000Q2:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2000Q3:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2000Q4:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2001Q1:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2001Q2:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2001Q3:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2001Q4:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2002Q1:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2002Q2:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2002Q3:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2002Q4:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2003Q1:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2003Q2:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2003Q3:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2003Q4:2049Q4
+[ Info: 1, || Fx || = 1.3322676295501878e-15
+[ Info: Simulating 2004Q1:2049Q4
+[ Info: 1, || Fx || = 5.721671108310993, || Δx || = 11.77306893354936
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2004Q2:2049Q4
+[ Info: 1, || Fx || = 2.0477920595953183, || Δx || = 8.8031182804498
+[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: Simulating 2004Q3:2049Q4
+[ Info: 1, || Fx || = 2.1874667568863733, || Δx || = 9.927689412318376
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2004Q4:2049Q4
+[ Info: 1, || Fx || = 1.6210179620288576, || Δx || = 3.2742381705980876
+[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: Simulating 2005Q1:2049Q4
+[ Info: 1, || Fx || = 1.519079379470909, || Δx || = 2.5269669767426484
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2005Q2:2049Q4
+[ Info: 1, || Fx || = 7.907108815999533, || Δx || = 32.7942042371277
+[ Info: 2, || Fx || = 7.105427357601002e-15
+[ Info: Simulating 2005Q3:2049Q4
+[ Info: 1, || Fx || = 4.983668711499643, || Δx || = 12.244988026844407
+[ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2005Q4:2049Q4
+[ Info: 1, || Fx || = 3.1620098257432376, || Δx || = 5.533764706644862
+[ Info: 2, || Fx || = 3.552713678800501e-15</code></pre><p>If we did everything correctly, the shocks we recovered must match exactly the shocks we used when we simulated the &quot;historical&quot; data.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a[shocks(m)] ≈ back_a[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u[shocks(m)] ≈ back_u[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><p>Moreover, we must have the unobserved variables match as well. In fact, all the data must match over the entire simulation range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a ≈ back_a</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u ≈ back_u</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h2 id="Appendix"><a class="docs-heading-anchor" href="#Appendix">Appendix</a><a id="Appendix-1"></a><a class="docs-heading-anchor-permalink" href="#Appendix" title="Permalink"></a></h2><h3 id="replication_data"><a class="docs-heading-anchor" href="#replication_data">Replication Data</a><a id="replication_data-1"></a><a class="docs-heading-anchor-permalink" href="#replication_data" title="Permalink"></a></h3><p>The replication data can be downloaded from <a href="http://doi.org/10.3886/E116269V1">http://doi.org/10.3886/E116269V1</a></p><h3 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h3><p><a href="https://www.aeaweb.org/articles?id=10.1257/aer.97.3.586">Smets, F., Wouters, R., 2007. Shocks and frictions in US business cycles: A bayesian DSGE approach. The American Economic Review 97(3), 586–606.</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../TimeSeriesEcon/main/">« TimeSeriesEcon</a><a class="docs-footer-nextpage" href="../../FRB-US/main/">FRB/US »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.13 on <span class="colophon-date" title="Saturday 26 February 2022 00:05">Saturday 26 February 2022</span>. Using Julia version 1.6.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

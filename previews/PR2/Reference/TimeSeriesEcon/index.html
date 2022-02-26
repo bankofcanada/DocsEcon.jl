@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>TimeSeriesEcon · StateSpaceEcon</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="StateSpaceEcon logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">StateSpaceEcon</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Welcome</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../../Tutorials/">Introduction</a></li><li><a class="tocitem" href="../../Tutorials/README/">README</a></li><li><a class="tocitem" href="../../Tutorials/TimeSeriesEcon/main/">TimeSeriesEcon</a></li><li><a class="tocitem" href="../../Tutorials/US_SW07/main/">Smets and Wouters 2007</a></li><li><a class="tocitem" href="../../Tutorials/FRB-US/main/">FRB/US</a></li></ul></li><li><span class="tocitem">Reference</span><ul><li class="is-active"><a class="tocitem" href>TimeSeriesEcon</a></li><li><a class="tocitem" href="../ModelBaseEcon/">ModelBaseEcon</a></li><li><a class="tocitem" href="../StateSpaceEcon/">StateSpaceEcon</a></li></ul></li><li><span class="tocitem">Design Papers</span><ul><li><a class="tocitem" href="../../DesignPapers/">Design Papers</a></li><li><a class="tocitem" href="../../DesignPapers/final_conditions/">Final Conditions</a></li><li><a class="tocitem" href="../../DesignPapers/log_variables/">Log-variables</a></li></ul></li><li><a class="tocitem" href="../../indexpage/">Index</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Reference</a></li><li class="is-active"><a href>TimeSeriesEcon</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>TimeSeriesEcon</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/bankofcanada/DocsEcon.jl/blob/master/src/Reference/TimeSeriesEcon.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="TimeSeriesEcon-Reference"><a class="docs-heading-anchor" href="#TimeSeriesEcon-Reference">TimeSeriesEcon Reference</a><a id="TimeSeriesEcon-Reference-1"></a><a class="docs-heading-anchor-permalink" href="#TimeSeriesEcon-Reference" title="Permalink"></a></h1><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Duration" href="#TimeSeriesEcon.Duration"><code>TimeSeriesEcon.Duration</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">MIT{F &lt;: Frequency}, Duration{F &lt;: Frequency}</code></pre><p>Two types representing a  moment in time (like 2020Q1 or 2020-01-01) and duration (the quantity of time between two moments).</p><p>Both of these have a Frequency as a type parameter and both  internally are represented by integer values.</p><p>If you imagine a time axis of the given <code>Frequency</code>, <code>MIT</code> values are ordinal (correspond to points) while <code>Duration</code> values are cardinal  (correspond to distances). </p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Frequency" href="#TimeSeriesEcon.Frequency"><code>TimeSeriesEcon.Frequency</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">abstract type Frequency end</code></pre><p>The abstract supertype for all frequencies. See also: <a href="#TimeSeriesEcon.Unit"><code>Unit</code></a> and <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.MIT" href="#TimeSeriesEcon.MIT"><code>TimeSeriesEcon.MIT</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">MIT{F &lt;: Frequency}, Duration{F &lt;: Frequency}</code></pre><p>Two types representing a  moment in time (like 2020Q1 or 2020-01-01) and duration (the quantity of time between two moments).</p><p>Both of these have a Frequency as a type parameter and both  internally are represented by integer values.</p><p>If you imagine a time axis of the given <code>Frequency</code>, <code>MIT</code> values are ordinal (correspond to points) while <code>Duration</code> values are cardinal  (correspond to distances). </p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.MIT-Union{Tuple{F}, Tuple{N}, Tuple{Integer, Integer}} where {N, F&lt;:YPFrequency{N}}" href="#TimeSeriesEcon.MIT-Union{Tuple{F}, Tuple{N}, Tuple{Integer, Integer}} where {N, F&lt;:YPFrequency{N}}"><code>TimeSeriesEcon.MIT</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">MIT{F}(year, period) where {F &lt;: YPFrequency}</code></pre><p>Construct an <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> instance from year and period. This is valid only for frequencies subtyped from <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Monthly" href="#TimeSeriesEcon.Monthly"><code>TimeSeriesEcon.Monthly</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Yearly, Quarterly, Monthly</code></pre><p>Frequencies corresponding to 1, 4, and 12 periods per year. See also: <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Quarterly" href="#TimeSeriesEcon.Quarterly"><code>TimeSeriesEcon.Quarterly</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Yearly, Quarterly, Monthly</code></pre><p>Frequencies corresponding to 1, 4, and 12 periods per year. See also: <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.TSeries" href="#TimeSeriesEcon.TSeries"><code>TimeSeriesEcon.TSeries</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">mutable struct TSeries{F, T, C} &lt;: AbstractVector{T}
+    firstdate::MIT{F}
+    values::C
+end</code></pre><p>Time series with frequency <code>F</code> with values of type <code>T</code> stored in a container of type <code>C</code>. By default the type is <code>Float64</code> and the container is <code>Vector{Float64}</code>.</p><p>Construction:     ts = TSeries(args...)</p><pre><code class="nohighlight hljs">The standard construction is `TSeries(firstdate::MIT, values::AbstractVector)`
+
+If the first argument is an MIT-range (instead or an MIT), then the length
+of the `values` container must match the length of the given range.
+
+In the case of a range argument, the `values` can be omitted, in which case
+the container is initializes with `undef`. Or you can also pass a constant
+and then the `values` will be filled with that constant. To accomplish this,
+you can also use `fill`, e.g., `TSeries(20Q1:20Q4, 5)` is the same as
+`fill(5, 20Q1:20Q4)`.
+
+If only a `firstdate::MIT` is given, the `values` container is initialized
+to an empty `Vector`.
+
+If only an `n::Integer` is given, it is the same as passing the range
+`0U .+ (1:n)`. An initialization argument is not allowed in this case.
+
+A `TSeries` can also be constructed with `copy`, `similar`, and `fill`.</code></pre><p>Indexing:</p><pre><code class="nohighlight hljs">Indexing with an `MIT` or a range of `MIT` works as you&#39;d expect.
+
+Indexing with `Integer`s works the same as with `Vector`.
+
+Indexing with `Bool`-array works as you&#39;d expect. For example,
+`s[s .&lt; 0.0] .*= -1` multiplies in place the negative entries of `s` by -1,
+so effectively it&#39;s the same as `s .= abs.(s)`.
+
+There are important differences between indexing with MIT and not
+using MIT (i.e., using Integer or Bool-array).
+
+* with MIT-range we return a TSeries with the given range, otherwise we
+  return a `Vector`
+
+* the range can be extended (the TSeries resized appropriately) by assigning
+  outside the current range. This works only with MIT (you get a BoundsError
+  if you try to assign outside the Integer range).
+
+* `begin` and `end` are MIT, so either use both or none of them. For example
+  `s[2:end]` doesn&#39;t work because 2 is an `Int` and `end` is an `MIT`. You
+  should use `s[begin+1:end]`.</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Unit" href="#TimeSeriesEcon.Unit"><code>TimeSeriesEcon.Unit</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct Unit &lt;: Frequency end</code></pre><p>Represents a non-dimensional frequency (not associated with the calendar). See also: <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Workspace" href="#TimeSeriesEcon.Workspace"><code>TimeSeriesEcon.Workspace</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">struct Workspace … end</code></pre><p>A collection of variables.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.YPFrequency" href="#TimeSeriesEcon.YPFrequency"><code>TimeSeriesEcon.YPFrequency</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">abstract type YPFrequency{N} &lt;: Frequency end;</code></pre><p>Represents a calendar frequency based on a number of periods in a year.  The type parameter <code>N</code> is the number of periods and must be a positive integer. See also: <a href="#TimeSeriesEcon.Yearly"><code>Yearly</code></a>, <a href="#TimeSeriesEcon.Quarterly"><code>Quarterly</code></a>, <a href="#TimeSeriesEcon.Monthly"><code>Monthly</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.Yearly" href="#TimeSeriesEcon.Yearly"><code>TimeSeriesEcon.Yearly</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Yearly, Quarterly, Monthly</code></pre><p>Frequencies corresponding to 1, 4, and 12 periods per year. See also: <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.apct-Union{Tuple{TSeries{var&quot;#s10&quot;, T, C} where {var&quot;#s10&quot;&lt;:YPFrequency{N}, T&lt;:Number, C&lt;:AbstractVector{T}}}, Tuple{N}, Tuple{TSeries{var&quot;#s9&quot;, T, C} where {var&quot;#s9&quot;&lt;:YPFrequency{N}, T&lt;:Number, C&lt;:AbstractVector{T}}, Bool}} where N" href="#TimeSeriesEcon.apct-Union{Tuple{TSeries{var&quot;#s10&quot;, T, C} where {var&quot;#s10&quot;&lt;:YPFrequency{N}, T&lt;:Number, C&lt;:AbstractVector{T}}}, Tuple{N}, Tuple{TSeries{var&quot;#s9&quot;, T, C} where {var&quot;#s9&quot;&lt;:YPFrequency{N}, T&lt;:Number, C&lt;:AbstractVector{T}}, Bool}} where N"><code>TimeSeriesEcon.apct</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">apct(x::TSeries, islog::Bool)</code></pre><p>Calculate annualised percent rate of change in <code>x</code>.</p><p><strong>Note:</strong> The implementation is similar to IRIS.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; x = TSeries(qq(2018, 1), Vector(1:8));
+
+julia&gt; apct(x)
+TSeries{Quarterly} of length 7
+2018Q2: 1500.0
+2018Q3: 406.25
+2018Q4: 216.04938271604937
+2019Q1: 144.140625
+2019Q2: 107.35999999999999
+2019Q3: 85.26234567901243
+2019Q4: 70.59558517284461</code></pre><p>See also: <a href="Reference/@ref"><code>pct</code></a></p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.compare" href="#TimeSeriesEcon.compare"><code>TimeSeriesEcon.compare</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">@compare x y [options] 
+compare(x, y [; options])</code></pre><p>Compare two <code>Workspace</code> recursively and print out the differences. <code>MVTSeries</code> and <code>Dict</code> with keys of type <code>Symbol</code> are treated like <code>Workspace</code>. <code>TSeries</code> and other <code>Vector</code> are compared using <code>isapprox</code>, so feel free to supply <code>rtol</code> or <code>atol</code>.</p><p>Optional argument <code>name</code> can be used for the top name. Default is <code>&quot;_&quot;</code>.</p><p>Parameter <code>showequal=true</code> causes the report to include objects that are the same. Default behaviour, with <code>showequal=false</code>, is to report only the differences. </p><p>Parameter <code>ignoremissing=true</code> causes objects that appear in one but not the other workspace to be ignored. That is, they are not printed and do not affect the return value <code>true</code> or <code>false</code>. Default is <code>ignoremissing=false</code> meaning they will be printed and return value will be <code>false</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.fconvert-Tuple{Type{var&quot;#s9&quot;} where var&quot;#s9&quot;&lt;:Frequency, TSeries}" href="#TimeSeriesEcon.fconvert-Tuple{Type{var&quot;#s9&quot;} where var&quot;#s9&quot;&lt;:Frequency, TSeries}"><code>TimeSeriesEcon.fconvert</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">fconvert(F, t)</code></pre><p>Convert the time series <code>t</code> to the desired frequency <code>F</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.fconvert-Union{Tuple{N2}, Tuple{N1}, Tuple{Type{var&quot;#s22&quot;} where var&quot;#s22&quot;&lt;:YPFrequency{N1}, TSeries{var&quot;#s23&quot;, T, C} where {var&quot;#s23&quot;&lt;:YPFrequency{N2}, T&lt;:Number, C&lt;:AbstractVector{T}}}} where {N1, N2}" href="#TimeSeriesEcon.fconvert-Union{Tuple{N2}, Tuple{N1}, Tuple{Type{var&quot;#s22&quot;} where var&quot;#s22&quot;&lt;:YPFrequency{N1}, TSeries{var&quot;#s23&quot;, T, C} where {var&quot;#s23&quot;&lt;:YPFrequency{N2}, T&lt;:Number, C&lt;:AbstractVector{T}}}} where {N1, N2}"><code>TimeSeriesEcon.fconvert</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">fconvert(F1, t::TSeries{F2}; method) where {F1 &lt;: YPFrequency, F2 &lt;: YPFrequency}</code></pre><p>Convert between frequencies of the <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a> variety.</p><p>TODO: describe <code>method</code> when converting to a higher frequency (interpolation) TODO: describe <code>method</code> when converting to a lower frequency (aggregation)</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.firstdate" href="#TimeSeriesEcon.firstdate"><code>TimeSeriesEcon.firstdate</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">firstdate(ts), lastdate(ts)</code></pre><p>Return the first and last date of the allocated data for the given <code>TSeries</code>. These are identical to <code>firstindex</code> and <code>lastindex</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.frequencyof" href="#TimeSeriesEcon.frequencyof"><code>TimeSeriesEcon.frequencyof</code></a> — <span class="docstring-category">Function</span></header><section><div><p>frequencyof(x), frequencyof(T)</p><p>Return the Frequency type of the given value <code>x</code> or type <code>T</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.lag" href="#TimeSeriesEcon.lag"><code>TimeSeriesEcon.lag</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">shift(x, n)
+shift!(x, n)
+lag(x, n=1)
+lag!(x, n=1)
+lead(x, n=1)
+lead!(x, n=1)</code></pre><p>Shift, lag or lead the TSeries <code>x</code> by <code>n</code> periods.      By convention <code>shift</code> is the same as <code>lead</code> while <code>lag(x,n)</code> is the same as <code>shift(x, -n)</code>. The versions ending in ! do it in place, while the others create a new TSeries instance.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; shift(TSeries(2020Q1, 1:4), 1)
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0
+
+
+julia&gt; shift(TSeries(2020Q1, 1:4), -1)
+TSeries{Quarterly} of length 4
+2020Q2: 1.0
+2020Q3: 2.0
+2020Q4: 3.0
+2021Q1: 4.0
+
+julia&gt; x = TSeries(2020Q1, 1:4);
+
+julia&gt; shift!(x, 1);
+
+julia&gt; x
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.lag!" href="#TimeSeriesEcon.lag!"><code>TimeSeriesEcon.lag!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">shift(x, n)
+shift!(x, n)
+lag(x, n=1)
+lag!(x, n=1)
+lead(x, n=1)
+lead!(x, n=1)</code></pre><p>Shift, lag or lead the TSeries <code>x</code> by <code>n</code> periods.      By convention <code>shift</code> is the same as <code>lead</code> while <code>lag(x,n)</code> is the same as <code>shift(x, -n)</code>. The versions ending in ! do it in place, while the others create a new TSeries instance.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; shift(TSeries(2020Q1, 1:4), 1)
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0
+
+
+julia&gt; shift(TSeries(2020Q1, 1:4), -1)
+TSeries{Quarterly} of length 4
+2020Q2: 1.0
+2020Q3: 2.0
+2020Q4: 3.0
+2021Q1: 4.0
+
+julia&gt; x = TSeries(2020Q1, 1:4);
+
+julia&gt; shift!(x, 1);
+
+julia&gt; x
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.lastdate" href="#TimeSeriesEcon.lastdate"><code>TimeSeriesEcon.lastdate</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">firstdate(ts), lastdate(ts)</code></pre><p>Return the first and last date of the allocated data for the given <code>TSeries</code>. These are identical to <code>firstindex</code> and <code>lastindex</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.lead" href="#TimeSeriesEcon.lead"><code>TimeSeriesEcon.lead</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">shift(x, n)
+shift!(x, n)
+lag(x, n=1)
+lag!(x, n=1)
+lead(x, n=1)
+lead!(x, n=1)</code></pre><p>Shift, lag or lead the TSeries <code>x</code> by <code>n</code> periods.      By convention <code>shift</code> is the same as <code>lead</code> while <code>lag(x,n)</code> is the same as <code>shift(x, -n)</code>. The versions ending in ! do it in place, while the others create a new TSeries instance.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; shift(TSeries(2020Q1, 1:4), 1)
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0
+
+
+julia&gt; shift(TSeries(2020Q1, 1:4), -1)
+TSeries{Quarterly} of length 4
+2020Q2: 1.0
+2020Q3: 2.0
+2020Q4: 3.0
+2021Q1: 4.0
+
+julia&gt; x = TSeries(2020Q1, 1:4);
+
+julia&gt; shift!(x, 1);
+
+julia&gt; x
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.lead!" href="#TimeSeriesEcon.lead!"><code>TimeSeriesEcon.lead!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">shift(x, n)
+shift!(x, n)
+lag(x, n=1)
+lag!(x, n=1)
+lead(x, n=1)
+lead!(x, n=1)</code></pre><p>Shift, lag or lead the TSeries <code>x</code> by <code>n</code> periods.      By convention <code>shift</code> is the same as <code>lead</code> while <code>lag(x,n)</code> is the same as <code>shift(x, -n)</code>. The versions ending in ! do it in place, while the others create a new TSeries instance.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; shift(TSeries(2020Q1, 1:4), 1)
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0
+
+
+julia&gt; shift(TSeries(2020Q1, 1:4), -1)
+TSeries{Quarterly} of length 4
+2020Q2: 1.0
+2020Q3: 2.0
+2020Q4: 3.0
+2021Q1: 4.0
+
+julia&gt; x = TSeries(2020Q1, 1:4);
+
+julia&gt; shift!(x, 1);
+
+julia&gt; x
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.mit2yp" href="#TimeSeriesEcon.mit2yp"><code>TimeSeriesEcon.mit2yp</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">mit2yp(x::MIT)</code></pre><p>Recover the year and period from a given <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> value. This is valid only if the frequency is subtyped from <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.mm" href="#TimeSeriesEcon.mm"><code>TimeSeriesEcon.mm</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">mm(year, period), qq(year, period), yy(year, period=1)</code></pre><p>IRIS type constructors for <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> values with frequencies that have year and period. </p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.moving" href="#TimeSeriesEcon.moving"><code>TimeSeriesEcon.moving</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">moving(x, n)</code></pre><p>Compute the moving average of <code>x</code> over a window of <code>n</code> periods. If <code>n &gt; 0</code> the window is backward-looking <code>(-n+1:0)</code> and if <code>n &lt; 0</code> the window is forward-looking <code>(0:-n-1)</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.overlay-Tuple{AbstractRange{var&quot;#s9&quot;} where var&quot;#s9&quot;&lt;:MIT, Vararg{TSeries, N} where N}" href="#TimeSeriesEcon.overlay-Tuple{AbstractRange{var&quot;#s9&quot;} where var&quot;#s9&quot;&lt;:MIT, Vararg{TSeries, N} where N}"><code>TimeSeriesEcon.overlay</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">overlay(rng, t1, t2, ...)</code></pre><p>If the first argument is a range (must be of the same frequency), that becomes the range of the resulting TSeries.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.overlay-Tuple{Vararg{TSeries, N} where N}" href="#TimeSeriesEcon.overlay-Tuple{Vararg{TSeries, N} where N}"><code>TimeSeriesEcon.overlay</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">overlay(t1, t2, ...)</code></pre><p>Construct a TSeries in which each observation is taken from the first non-missing observation in the list of arguments. A missing observation is one for which <a href="Reference/@ref"><code>istypenan</code></a> returns <code>true</code>.</p><p>All TSeries in the argument list must be of the same frequency. The data type of the resulting TSeries is computed by the standard promotion of numerical types in Julia. Its range is the union of the ranges of the arguments.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.period" href="#TimeSeriesEcon.period"><code>TimeSeriesEcon.period</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">year(x::MIT), period(x::MIT)</code></pre><p>Return the year and period of an <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> value <code>x</code>. This only makes sense if the frequency of <code>x</code> is subtyped from <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.qq" href="#TimeSeriesEcon.qq"><code>TimeSeriesEcon.qq</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">mm(year, period), qq(year, period), yy(year, period=1)</code></pre><p>IRIS type constructors for <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> values with frequencies that have year and period. </p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.rangeof-Tuple{TSeries}" href="#TimeSeriesEcon.rangeof-Tuple{TSeries}"><code>TimeSeriesEcon.rangeof</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">rangeof(s)</code></pre><p>Return the stored range of the given time series object.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.rangeof-Tuple{Union{MVTSeries, TSeries}}" href="#TimeSeriesEcon.rangeof-Tuple{Union{MVTSeries, TSeries}}"><code>TimeSeriesEcon.rangeof</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">rangeof(s; drop::Integer)</code></pre><p>Return the stored range of <code>s</code> adjusted by dropping <code>drop</code> periods. If <code>drop</code> is positive, we drop from the beginning and if <code>drop</code> is negative we drop from the end. This adds convenience when using <a href="#TimeSeriesEcon.@rec-Tuple{Any, Any}"><code>@rec</code></a></p><p>Example</p><pre><code class="nohighlight hljs">julia&gt; q = TSeries(20Q1:21Q4); rangeof(q; drop=1)
+20Q2:21Q4
+
+julia&gt; rangeof(q; drop=-4)
+20Q1:20Q4
+
+julia&gt; q[begin:begin+1] .= 1; @rec rangeof(q; drop=2) q[t] = q[t-1] + q[t-2]; q
+8-element TSeries{Quarterly} with range 20Q1:21Q4:
+    20Q1 : 1.0
+    20Q2 : 1.0
+    20Q3 : 2.0
+    20Q4 : 3.0
+    21Q1 : 5.0
+    21Q2 : 8.0
+    21Q3 : 13.0
+    21Q4 : 21.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.shift" href="#TimeSeriesEcon.shift"><code>TimeSeriesEcon.shift</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">shift(x, n)
+shift!(x, n)
+lag(x, n=1)
+lag!(x, n=1)
+lead(x, n=1)
+lead!(x, n=1)</code></pre><p>Shift, lag or lead the TSeries <code>x</code> by <code>n</code> periods.      By convention <code>shift</code> is the same as <code>lead</code> while <code>lag(x,n)</code> is the same as <code>shift(x, -n)</code>. The versions ending in ! do it in place, while the others create a new TSeries instance.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; shift(TSeries(2020Q1, 1:4), 1)
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0
+
+
+julia&gt; shift(TSeries(2020Q1, 1:4), -1)
+TSeries{Quarterly} of length 4
+2020Q2: 1.0
+2020Q3: 2.0
+2020Q4: 3.0
+2021Q1: 4.0
+
+julia&gt; x = TSeries(2020Q1, 1:4);
+
+julia&gt; shift!(x, 1);
+
+julia&gt; x
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.shift!" href="#TimeSeriesEcon.shift!"><code>TimeSeriesEcon.shift!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">shift(x, n)
+shift!(x, n)
+lag(x, n=1)
+lag!(x, n=1)
+lead(x, n=1)
+lead!(x, n=1)</code></pre><p>Shift, lag or lead the TSeries <code>x</code> by <code>n</code> periods.      By convention <code>shift</code> is the same as <code>lead</code> while <code>lag(x,n)</code> is the same as <code>shift(x, -n)</code>. The versions ending in ! do it in place, while the others create a new TSeries instance.</p><p>Examples</p><pre><code class="language-julia-repl hljs">julia&gt; shift(TSeries(2020Q1, 1:4), 1)
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0
+
+
+julia&gt; shift(TSeries(2020Q1, 1:4), -1)
+TSeries{Quarterly} of length 4
+2020Q2: 1.0
+2020Q3: 2.0
+2020Q4: 3.0
+2021Q1: 4.0
+
+julia&gt; x = TSeries(2020Q1, 1:4);
+
+julia&gt; shift!(x, 1);
+
+julia&gt; x
+TSeries{Quarterly} of length 4
+2019Q4: 1.0
+2020Q1: 2.0
+2020Q2: 3.0
+2020Q3: 4.0</code></pre></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.strip!-Tuple{Workspace}" href="#TimeSeriesEcon.strip!-Tuple{Workspace}"><code>TimeSeriesEcon.strip!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">strip!(w::Workspace; recursive=true)</code></pre><p>Apply <a href="#TimeSeriesEcon.strip!-Tuple{Workspace}"><code>strip!</code></a> to all TSeries members of the given workspace. This includes nested workspaces, unless <code>recursive=false</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.typenan" href="#TimeSeriesEcon.typenan"><code>TimeSeriesEcon.typenan</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">typenan(x), typenan(T)</code></pre><p>Return a value that indicates Not-A-Number of the same type as the given <code>x</code> or of the given type <code>T</code>.</p><p>For floating point types, this is the IEEE-defined NaN. For integer types, we use typemax(). This is not ideal, but it&#39;ll do for now.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.undiff" href="#TimeSeriesEcon.undiff"><code>TimeSeriesEcon.undiff</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">undiff(dvar, [date =&gt; value])
+undiff!(var, dvar; fromdate=firstdate(dvar)-1)</code></pre><p>Inverse of <code>diff</code>, i.e. <code>var</code> remains unchanged under <code>undiff!(var, diff(var))</code> or <code>undiff(diff(var), firstdate(var)=&gt;first(var))</code>. This is the same as <code>cumsum</code>, but specific to time series.</p><p>In the case of <code>undiff</code> the second argument is an &quot;anchor&quot; <code>Pair</code> specifying a known value at some time period. Typically this will be the period just before the first date of <code>dvar</code>, but doesn&#39;t have to be. If the date falls outside the <code>rangeof(dvar)</code> we extend dvar with zeros as necessary. If missing, this argument defaults to <code>firstdate(dvar)-1 =&gt; 0</code>.</p><p>In the case of <code>undiff!</code>, the <code>var</code> argument provides the &quot;anchor&quot; value and the storage location for the result. The <code>fromdate</code> parameter specifies the date of the &quot;anchor&quot; and the anchor value is taken from <code>var</code>. See important note below.</p><p>The in-place version (<code>undiff!</code>) works only with <code>TSeries</code>. The other version (<code>undiff</code>) works with <code>MVTSeries</code> as well as <code>TSeries</code>. In the case of <code>MVTSeries</code> the anchor <code>value</code> must be a <code>Vector</code>, or a <code>Martix</code> with 1 row, of the same length as the number of columns of <code>dvar</code>.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>In the case of <code>undiff!</code> the meaning of parameter <code>fromdate</code> is different from the meaning of <code>date</code> in the second argument of <code>undiff</code>. This only matters if <code>fromdate</code> falls somewhere in the middle of the range of <code>dvar</code>.</p><p>In the case of <code>undiff!</code>, all values of <code>dvar</code> at, and prior to, <code>fromdate</code> are ignored (considered zero). Effectively, values of <code>var</code> up to, and including, <code>fromdate</code> remain unchanged. </p><p>By contrast, in <code>undiff</code> with <code>date =&gt; value</code> somewhere in the middle of the range of <code>dvar</code>, the operation is applied over the full range of <code>dvar</code>, both before and after <code>date</code>, and then the result is adjusted by adding or subtracting a constant such that in the end we have <code>result[date]=value</code>.</p></div></div></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.undiff!" href="#TimeSeriesEcon.undiff!"><code>TimeSeriesEcon.undiff!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">undiff(dvar, [date =&gt; value])
+undiff!(var, dvar; fromdate=firstdate(dvar)-1)</code></pre><p>Inverse of <code>diff</code>, i.e. <code>var</code> remains unchanged under <code>undiff!(var, diff(var))</code> or <code>undiff(diff(var), firstdate(var)=&gt;first(var))</code>. This is the same as <code>cumsum</code>, but specific to time series.</p><p>In the case of <code>undiff</code> the second argument is an &quot;anchor&quot; <code>Pair</code> specifying a known value at some time period. Typically this will be the period just before the first date of <code>dvar</code>, but doesn&#39;t have to be. If the date falls outside the <code>rangeof(dvar)</code> we extend dvar with zeros as necessary. If missing, this argument defaults to <code>firstdate(dvar)-1 =&gt; 0</code>.</p><p>In the case of <code>undiff!</code>, the <code>var</code> argument provides the &quot;anchor&quot; value and the storage location for the result. The <code>fromdate</code> parameter specifies the date of the &quot;anchor&quot; and the anchor value is taken from <code>var</code>. See important note below.</p><p>The in-place version (<code>undiff!</code>) works only with <code>TSeries</code>. The other version (<code>undiff</code>) works with <code>MVTSeries</code> as well as <code>TSeries</code>. In the case of <code>MVTSeries</code> the anchor <code>value</code> must be a <code>Vector</code>, or a <code>Martix</code> with 1 row, of the same length as the number of columns of <code>dvar</code>.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>In the case of <code>undiff!</code> the meaning of parameter <code>fromdate</code> is different from the meaning of <code>date</code> in the second argument of <code>undiff</code>. This only matters if <code>fromdate</code> falls somewhere in the middle of the range of <code>dvar</code>.</p><p>In the case of <code>undiff!</code>, all values of <code>dvar</code> at, and prior to, <code>fromdate</code> are ignored (considered zero). Effectively, values of <code>var</code> up to, and including, <code>fromdate</code> remain unchanged. </p><p>By contrast, in <code>undiff</code> with <code>date =&gt; value</code> somewhere in the middle of the range of <code>dvar</code>, the operation is applied over the full range of <code>dvar</code>, both before and after <code>date</code>, and then the result is adjusted by adding or subtracting a constant such that in the end we have <code>result[date]=value</code>.</p></div></div></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.year" href="#TimeSeriesEcon.year"><code>TimeSeriesEcon.year</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">year(x::MIT), period(x::MIT)</code></pre><p>Return the year and period of an <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> value <code>x</code>. This only makes sense if the frequency of <code>x</code> is subtyped from <a href="#TimeSeriesEcon.YPFrequency"><code>YPFrequency</code></a>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.ytypct-Tuple{Any}" href="#TimeSeriesEcon.ytypct-Tuple{Any}"><code>TimeSeriesEcon.ytypct</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">ytypct(x)</code></pre><p>Year-to-year percent change in x. </p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.yy" href="#TimeSeriesEcon.yy"><code>TimeSeriesEcon.yy</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">mm(year, period), qq(year, period), yy(year, period=1)</code></pre><p>IRIS type constructors for <a href="#TimeSeriesEcon.MIT"><code>MIT</code></a> values with frequencies that have year and period. </p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.@compare" href="#TimeSeriesEcon.@compare"><code>TimeSeriesEcon.@compare</code></a> — <span class="docstring-category">Macro</span></header><section><div><pre><code class="language-julia hljs">@compare x y [options] 
+compare(x, y [; options])</code></pre><p>Compare two <code>Workspace</code> recursively and print out the differences. <code>MVTSeries</code> and <code>Dict</code> with keys of type <code>Symbol</code> are treated like <code>Workspace</code>. <code>TSeries</code> and other <code>Vector</code> are compared using <code>isapprox</code>, so feel free to supply <code>rtol</code> or <code>atol</code>.</p><p>Optional argument <code>name</code> can be used for the top name. Default is <code>&quot;_&quot;</code>.</p><p>Parameter <code>showequal=true</code> causes the report to include objects that are the same. Default behaviour, with <code>showequal=false</code>, is to report only the differences. </p><p>Parameter <code>ignoremissing=true</code> causes objects that appear in one but not the other workspace to be ignored. That is, they are not printed and do not affect the return value <code>true</code> or <code>false</code>. Default is <code>ignoremissing=false</code> meaning they will be printed and return value will be <code>false</code>.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="TimeSeriesEcon.@rec-Tuple{Any, Any}" href="#TimeSeriesEcon.@rec-Tuple{Any, Any}"><code>TimeSeriesEcon.@rec</code></a> — <span class="docstring-category">Macro</span></header><section><div><pre><code class="language-julia hljs">@rec [index=]range expression</code></pre><p>Computes recursive operations on time series. The first argument is the range and the second argument is an expression to be evaluated over that range.</p><p>The expression is meant to be an assignment, but it doesn&#39;t have to be. </p><p>The the range can specify an optional indexing variable (as in a for loop). If not given, the variable is assumed to be <code>t</code>.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; s = TSeries(1U)
+Empty TSeries{Unit} starting 5U
+
+julia&gt; s[1U] = s[2U] = 1; s
+2-element TSeries{Unit} with range 1U:2U:
+      1U : 1.0
+      2U : 1.0
+
+julia&gt; @rec t=3U:10U s[t] = s[t-1] + s[t-2]
+
+julia&gt; s
+10-element TSeries{Unit} with range 1U:10U:
+      1U : 1.0
+      2U : 1.0
+      3U : 2.0
+      4U : 3.0
+      5U : 5.0
+      6U : 8.0
+      7U : 13.0
+      8U : 21.0
+      9U : 34.0
+     10U : 55.0</code></pre></div></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../Tutorials/FRB-US/main/">« FRB/US</a><a class="docs-footer-nextpage" href="../ModelBaseEcon/">ModelBaseEcon »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.13 on <span class="colophon-date" title="Saturday 26 February 2022 00:05">Saturday 26 February 2022</span>. Using Julia version 1.6.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
