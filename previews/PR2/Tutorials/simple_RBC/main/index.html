@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Simple RBC Model · StateSpaceEcon</title><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.png" alt="StateSpaceEcon logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">StateSpaceEcon</a></span></div><form class="docs-search" action="../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../">Welcome</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../../">Introduction</a></li><li><a class="tocitem" href="../../README/">README</a></li><li><a class="tocitem" href="../../TimeSeriesEcon/main/">TimeSeriesEcon</a></li><li class="is-active"><a class="tocitem" href>Simple RBC Model</a><ul class="internal"><li><a class="tocitem" href="#Part-1:-The-model"><span>Part 1: The model</span></a></li><li><a class="tocitem" href="#Part-2:-Implementation-of-the-model-in-StateSpaceEcon"><span>Part 2: Implementation of the model in <code>StateSpaceEcon</code></span></a></li><li><a class="tocitem" href="#Part-3:-The-steady-state-solution"><span>Part 3: The steady state solution</span></a></li><li><a class="tocitem" href="#Part-4:-Impulse-response"><span>Part 4: Impulse response</span></a></li><li><a class="tocitem" href="#Appendix"><span>Appendix</span></a></li></ul></li><li><a class="tocitem" href="../../US_SW07/main/">Smets and Wouters 2007</a></li><li><a class="tocitem" href="../../FRB-US/main/">FRB/US</a></li></ul></li><li><span class="tocitem">Reference</span><ul><li><a class="tocitem" href="../../../Reference/TimeSeriesEcon/">TimeSeriesEcon</a></li><li><a class="tocitem" href="../../../Reference/ModelBaseEcon/">ModelBaseEcon</a></li><li><a class="tocitem" href="../../../Reference/StateSpaceEcon/">StateSpaceEcon</a></li></ul></li><li><span class="tocitem">Design Papers</span><ul><li><a class="tocitem" href="../../../DesignPapers/">Design Papers</a></li><li><a class="tocitem" href="../../../DesignPapers/final_conditions/">Final Conditions</a></li><li><a class="tocitem" href="../../../DesignPapers/log_variables/">Log-variables</a></li></ul></li><li><a class="tocitem" href="../../../indexpage/">Index</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Simple RBC Model</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Simple RBC Model</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/bankofcanada/TutorialsEcon.jl/blob/master/simple_RBC/main.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Simple-RBC-Model"><a class="docs-heading-anchor" href="#Simple-RBC-Model">Simple RBC Model</a><a id="Simple-RBC-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Simple-RBC-Model" title="Permalink"></a></h1><p>You can follow the tutorial by reading this page and copying and pasting code into your Julia REPL session. In this case, you will need the model file, <a href="../simple_RBC.jl"><code>simple_RBC.jl</code></a>.</p><p>All the code contained here is also available in this file: <a href="../main.jl"><code>main.jl</code></a>.</p><ul><li><a href="#Simple-RBC-Model">Simple RBC Model</a></li><li class="no-marker"><ul><li><a href="#Part-1:-The-model">Part 1: The model</a></li><li class="no-marker"><ul><li><a href="#The-simple-RBC-model">The simple RBC model</a></li><li><a href="#The-household-problem">The household problem</a></li><li><a href="#The-firm-problem">The firm problem</a></li><li><a href="#The-goods-market-equilibrium">The goods market equilibrium</a></li><li><a href="#The-dynamic-equilibrium">The dynamic equilibrium</a></li></ul></li><li><a href="#Part-2:-Implementation-of-the-model-in-StateSpaceEcon">Part 2: Implementation of the model in <code>StateSpaceEcon</code></a></li><li class="no-marker"><ul><li><a href="#Writing-the-model-file">Writing the model file</a></li><li><a href="#Loading-the-model">Loading the model</a></li><li><a href="#Examining-the-model">Examining the model</a></li><li><a href="#Setting-the-model-parameters">Setting the model parameters</a></li><li><a href="#Model-flags-and-options">Model flags and options</a></li></ul></li><li><a href="#Part-3:-The-steady-state-solution">Part 3: The steady state solution</a></li><li class="no-marker"><ul><li><a href="#Solving-for-the-steady-state">Solving for the steady state</a></li><li><a href="#Examining-the-steady-state">Examining the steady state</a></li></ul></li><li><a href="#Part-4:-Impulse-response">Part 4: Impulse response</a></li><li class="no-marker"><ul><li><a href="#Simulation-plan">Simulation plan</a></li><li><a href="#Exogenous-data">Exogenous data</a></li></ul></li><li><a href="#Appendix">Appendix</a></li><li class="no-marker"><ul><li><a href="#References">References</a></li></ul></li></ul></li></ul><h2 id="Part-1:-The-model"><a class="docs-heading-anchor" href="#Part-1:-The-model">Part 1: The model</a><a id="Part-1:-The-model-1"></a><a class="docs-heading-anchor-permalink" href="#Part-1:-The-model" title="Permalink"></a></h2><h3 id="The-simple-RBC-model"><a class="docs-heading-anchor" href="#The-simple-RBC-model">The simple RBC model</a><a id="The-simple-RBC-model-1"></a><a class="docs-heading-anchor-permalink" href="#The-simple-RBC-model" title="Permalink"></a></h3><p>In this tutorial, we will use the simple RBC model presented by <a href="https://archives.dynare.org/DynareShanghai2013/order1.pdf">Villemot (2013)</a>.</p><p>A representative agent maximizes the expected discounted sum of his utility by choosing consumption <span>$C_t$</span> and labour <span>$L_t$</span> for <span>$t=1,...,\infty$</span>.</p><p class="math-container">\[\displaystyle\sum_{n=1}^\infty\beta^{t-1}E_t\left[\log(C_t)-\frac{L_t^{1+\gamma}}{1+\gamma}\right]\]</p><p>The household provides labour and rents capital to firms.</p><ul><li><span>$\beta=\frac{1}{1+\rho}$</span> is the discount rate and <span>$\rho \in (0,\infty)$</span> is the rate of time preference;</li><li><span>$\gamma \in (0,\infty)$</span> is a labour supply parameter.</li></ul><p>The household faces the following sequence of budget constraints:</p><p class="math-container">\[\displaystyle K_t=K_{t-1}(1-\delta)+w_tL_t+r_tK_{t-1}-C_t\]</p><p>Where:</p><ul><li><span>$K_t$</span> is the capital at the end of the period;</li><li><span>$\delta \in (0,1)$</span> is the rate of depreciation of capital;</li><li><span>$w_t$</span> is the real wage;</li><li><span>$r_t$</span> is the real rental rate.</li></ul><p>The production function is written as:</p><p class="math-container">\[\displaystyle Y_t=A_tK_{t-1}^\alpha((1+g)^tL_t)^{1-\alpha}\]</p><p>Where:</p><ul><li><span>$g \in (0,\infty)$</span> is the growth rate;</li><li><span>$\alpha$</span> is the output elasticity of labour.</li></ul><p><span>$A_t$</span> is a technological shock that follows an AR(1) process.</p><p class="math-container">\[\displaystyle \log(A_t)=\lambda\log(A_{t-1})+e_t\]</p><p>Where:</p><ul><li><span>$e_t$</span> is an i.i.d. zero-mean normally distributed error term with a standard deviation of <span>$\gamma$</span>;</li><li><span>$\lambda \in (0,1)$</span> is a parameter governing the persistence of the shock.</li></ul><h3 id="The-household-problem"><a class="docs-heading-anchor" href="#The-household-problem">The household problem</a><a id="The-household-problem-1"></a><a class="docs-heading-anchor-permalink" href="#The-household-problem" title="Permalink"></a></h3><p>The constrained maximization problem can be written as a Lagrangian:</p><p class="math-container">\[\displaystyle \mathcal{L}(C_t,L_t,K_t) = \sum_{t=1}^\infty\beta^{t-1}E_t\left[\log(C_t)-\frac{L_t^{1+\gamma}}{1+\gamma}-\mu_t(K_t-K_{t-1}(1-\delta)-w_tL_t-r_tK_{t-1}+C_t)\right]\]</p><p>The first order conditions are:</p><p class="math-container">\[\begin{aligned}
+    \frac{\partial\mathcal{L}}{\partial C_t} &amp;= \left(\frac{1}{1+\rho}\right)^{t-1} \left(\frac{1}{C_t} - \mu_t \right) = 0 \\
+    \frac{\partial\mathcal{L}}{\partial L_t} &amp;= \left(\frac{1}{1+\rho}\right)^{t-1} \left(L_t^\gamma - \mu_t w_t \right) = 0 \\
+    \frac{\partial\mathcal{L}}{\partial K_t} &amp;= -\left(\frac{1}{1+\rho} \right)^{t-1} \mu_t + \left(\frac{1}{1+\rho} \right)^t E_t
+        \left(\mu_{t+1}(1-\delta+r_t) \right) = 0
+\end{aligned}\]</p><p>Once we eliminate the Lagrange multiplier <span>$\mu_t$</span>, we get:</p><p class="math-container">\[\begin{aligned}
+    L_t^\gamma &amp;= \frac{w_t}{C_t} \\
+    \frac{1}{C_t} &amp;= \frac{1}{1+\rho} E_t \left(\frac{1}{C_{t+1}}(r_{t+1}+1-\delta) \right)
+\end{aligned}\]</p><h3 id="The-firm-problem"><a class="docs-heading-anchor" href="#The-firm-problem">The firm problem</a><a id="The-firm-problem-1"></a><a class="docs-heading-anchor-permalink" href="#The-firm-problem" title="Permalink"></a></h3><p>The firm chooses labour and capital in order to maximize profits:</p><p class="math-container">\[\displaystyle \max_{L_t,K_{t-1}} A_t K_{t-1}^\alpha ((1+g)^t L_t)^{1-\alpha} - r_t K_{t-1} - w_t L_t\]</p><p>The first order conditions are:</p><p class="math-container">\[\begin{aligned}
+    r_t &amp;= \alpha A_t K_{t-1}^{\alpha-1}((1+g)^t L_t)^{1-\alpha} \\
+    w_t &amp;= (1-\alpha)A_t K_{t-1}^\alpha ((1+g)^t)^{1-\alpha} L_t^{-\alpha}
+\end{aligned}\]</p><h3 id="The-goods-market-equilibrium"><a class="docs-heading-anchor" href="#The-goods-market-equilibrium">The goods market equilibrium</a><a id="The-goods-market-equilibrium-1"></a><a class="docs-heading-anchor-permalink" href="#The-goods-market-equilibrium" title="Permalink"></a></h3><p>Aggregate demand must equal aggregate supply to clear the goods market.</p><p class="math-container">\[\displaystyle K_t + C_t = K_{t-1}(1-\delta)+A_t K_{t-1}^\alpha ((1+g)^t L_t)^{1-\alpha}\]</p><h3 id="The-dynamic-equilibrium"><a class="docs-heading-anchor" href="#The-dynamic-equilibrium">The dynamic equilibrium</a><a id="The-dynamic-equilibrium-1"></a><a class="docs-heading-anchor-permalink" href="#The-dynamic-equilibrium" title="Permalink"></a></h3><p>The dynamic equations are obtained by combining the first order conditions of the household and firm problems  with the goods market equilibrium.</p><p>Based on the goods market equilibrium, consumption and capital must be growing at the same rate: <span>$g_c=g_k=g$</span>.</p><p>Thus, we can define stationary variables as:</p><p class="math-container">\[\begin{aligned}
+    \hat{C}_t &amp;= \frac{C_t}{(1+g)^t} \\
+    \hat{K}_t &amp;= \frac{K_t}{(1+g)^t} \\
+    \hat{w}_t &amp;= \frac{w_t}{(1+g)^t}
+\end{aligned}\]</p><p>Once stationarized (see <a href="https://archives.dynare.org/DynareShanghai2013/order1.pdf">Villemot (2013)</a>), the dynamic equations can be written as:</p><p class="math-container">\[\begin{aligned}
+    \frac{1}{\hat{C}_t} &amp;= \frac{1}{1+\rho} E_t \left(\frac{1}{\hat{C}_{t+1}(1+g)}(r_{t+1}+1-\delta) \right) \\
+    L_t^\gamma &amp;= \frac{\hat{w}_t}{\hat{C}_t} \\
+    r_t &amp;= \alpha A_t \left( \frac{\hat{K}_{t-1}}{1+g} \right)^{\alpha-1} L_t^{1-\alpha} \\
+    \hat{w}_t &amp;= (1-\alpha) A_t \left( \frac{\hat{K}_{t-1}}{1+g} \right)^\alpha L_t^{-\alpha} \\
+    \hat{K}_t + \hat{C}_t &amp;= \frac{\hat{K}_{t-1}}{1+g} (1-\delta) + A_t \left( \frac{\hat{K}_{t-1}}{1+g} \right)^\alpha L_t^{1-\alpha}
+\end{aligned}\]</p><p>The next part will discuss how to implement the simple RBC model in <code>StateSpaceEcon</code>.</p><h2 id="Part-2:-Implementation-of-the-model-in-StateSpaceEcon"><a class="docs-heading-anchor" href="#Part-2:-Implementation-of-the-model-in-StateSpaceEcon">Part 2: Implementation of the model in <code>StateSpaceEcon</code></a><a id="Part-2:-Implementation-of-the-model-in-StateSpaceEcon-1"></a><a class="docs-heading-anchor-permalink" href="#Part-2:-Implementation-of-the-model-in-StateSpaceEcon" title="Permalink"></a></h2><h3 id="Writing-the-model-file"><a class="docs-heading-anchor" href="#Writing-the-model-file">Writing the model file</a><a id="Writing-the-model-file-1"></a><a class="docs-heading-anchor-permalink" href="#Writing-the-model-file" title="Permalink"></a></h3><p>In <code>StateSpaceEcon</code>, a model is written in its own dedicated module, which is contained in its own file, <a href="../simple_RBC.jl"><code>simple_RBC.jl</code></a>.</p><p>A docstring can be added to the model to provide more details:</p><pre><code class="language-julia hljs">    &quot;&quot;&quot;
+    Simple RBC Model
+    Model available at: https://archives.dynare.org/DynareShanghai2013/order1.pdf
+    Presentation: Villemot, S., 2013. First order approximation of stochastic models. Shanghai Dynare Workshop. https://archives.dynare.org/DynareShanghai2013/order1.pdf
+    &quot;&quot;&quot;</code></pre><p>Then, the module is created with the same name as the model and the associated file name. The model will be constructed with macros taken from the package <code>ModelBaseEcon</code>. So, we need to load the module with <code>using ModelBaseEcon</code>. The model will itself be a global variable called <code>model</code> within the module <code>simple_RBC</code>. The command <code>const</code> declares global variables in Julia and the function <code>Model()</code> constructs a new model object.</p><pre><code class="language-julia hljs">module simple_RBC
+    using ModelBaseEcon
+    const model = Model()
+    # Write the rest of the model below.
+end # module</code></pre><p>We can specify that the model is stationary by setting the flag <code>ssZeroSlope</code> to <code>true</code>. We will discuss flags and options further below.</p><pre><code class="language-julia hljs">model.flags.ssZeroSlope = true</code></pre><p>We can also preset model options with the function <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.OptionsMod.setoption!"><code>setoption!</code></a>. Below, we set <code>tol</code> and <code>maxiter</code>, which set the desired accuracy and maximum number of iterations for the iterative solvers.</p><pre><code class="language-julia hljs">setoption!(model) do o
+    o.tol = 1e-12
+    o.maxiter = 100
+end # options</code></pre><p>The rest of the model is specified with macros which do not have to be in any particular order. <br/><br/>The macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@parameters-Tuple{Any, Vararg{Expr, N} where N}"><code>@parameters</code></a> assigns parameter values to the model. A link between parameters can be created with the macro <code>@link</code>. Below, the parameter <span>$\beta$</span> depends on the parameter <span>$\rho$</span>.</p><pre><code class="language-julia hljs">@parameters model begin
+    α = 0.33
+    δ = 0.1
+    ρ = 0.03
+    λ = 0.97
+    γ = 0
+    g = 0.015
+    β = @link 1/(1+ρ)
+end # parameters</code></pre><p>Similarly, model variables are specified with the macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@variables-Tuple{Any, Expr}"><code>@variables</code></a>. Variables can be declared one line at a time (as with the shocks previously), or over one line by separating them with semicolons <code>;</code>. </p><pre><code class="language-julia hljs">@variables model begin
+    C; K; L; w; r; A;
+end # variables</code></pre><p>The macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@shocks-Tuple{Any, Expr}"><code>@shocks</code></a> declares model shocks.</p><pre><code class="language-julia hljs">@shocks model begin
+    ea
+end # shocks</code></pre><p>In this case, a <code>begin</code> block is not necessary and the technology shock can be declared in one line.</p><pre><code class="language-julia hljs">@shocks model ea</code></pre><p>The macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@autoexogenize-Tuple{Any, Vararg{Expr, N} where N}"><code>@autoexogenize</code></a> links a variable with a shock. This can be useful to back out historical shocks with the command <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.autoexogenize!-Tuple{Plan, Model, Any}"><code>autoexogenize!</code></a> (see below for an example).</p><pre><code class="language-julia hljs">@autoexogenize model begin
+    A = ea
+end # autoexogenize</code></pre><p>The dynamic equations of the model are embedded within the macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@equations-Tuple{Any, Expr}"><code>@equations</code></a>. The variables have to be indexed with <code>t</code>. For instance, <code>K[t-1]</code> refers to the capital stock on <code>t-1</code> and <code>C[t+1]</code> refers to the expectation on <code>t</code> for consumption on <code>t+1</code>, or <span>$E_t(C_{t+1})$</span>.</p><pre><code class="language-julia hljs">@equations model begin
+    1/C[t] = β*(1/(C[t+1]*(1+g)))*(r[t+1]+1-δ)
+    L[t]^γ = w[t]/C[t]
+    r[t] = α*A[t]*(K[t-1]/(1+g))^(α-1)*L[t]^(1-α)
+    w[t] = (1-α)*A[t]*(K[t-1]/(1+g))^α*L[t]^(-α)
+    K[t]+C[t] = A[t]*(K[t-1]/(1+g))^α*L[t]^(1-α)+(1-δ)*(K[t-1]/(1+g))
+    log(A[t]) = λ*log(A[t-1])+ea[t]
+end # equations</code></pre><p>Once the parameters, the variables, the shocks and the equations have been specified, the macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@initialize-Tuple{Symbol}"><code>@initialize</code></a> constructs the model within the module.</p><pre><code class="language-julia hljs">@initialize(model)</code></pre><h3 id="Loading-the-model"><a class="docs-heading-anchor" href="#Loading-the-model">Loading the model</a><a id="Loading-the-model-1"></a><a class="docs-heading-anchor-permalink" href="#Loading-the-model" title="Permalink"></a></h3><p>We load the module that contains the model with <code>using simple_RBC</code>; the model itself is a global variable called <code>model</code> within that module, which we assign to <code>m</code> in the Main module.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; using simple_RBC</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m = simple_RBC.model</code><code class="nohighlight hljs ansi" style="display:block;">7 variable(s): C, K, L, w, r, A, logKL
+1 shock(s): ea
+7 parameter(s): g = 0.015, α = 0.33, γ = 0
+    δ = 0.1, λ = 0.97, ρ = 0.03, β = @link 1 / (1 + ρ)
+7 equations(s):
+   E1:   1 / C[t] = β * (1 / (C[t + 1] * (1 + g))) * ((r[t + 1] + 1) - δ)
+   E2:   L[t] ^ γ = w[t] / C[t]
+   E3:   r[t] / A[t] = α * exp(logKL[t]) ^ (α - 1)
+   E4:   w[t] / A[t] = (1 - α) * exp(logKL[t]) ^ α
+   E5:   (K[t] + C[t]) / A[t] = exp(logKL[t]) ^ α * L[t] + ((1 - δ) * (K[t - 1] / (1 + g))) / A[t]
+   E6:   log(A[t]) = λ * log(A[t - 1]) + ea[t]
+   E7:   exp(logKL[t]) = K[t - 1] / (L[t] * (1 + g))
+Maximum lag: 1
+Maximum lead: 1</code></pre><h3 id="Examining-the-model"><a class="docs-heading-anchor" href="#Examining-the-model">Examining the model</a><a id="Examining-the-model-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-model" title="Permalink"></a></h3><p>We can see the entire model with <code>fullprint</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; fullprint(m)</code><code class="nohighlight hljs ansi" style="display:block;">7 variable(s): C, K, L, w, r, A, logKL
+1 shock(s): ea
+7 parameter(s): g = 0.015, α = 0.33, γ = 0
+    δ = 0.1, λ = 0.97, ρ = 0.03, β = @link 1 / (1 + ρ)
+7 equations(s): 
+   E1:   1 / C[t] = β * (1 / (C[t + 1] * (1 + g))) * ((r[t + 1] + 1) - δ)
+   E2:   L[t] ^ γ = w[t] / C[t]
+   E3:   r[t] / A[t] = α * exp(logKL[t]) ^ (α - 1)
+   E4:   w[t] / A[t] = (1 - α) * exp(logKL[t]) ^ α
+   E5:   (K[t] + C[t]) / A[t] = exp(logKL[t]) ^ α * L[t] + ((1 - δ) * (K[t - 1] / (1 + g))) / A[t]
+   E6:   log(A[t]) = λ * log(A[t - 1]) + ea[t]
+   E7:   exp(logKL[t]) = K[t - 1] / (L[t] * (1 + g))</code></pre><p>We can also examine individual components using the commands <code>parameters</code>, <code>variables</code>, <code>shocks</code> and <code>equations</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; parameters(m)</code><code class="nohighlight hljs ansi" style="display:block;">Parameters{ModelParam} with 7 entries:
+  :g =&gt; 0.015
+  :α =&gt; 0.33
+  :γ =&gt; 0
+  :δ =&gt; 0.1
+  :λ =&gt; 0.97
+  :ρ =&gt; 0.03
+  :β =&gt; @link 1 / (1 + ρ)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; variables(m)</code><code class="nohighlight hljs ansi" style="display:block;">7-element Vector{ModelVariable}:
+ C
+ K
+ L
+ w
+ r
+ @log A
+ logKL</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; shocks(m)</code><code class="nohighlight hljs ansi" style="display:block;">1-element Vector{ModelVariable}:
+ ea</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; equations(m)</code><code class="nohighlight hljs ansi" style="display:block;">7-element Vector{Equation}:
+ 1 / C[t] = β * (1 / (C[t + 1] * (1 + g))) * ((r[t + 1] + 1) - δ)
+ L[t] ^ γ = w[t] / C[t]
+ r[t] / A[t] = α * exp(logKL[t]) ^ (α - 1)
+ w[t] / A[t] = (1 - α) * exp(logKL[t]) ^ α
+ (K[t] + C[t]) / A[t] = exp(logKL[t]) ^ α * L[t] + ((1 - δ) * (K[t - 1] / (1 + g))) / A[t]
+ log(A[t]) = λ * log(A[t - 1]) + ea[t]
+ exp(logKL[t]) = K[t - 1] / (L[t] * (1 + g))</code></pre><h3 id="Setting-the-model-parameters"><a class="docs-heading-anchor" href="#Setting-the-model-parameters">Setting the model parameters</a><a id="Setting-the-model-parameters-1"></a><a class="docs-heading-anchor-permalink" href="#Setting-the-model-parameters" title="Permalink"></a></h3><p>We must not change any part of the model in the active Julia session except for the model parameters and steady state constraints if any (see the <a href="https://bankofcanada.github.io/DocsEcon.jl/dev/Tutorials/US_SW07/main/">Smets and Wouters (2007)</a> tutorial). If we want to add variables, shocks, or equations, we must do so in the model module file and restart a new Julia session to load the new model.</p><p>When it comes to the model parameters, we can access them by their names from the model object using the dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.β # read a parameter value</code><code class="nohighlight hljs ansi" style="display:block;">0.970873786407767</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.α = 0.33 # modify a parameter value</code><code class="nohighlight hljs ansi" style="display:block;">0.33</code></pre><p>Parameters can be linked to other parameters with the macro <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@link-Tuple{Any}"><code>@link</code></a>:</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; parameters(m)[:β]</code><code class="nohighlight hljs ansi" style="display:block;">@link 1 / (1 + ρ)</code></pre><p>If <span>$\rho$</span> changes, <span>$\beta$</span> will automatically be updated.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.ρ = 0.05</code><code class="nohighlight hljs ansi" style="display:block;">0.05</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.β</code><code class="nohighlight hljs ansi" style="display:block;">0.9523809523809523</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.ρ = 0.03</code><code class="nohighlight hljs ansi" style="display:block;">0.03</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.β</code><code class="nohighlight hljs ansi" style="display:block;">0.970873786407767</code></pre><p>However, the dynamic links only work with parameter values. Otherwise, the function <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.update_links!-Tuple{ModelBaseEcon.AbstractModel}"><code>update_links!</code></a> needs to be called to refresh all the links.</p><pre><code class="language-julia hljs">@update_link!(model)</code></pre><div class="admonition is-info"><header class="admonition-header">Important note</header><div class="admonition-body"><p>Links will not be automatically updated if:</p><ul><li>Links contain a reference outside the model parameters, such as the steady state or a model in a parent module</li><li>A parameter is not a number, such as if an element of a parameter vector is updated.</li></ul></div></div><h3 id="Model-flags-and-options"><a class="docs-heading-anchor" href="#Model-flags-and-options">Model flags and options</a><a id="Model-flags-and-options-1"></a><a class="docs-heading-anchor-permalink" href="#Model-flags-and-options" title="Permalink"></a></h3><p>In addition to model parameters, which are values that appear in the model equations, the model object also holds two other sets of parameters, namely flags and options.</p><p>Flags are (usually boolean) values which characterize the type of model we have. For example, a linear model should have its <code>linear</code> flag set to <code>true</code>. Typically, this is done in the model file before calling <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.@initialize-Tuple{Symbol}"><code>@initialize</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.flags</code><code class="nohighlight hljs ansi" style="display:block;">ModelFlags
+        linear = false
+   ssZeroSlope = false</code></pre><p>If the model is stationary, we would set the <code>ssZeroSlope</code> flag to <code>true</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.flags.ssZeroSlope</code><code class="nohighlight hljs ansi" style="display:block;">false</code></pre><p>Options are values that adjust the operations of the algorithms. For example, we have <code>tol</code> and <code>maxiter</code>, which set the desired accuracy and maximum number of iterations for the iterative solvers. These can be adjusted as needed at any time. Another useful option is <code>verbose</code>, which controls the level of verbosity of the different commands.</p><p>Many functions in <code>StateSpaceEcon</code> have optional arguments of the same name as a model option. When the argument is not explicitly given in the function call, these functions will use the value from the model option of the same name.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.verbose = true</code><code class="nohighlight hljs ansi" style="display:block;">true</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.options</code><code class="nohighlight hljs ansi" style="display:block;">6 Options:
+    shift = 10
+    tol = 1.0e-12
+    maxiter = 100
+    verbose = true
+    substitutions = false
+    warn = Options(no_t=true)</code></pre><p>Flags and options can be adjusted from the model file itself after the constant declaration.</p><pre><code class="language-julia hljs">model.flags.ssZeroSlope = true
+setoption!(model) do o
+    o.tol = 1e-12
+    o.maxiter = 100
+    o.verbose = true
+end</code></pre><h2 id="Part-3:-The-steady-state-solution"><a class="docs-heading-anchor" href="#Part-3:-The-steady-state-solution">Part 3: The steady state solution</a><a id="Part-3:-The-steady-state-solution-1"></a><a class="docs-heading-anchor-permalink" href="#Part-3:-The-steady-state-solution" title="Permalink"></a></h2><p>The steady state is a special solution of the dynamic system that remains constant over time. It is important on its own, but also it can be useful in several ways. For example, linearizing the model requires a particular solution about which to linearize, and the steady state is typically used for this purpose.</p><p>In addition to the steady state, we also consider another kind of special solution which grows linearly in time. If we know that the steady state solution is constant (i.e., its slope is zero), we can set the model flag <code>ssZeroSlope</code> to <code>true</code>. This is not required; however in a large model it might help the steady state solver converge faster to the solution.</p><p>The model object <code>m</code> stores information about the steady state. This includes the steady state solution itself, as well as a (possibly empty) set of additional constraints that apply only to the steady state. This information can be accessed via <code>m.sstate</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate</code><code class="nohighlight hljs ansi" style="display:block;">Steady state not solved.
+No additional constraints.</code></pre><h3 id="Solving-for-the-steady-state"><a class="docs-heading-anchor" href="#Solving-for-the-steady-state">Solving for the steady state</a><a id="Solving-for-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-for-the-steady-state" title="Permalink"></a></h3><p>The steady state solution is stored within the model object. Before solving, we have to specify an initial condition. If the model is linear, this makes no difference, but in a non-linear model a good or a bad initial guess might be the difference between success and failure of the steady state solver.</p><p>We specify the initial guess by calling <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.clear_sstate!-Tuple{Model}"><code>clear_sstate!</code></a>. This call removes any previously stored solution, sets the initial guess, and runs the pre-solve pass of the steady state solver. The initial guess can be given with the <code>lvl</code> and <code>slp</code> arguments; if not provided, an initial guess is chosen automatically.</p><p>Once that&#39;s done, we call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.sssolve!-Tuple{Model}"><code>sssolve!</code></a> to find the steady state. We can see below that <code>sssolve!</code> cannot find a steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; clear_sstate!(m)</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sssolve!(m);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Solving 14 equations for 14 variables.
+[ Info: 1, NR, || Fx || = 0.6019951194880787, || Δx || = 4.250809572481332
+[ Info: 2, NR, || Fx || = 76.27029486090437, || Δx || = 29.028125283888095
+[ Info: 3, NR, || Fx || = 18.66932846550785, || Δx || = 896.6276839921242
+[ Info: 4, NR, || Fx || = 7855.361568423514, || Δx || = 91573.80732365746
+┌ Warning: Unable to update #K#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 5, NR, || Fx || = 3792.563534697963, || Δx || = 641403.2823790733
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 6, NR, || Fx || = 2.2797664337285645e6, || Δx || = 21294.513106516177
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 7, NR, || Fx || = 522456.6249980931, || Δx || = 2604.966922618888
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 8, NR, || Fx || = 110678.50412713643, || Δx || = 565.1742612900455
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 9, NR, || Fx || = 16886.591263092123, || Δx || = 962.2909114177584
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 10, NR, || Fx || = 1226.04409643554, || Δx || = 2457.0134053538363
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 11, NR, || Fx || = 4639.131075511454, || Δx || = 4111.11865663585
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 12, NR, || Fx || = 4634.613784576766, || Δx || = 12560.798523962085
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 13, NR, || Fx || = 19728.731435064692, || Δx || = 38402.28112702929
+┌ Warning: Unable to update #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 14, NR, || Fx || = 107932.74133996293, || Δx || = 1.435307318388044e6
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 15, NR, || Fx || = 178276.24713788368, || Δx || = 110496.03665592501
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 16, NR, || Fx || = 387645.61317917146, || Δx || = 266340.03039095894
+┌ Warning: Unable to update #K#lvl#, #K#slp#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 17, NR, || Fx || = 162743.0629217259, || Δx || = 269203.9232078345
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 18, NR, || Fx || = 39438.1332668094, || Δx || = 533919.2013440126
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 19, NR, || Fx || = 643765.4142180551, || Δx || = 106034.56562872225
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 20, NR, || Fx || = 70391.77368285507, || Δx || = 125470.35256489512
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 21, NR, || Fx || = 345696.48718447424, || Δx || = 54811.373963194324
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 22, NR, || Fx || = 19568.609935753047, || Δx || = 11309.280798517995
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 23, NR, || Fx || = 2586.61081860587, || Δx || = 8855.219846953705
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 24, NR, || Fx || = 776.3767844736576, || Δx || = 414.67801956228413
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 25, NR, || Fx || = 0.6603989116847515, || Δx || = 168.1297815235897
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 26, NR, || Fx || = 0.29118600115180016, || Δx || = 6.6303557994132385
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 27, NR, || Fx || = 0.09122800679270715, || Δx || = 4.071347490259889
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 28, NR, || Fx || = 0.09122832419581317, || Δx || = 0.17896555380756318
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 29, NR, || Fx || = 0.09122838946524703, || Δx || = 0.10185373155104974
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 30, NR, || Fx || = 0.0912283993088121, || Δx || = 0.005852665459876873
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 31, NR, || Fx || = 0.09122840122013232, || Δx || = 0.0026638712098499585
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 32, NR, || Fx || = 0.0912284015220648, || Δx || = 0.00023957941568027928
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 33, NR, || Fx || = 0.09122840157966361, || Δx || = 2.3058831532561362e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 34, NR, || Fx || = 0.09122840158839884, || Δx || = 1.4445700044635792e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 35, NR, || Fx || = 0.09122840158902656, || Δx || = 3.7664913296235524e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 36, NR, || Fx || = 0.09122840159001755, || Δx || = 3.936910275343207e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 37, NR, || Fx || = 0.09122840158960654, || Δx || = 4.0540365291474676e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 38, NR, || Fx || = 0.0912284015900906, || Δx || = 8.921099453614613e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 39, NR, || Fx || = 0.09122840159085444, || Δx || = 3.270371398901345e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 40, NR, || Fx || = 0.09122840159028556, || Δx || = 3.562632857970456e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 41, NR, || Fx || = 0.09122840159047585, || Δx || = 8.333505258245046e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 42, NR, || Fx || = 0.09122840158930834, || Δx || = 3.9992361900860034e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 43, NR, || Fx || = 0.09122840158995804, || Δx || = 4.067179755199513e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 44, NR, || Fx || = 0.09122840159007595, || Δx || = 4.299606118438992e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 45, NR, || Fx || = 0.09122840159027512, || Δx || = 3.8092457424355386e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 46, NR, || Fx || = 0.09122840159057644, || Δx || = 5.1796248792453885e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 47, NR, || Fx || = 0.09122840158972179, || Δx || = 4.3093251782354266e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 48, NR, || Fx || = 0.09122840159028933, || Δx || = 3.6462450535065217e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 49, NR, || Fx || = 0.09122840159000067, || Δx || = 8.690919212389841e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 50, NR, || Fx || = 0.09122840158998002, || Δx || = 4.001920318274867e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 51, NR, || Fx || = 0.09122840159008283, || Δx || = 2.998624388587621e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 52, NR, || Fx || = 0.09122840159038637, || Δx || = 1.767014513901958e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 53, NR, || Fx || = 0.09122840159044898, || Δx || = 1.3032434045304702e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 54, NR, || Fx || = 0.09122840159058576, || Δx || = 2.216667904019126e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 55, NR, || Fx || = 0.0912284015910294, || Δx || = 3.802055707364987e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 56, NR, || Fx || = 0.0912284015907765, || Δx || = 1.0882175114753702e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 57, NR, || Fx || = 0.09122840158934209, || Δx || = 3.522650330749668e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 58, NR, || Fx || = 0.09122840159007661, || Δx || = 7.93501697052352e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 59, NR, || Fx || = 0.09122840159084777, || Δx || = 1.4645152793232646e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 60, NR, || Fx || = 0.09122840159086198, || Δx || = 3.438571613241085e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 61, NR, || Fx || = 0.09122840159029488, || Δx || = 2.3131107051050182e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 62, NR, || Fx || = 0.09122840159000978, || Δx || = 7.394368385884618e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 63, NR, || Fx || = 0.09122840158998047, || Δx || = 3.999259384965561e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 64, NR, || Fx || = 0.0912284015900835, || Δx || = 4.8660367010386774e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 65, NR, || Fx || = 0.09122840159074275, || Δx || = 5.0177175523180955e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 66, NR, || Fx || = 0.09122840159009149, || Δx || = 2.0157721051782646e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 67, NR, || Fx || = 0.09122840158974155, || Δx || = 7.925138939052245e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 68, NR, || Fx || = 0.0912284015908642, || Δx || = 3.8722898142284245e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 69, NR, || Fx || = 0.09122840159075407, || Δx || = 4.8527927371428725e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 70, NR, || Fx || = 0.09122840159010148, || Δx || = 4.4890501782049195e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 71, NR, || Fx || = 0.0912284015903968, || Δx || = 3.898740752850815e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 72, NR, || Fx || = 0.09122840159030421, || Δx || = 4.5508010804259375e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 73, NR, || Fx || = 0.09122840158946333, || Δx || = 7.026882850858426e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 74, NR, || Fx || = 0.09122840159037837, || Δx || = 4.207399304650885e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 75, NR, || Fx || = 0.09122840159087509, || Δx || = 6.3010541628753764e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 76, NR, || Fx || = 0.09122840159040324, || Δx || = 4.072586646865015e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 77, NR, || Fx || = 0.09122840159031376, || Δx || = 3.0905574283829887e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 78, NR, || Fx || = 0.09122840159000778, || Δx || = 6.551067059499844e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 79, NR, || Fx || = 0.0912284015904481, || Δx || = 6.448160177966612e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 80, NR, || Fx || = 0.09122840158995515, || Δx || = 8.163992711254331e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 81, NR, || Fx || = 0.09122840158997403, || Δx || = 4.007072586374816e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 82, NR, || Fx || = 0.09122840159008194, || Δx || = 2.9957657498513197e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 83, NR, || Fx || = 0.09122840159038592, || Δx || = 3.4750168911055883e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 84, NR, || Fx || = 0.09122840158975909, || Δx || = 3.2746594575558543e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 85, NR, || Fx || = 0.0912284015904048, || Δx || = 6.365507573418906e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 86, NR, || Fx || = 0.0912284015904159, || Δx || = 2.6017213894744604e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 87, NR, || Fx || = 0.0912284015897673, || Δx || = 5.782562310400988e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 88, NR, || Fx || = 0.09122840158975154, || Δx || = 8.318085996302499e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 89, NR, || Fx || = 0.09122840159086687, || Δx || = 3.0339253967684287e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 90, NR, || Fx || = 0.09122840158963319, || Δx || = 6.774868087435462e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 91, NR, || Fx || = 0.09122840159045964, || Δx || = 6.051229325565698e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 92, NR, || Fx || = 0.09122840159042322, || Δx || = 6.239144917304174e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 93, NR, || Fx || = 0.09122840159010215, || Δx || = 2.176759536873307e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 94, NR, || Fx || = 0.09122840159051582, || Δx || = 1.9378700526526723e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 95, NR, || Fx || = 0.0912284015904603, || Δx || = 1.8522546709731712e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 96, NR, || Fx || = 0.09122840159055357, || Δx || = 4.042850725904389e-6
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 97, NR, || Fx || = 0.09122840159090151, || Δx || = 3.2044862105489204e-7
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 98, NR, || Fx || = 0.09122840159087531, || Δx || = 6.989901021105006e-8
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 99, NR, || Fx || = 0.09122840159087398, || Δx || = 3.995642773251097e-5
+┌ Warning: Unable to update #K#lvl#, #L#lvl#.
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/nr.jl:59
+[ Info: 100, NR, || Fx || = 0.09122840159076318, || Δx || = 8.68051301250167e-6
+┌ Warning: Unable to solve for 1 variables:
+│    #logKL#lvl#
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/sssolve.jl:137</code></pre><p>The Newton-Raphson solution algorithm used by default has failed to converge. Instead, the <code>:auto</code> method starts with the Levenberg-Marquardt algorithm and automatically switches to Newton-Raphson when it starts to converge.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; clear_sstate!(m)</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sssolve!(m; method = :auto)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Solving 14 equations for 14 variables.
+[ Info: 0, || Fx || = 0.6019951194880787, || Δx || = 1.222457092564067, lambda = 0.1
+[ Info: 1, LM, || Fx || = 0.36072352044654765, || Δx || = 0.3452098494523946, lambda = 0.01
+[ Info: 2, LM, || Fx || = 0.26986676991075503, || Δx || = 0.8652343109070173, lambda = 0.01
+[ Info: 3, LM, || Fx || = 0.19451925644668028, || Δx || = 0.4151044827105775, lambda = 0.001
+[ Info: 4, LM, || Fx || = 0.144643350411716, || Δx || = 0.19082636875406045, lambda = 0.0001
+[ Info: 5, LM, || Fx || = 0.039901715822063366, || Δx || = 0.16719247025297554, lambda = 0.001
+[ Info: 6, LM, || Fx || = 0.05637165188598914, || Δx || = 0.007131610784616387, lambda = 0.0001
+[ Info: 7, LM, || Fx || = 0.009788816764861652, || Δx || = 0.04986834485137555, lambda = 0.0001
+[ Info: 8, LM, || Fx || = 0.006628458391659375, || Δx || = 0.03876902052091581, lambda = 1.0e-5
+[ Info: 9, NR, || Fx || = 0.006075713375704783, || Δx || = 2.972020235101623
+[ Info: 10, NR, || Fx || = 3.136279168653609, || Δx || = 4.701538376572659
+[ Info: 11, NR, || Fx || = 5.537243907089603, || Δx || = 4.548708326451772
+[ Info: 12, NR, || Fx || = 3.7217079880937733, || Δx || = 0.8120635057164723
+[ Info: 13, NR, || Fx || = 0.6368600783575504, || Δx || = 1.2236525999324854
+[ Info: 14, NR, || Fx || = 0.14337185931509788, || Δx || = 0.3720364996550935
+[ Info: 15, NR, || Fx || = 0.014891092089860614, || Δx || = 0.024381932005105744
+[ Info: 16, NR, || Fx || = 2.6703729306465362e-5, || Δx || = 3.414723405136051e-5
+[ Info: 17, NR, || Fx || = 2.2373658481456005e-11, || Δx || = 1.9066039562338328e-11
+[ Info: 18, NR, || Fx || = 1.7763568394002505e-15, || Δx || = 8.823604969640768e-15
+16-element Vector{Float64}:
+ 1.0030433070390223
+ 0.0
+ 3.125296332025309
+ 0.0
+ 0.9065255813953484
+ 0.0
+ 1.0030433070390223
+ 0.0
+ 0.14544999999999986
+ 0.0
+ 0.0
+ 0.0
+ 1.2227765216706215
+ 0.0
+ 0.0
+ 0.0</code></pre><p>The function <code>sssolve!</code> returns a <code>Vector{Float64}</code> containing the steady state solution, and it also writes that solution into the model object. The vector is of length <code>2*nvariables(m)</code> and contains the level and the slope for each variable.</p><p>If in doubt, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.check_sstate-Tuple{Model}"><code>check_sstate</code></a> to make sure the steady state solution stored in the model object indeed satisfies the steady state system of equations. This function returns the number of equations that are not satisfied. A value of 0 is what we want to see. In verbose mode, it also lists the problematic equations and their residuals.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; check_sstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
+0</code></pre><h3 id="Examining-the-steady-state"><a class="docs-heading-anchor" href="#Examining-the-steady-state">Examining the steady state</a><a id="Examining-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-steady-state" title="Permalink"></a></h3><p>We can access the steady state solution via <code>m.sstate</code> using the dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C</code><code class="nohighlight hljs ansi" style="display:block;">  C = 1.0030433070390223</code></pre><p>We can also assign new values to the steady state solution, but we should be careful to make sure it remains a valid steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C.level = 1.0050</code><code class="nohighlight hljs ansi" style="display:block;">1.005</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) &gt; 0</code><code class="nohighlight hljs ansi" style="display:block;">┌ Warning: The following 4 steady state equations are not satisfied: 
+│ E5  res= 0.00195669  (K[t] + C[t]) / A[t] = exp(logKL[t]) ^ α * L[t] + ((1 - δ) * (K[t - 1] / (1 + g))) / A[t]
+│ E12  res= 0.00195669  (K[t] + C[t]) / A[t] = exp(logKL[t]) ^ α * L[t] + ((1 - δ) * (K[t - 1] / (1 + g))) / A[t]
+│ E2  res= 0.00194696  L[t] ^ γ = w[t] / C[t]
+│ E9  res= 0.00194696  L[t] ^ γ = w[t] / C[t]
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/steadystate/diagnose.jl:45
+Test Passed</code></pre><p>As the code above shows, a wrong steady state solution (based on the specified precision in the <code>tol</code> option) will result in one or more equation not being satisfied. Let&#39;s put back the correct value.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C.level = 1.0030433070390223</code><code class="nohighlight hljs ansi" style="display:block;">1.0030433070390223</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) == 0</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
+Test Passed</code></pre><p>We can examine the entire steady state solution with <a href="../../../Reference/ModelBaseEcon/#ModelBaseEcon.printsstate-Tuple{IO, ModelBaseEcon.AbstractModel}"><code>printsstate</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; printsstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">Steady State Solution:
+      C = 1.00304 
+      K = 3.1253  
+      L = 0.906526
+      w = 1.00304 
+      r = 0.14545 
+      A = 1.0     
+  logKL = 1.22278 
+     ea = 0.0</code></pre><h2 id="Part-4:-Impulse-response"><a class="docs-heading-anchor" href="#Part-4:-Impulse-response">Part 4: Impulse response</a><a id="Part-4:-Impulse-response-1"></a><a class="docs-heading-anchor-permalink" href="#Part-4:-Impulse-response" title="Permalink"></a></h2><h3 id="Simulation-plan"><a class="docs-heading-anchor" href="#Simulation-plan">Simulation plan</a><a id="Simulation-plan-1"></a><a class="docs-heading-anchor-permalink" href="#Simulation-plan" title="Permalink"></a></h3><p>Before we can simulate the model, we have to decide on the length of the simulation and what data is available for each period, i.e., what values are known (exogenous). This is done with an object of type <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.Plan"><code>Plan</code></a>.</p><p>To create a plan, all we need is the model object and a range for the simulation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2039Q4</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2039Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q4:2040Q1
+  1999Q4:2040Q1 → ea</code></pre><p>The plan shows us the list of exogenous values (variable or shocks) for each period or sub-range of the simulation. By default, all shocks are exogenous and all variables are endogenous.</p><p>We also see that the range of the plan has been extended before and after the simulation range. This is necessary because we need to set initial and final conditions. The number of periods for initial conditions is equal to the largest lag in the model. Similarly, final conditions have to be imposed over as many periods as the largest lead.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p.range          # the full range of the plan</code><code class="nohighlight hljs ansi" style="display:block;">1999Q4:2040Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; init_rng = first(p.range):first(sim_rng)-1   # the range for initial conditions</code><code class="nohighlight hljs ansi" style="display:block;">1999Q4:1999Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; final_rng = last(sim_rng)+1:last(p.range)     # the range for final conditions</code><code class="nohighlight hljs ansi" style="display:block;">2040Q1:2040Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test length(init_rng) == m.maxlag</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test length(final_rng) == m.maxlead</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h3 id="Exogenous-data"><a class="docs-heading-anchor" href="#Exogenous-data">Exogenous data</a><a id="Exogenous-data-1"></a><a class="docs-heading-anchor-permalink" href="#Exogenous-data" title="Permalink"></a></h3><p>We have to provide the data for the simulation. We start with all zeros and fill in the external data, which must include initial conditions for all variable and shocks, exogenous values (according to the plan), and possibly final conditions.</p><h4 id="Initial-conditions"><a class="docs-heading-anchor" href="#Initial-conditions">Initial conditions</a><a id="Initial-conditions-1"></a><a class="docs-heading-anchor-permalink" href="#Initial-conditions" title="Permalink"></a></h4><p>In this example, we want to simulate an impulse response, so it makes sense to start from the steady state.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = steadystatedata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">162×8 MVTSeries{Quarterly} with range 1999Q4:2040Q1 and variables (C,K,L,w,r,…):
+           C        K       L         w        r        A     logKL     ea
+  1999Q4 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2000Q1 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2000Q2 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2000Q3 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2000Q4 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2001Q1 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2001Q2 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2001Q3 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2001Q4 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+           ⋮        ⋮       ⋮         ⋮        ⋮        ⋮     ⋮         ⋮
+  2038Q1 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2038Q2 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2038Q3 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2038Q4 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2039Q1 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2039Q2 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2039Q3 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2039Q4 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0
+  2040Q1 : 1.00304  3.1253  0.906526  1.00304  0.14545  1.0   1.22278   0.0</code></pre><h4 id="Final-conditions"><a class="docs-heading-anchor" href="#Final-conditions">Final conditions</a><a id="Final-conditions-1"></a><a class="docs-heading-anchor-permalink" href="#Final-conditions" title="Permalink"></a></h4><p>For the final conditions we can use the steady state again, because we expect that the economy will eventually return to it if the simulation is sufficiently long past the last shock. We can do this by assigning the values of the steady state to the final periods after the simulation, similarly to what we did with the initial conditions.</p><p>Alternatively, we can specify that we want to use the steady state in the call to simulate by passing <code>fctype=fclevel</code>. Yet another possibility is to set the final condition so that the solution slope matches the slope of the steady state by setting <code>fctype=fcslope</code>. In both cases, we do not need to set anything in the exogenous data array because those values would be ignored.</p><div class="admonition is-success"><header class="admonition-header">Pro tip</header><div class="admonition-body"><p>In the simple RBC model, the two ways of using the steady state for final conditions (level or slope) are equivalent, because the steady state here is stationary and unique. In models where the steady state has non-zero slope, or the steady state has zero slope but the level is not unique, we should use <code>fctype=fcslope</code>.</p></div></div><h4 id="A-quick-sanity-check"><a class="docs-heading-anchor" href="#A-quick-sanity-check">A quick sanity check</a><a id="A-quick-sanity-check-1"></a><a class="docs-heading-anchor-permalink" href="#A-quick-sanity-check" title="Permalink"></a></h4><p>If we were to run a simulation where the economy started in the steady state and there were no shocks at all, we&#39;d expect that the economy would remain in steady state forever.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = simulate(m, p, exog; fctype=fcslope);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
+[ Info: 1, || Fx || = 8.881784197001252e-16</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test ss ≈ steadystatedata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><p>The simulated data, <code>ss</code>, should equal (up to the accuracy of the solution) the steady state data. Similar to <a href="Tutorials/simple_RBC/@ref"><code>steadystatedata</code></a>, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.zerodata"><code>zerodata</code></a> to create a data set containing the deviation from the steady state solution.</p><h4 id="Exogenous-data-2"><a class="docs-heading-anchor" href="#Exogenous-data-2">Exogenous data</a><a class="docs-heading-anchor-permalink" href="#Exogenous-data-2" title="Permalink"></a></h4><p>All shocks are exogenous by default. All we have left to do is to set the value of the shock.</p><p>Let&#39;s say that we want to shock <code>ea</code> for the first four quarters by <code>0.1</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[sim_rng[1:4], :ea] .= 0.1;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">162×1 MVTSeries{Quarterly} with range 1999Q4:2040Q1 and variables (ea):
+           ea
+  1999Q4 : 0.0
+  2000Q1 : 0.1
+  2000Q2 : 0.1
+  2000Q3 : 0.1
+  2000Q4 : 0.1
+  2001Q1 : 0.0
+  2001Q2 : 0.0
+  2001Q3 : 0.0
+  2001Q4 : 0.0
+           ⋮
+  2038Q1 : 0.0
+  2038Q2 : 0.0
+  2038Q3 : 0.0
+  2038Q4 : 0.0
+  2039Q1 : 0.0
+  2039Q2 : 0.0
+  2039Q3 : 0.0
+  2039Q4 : 0.0
+  2040Q1 : 0.0</code></pre><h4 id="Running-the-simulation"><a class="docs-heading-anchor" href="#Running-the-simulation">Running the simulation</a><a id="Running-the-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Running-the-simulation" title="Permalink"></a></h4><p>We call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.StackedTimeSolver.simulate"><code>simulate</code></a>, providing the model, the exogenous data, and the plan. We also specify the type of final condition we want to impose.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; irf = simulate(m, p, exog; fctype=fcslope);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
+[ Info: 1, || Fx || = 0.1, || Δx || = 1.3967687087545727e34
+┌ Error: The system is underdetermined with the given set of equations and final conditions.
+└ @ StateSpaceEcon.StackedTimeSolver ~/.julia/packages/StateSpaceEcon/KlsSU/src/stackedtime/solverdata.jl:563
+ERROR: LinearAlgebra.SingularException(0)</code></pre><p>We can now take a look at how some of the variables in the model have responded to this shock. We use <code>plot</code> from the <code>Plots</code> package to for that. We specify the variables we want to plot using <code>vars</code> and the names of the datasets being plotted (for the legend) in the <code>names</code> option.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, irf,
+            vars=(:A, :C, :K, :L),
+            names=(&quot;SS&quot;, &quot;IRF&quot;),
+            legend=[true false false false],
+            size=(600, 400)
+           );</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: irf not defined</code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p><h2 id="Appendix"><a class="docs-heading-anchor" href="#Appendix">Appendix</a><a id="Appendix-1"></a><a class="docs-heading-anchor-permalink" href="#Appendix" title="Permalink"></a></h2><h3 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h3><p><a href="https://archives.dynare.org/DynareShanghai2013/order1.pdf">Villemot, S., 2013. First order approximation of stochastic models.</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../TimeSeriesEcon/main/">« TimeSeriesEcon</a><a class="docs-footer-nextpage" href="../../US_SW07/main/">Smets and Wouters 2007 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.14 on <span class="colophon-date" title="Monday 14 March 2022 17:59">Monday 14 March 2022</span>. Using Julia version 1.6.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
