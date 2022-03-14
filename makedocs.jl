@@ -18,6 +18,7 @@ makedocs(
             "Tutorials/index.md",
             "Tutorials/README.md",
             "Tutorials/TimeSeriesEcon/main.md",
+            "Tutorials/simple_RBC/main.md",
             "Tutorials/US_SW07/main.md",
             "FRB/US" => "Tutorials/FRB-US/main.md",
         ],
