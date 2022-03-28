@@ -7,6 +7,10 @@ using StateSpaceEcon
 # Scans the src/Tutorials path and populates the tutorials array used below
 # include("scan_tutorials.jl")
 
+##
+
+ENV["GKSwstype"] = "100"
+
 makedocs(
     sitename = "StateSpaceEcon",
     format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
