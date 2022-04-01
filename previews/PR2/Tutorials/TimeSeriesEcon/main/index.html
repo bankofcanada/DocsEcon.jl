@@ -16,14 +16,14 @@ using Plots</code></pre><h2 id="Frequency-and-Time"><a class="docs-heading-ancho
   2020Q3 : 0.5662374165061859
   2020Q4 : 0.4600853424625171
   2021Q1 : 0.7940257103317943</code></pre><p>The frequency of the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> determines the frequency of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. Similarly, the type of the elements of the <code>vals</code> array determines the element type of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><div class="admonition is-info"><header class="admonition-header">Important Caveat</header><div class="admonition-body"><p>Be mindful of the fact that the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> does not copy the original data container. Rather, the <code>ts</code> constructed above is just a wrapper and uses <code>vals</code> for its storage. Specifically, every modification to one of them is immediately reflected in the other. To break the connection use <a href="https://docs.julialang.org/en/v1/base/base/#Base.copy"><code>copy</code></a>.</p><pre><code class="language- hljs">ts = TSeries(2020Q1, copy(vals))</code></pre></div></div><p>We can construct a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> with its own storage from just an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> range. This would construct a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> whose storage is un-initialized (it would contain some arbitrary numbers). We can initialize the storage by providing a constant or a function, such as <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.zeros"><code>zeros</code></a>, <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.ones"><code>ones</code></a>, <a href="https://docs.julialang.org/en/v1/stdlib/Random/#Base.rand"><code>rand</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; rng = 2020Q1:2021Q4</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1:2021Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng)  # uninitialized (arbitrary numbers that happen to be in memory)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 2.75859452825e-313
-  2020Q2 : 2.97079410794e-313
-  2020Q3 : 6.0e-323
-  2020Q4 : 2.54639494975e-313
-  2021Q1 : 2.54639494975e-313
-  2021Q2 : 2.12199579156e-313
-  2021Q3 : 6.3659873754e-314
-  2021Q4 : 0.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng, pi)    # constant</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly,Irrational{:π}} with range 2020Q1:2021Q4:
+  2020Q1 : 6.8997579511621e-310
+  2020Q2 : 6.89975840784e-310
+  2020Q3 : 6.89975840617046e-310
+  2020Q4 : 6.8997584061744e-310
+  2021Q1 : 6.89975840617837e-310
+  2021Q2 : 6.8997584061823e-310
+  2021Q3 : 6.89975883358073e-310
+  2021Q4 : 6.8997584078084e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng, pi)    # constant</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly,Irrational{:π}} with range 2020Q1:2021Q4:
   2020Q1 : π
   2020Q2 : π
   2020Q3 : π
@@ -49,14 +49,14 @@ TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Ot
   2021Q2 : 2.7
   2021Q3 : 2.7
   2021Q4 : 2.7</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; s = similar(t)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 6.95032715233867e-310
-  2020Q2 : 4.94e-322
-  2020Q3 : 4.94e-321
-  2020Q4 : 1.235e-321
-  2021Q1 : 1.0e-322
-  2021Q2 : 1.5e-323
-  2021Q3 : 1.6e-322
-  2021Q4 : 2.0e-323</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; c = copy(t)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
+  2020Q1 : 6.89975441694057e-310
+  2020Q2 : 6.89979531366313e-310
+  2020Q3 : 6.89979531366313e-310
+  2020Q4 : 6.89979531366313e-310
+  2021Q1 : 6.89975441544414e-310
+  2021Q2 : 6.8997544169366e-310
+  2021Q3 : 6.89979531366313e-310
+  2021Q4 : 6.89979531366313e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; c = copy(t)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
   2020Q1 : 2.7
   2020Q2 : 2.7
   2020Q3 : 2.7
@@ -392,14 +392,14 @@ Average of `zed` is 3.0.</code></pre><div class="admonition is-info"><header cla
            trange = 2020Q3:2022Q3,
            layout = (2,1),
        );</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../plot-4.png"><img src="../plot-4.png" alt/></a></p><div class="admonition is-info"><header class="admonition-header">Good to Know</header><div class="admonition-body"><p>The <code>trange=</code> argument works only when all time series in the plot have the same frequency. When plotting time series with different frequencies, you can use <code>xlim=</code>. You can use <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> in the limits specified by <code>xlim</code></p><ul><li>they are converted to floating point numbers automatically. For example <code>float(2020Q1) == 2020.0</code>, <code>float(2020Q2) = 2020.25</code>, etc. An important difference to keep in mind is that <code>trange=</code> requires a unit range, e.g., <code>trange=2020Q3:2022Q3</code>, while <code>xlim=</code> requires a tuple, e.g., <code>xlim=(2020Q3,2022Q3)</code>.</li></ul></div></div><h2 id="Workspaces"><a class="docs-heading-anchor" href="#Workspaces"><code>Workspace</code>s</a><a id="Workspaces-1"></a><a class="docs-heading-anchor-permalink" href="#Workspaces" title="Permalink"></a></h2><p>When working with models, in addition to time series data, we encounter a lot of other types of data. For example, parameter and steady state values, simulation ranges and dates, etc. The data type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> is a container that can store all kinds of data. Most operations for <a href="https://docs.julialang.org/en/v1/base/collections/#Dictionaries">dictionaries</a> work also for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s.</p><p>We can create an empty <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> and fill it with data. We can create <em>&quot;variables&quot;</em> in the workspace directly by assignment.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; w = Workspace()</code><code class="nohighlight hljs ansi" style="display:block;">Empty Workspace</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.rng = 2020Q1:2021Q4</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1:2021Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.start = first(w.rng)</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.a = TSeries(w.rng)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 6.95031548689616e-310
-  2020Q2 : 6.95031548689616e-310
-  2020Q3 : 6.95031548689616e-310
-  2020Q4 : 6.95031548689616e-310
-  2021Q1 : 6.95031548689616e-310
-  2021Q2 : 6.95031548689616e-310
-  2021Q3 : 6.95031548689616e-310
-  2021Q4 : 6.95031548689616e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.a .= a</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
+  2020Q1 : 1.46723e-319
+  2020Q2 : 4.94e-322
+  2020Q3 : 4.94e-321
+  2020Q4 : 1.235e-321
+  2021Q1 : 1.0e-322
+  2021Q2 : 1.5e-323
+  2021Q3 : 1.6e-322
+  2021Q4 : 2.0e-323</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.a .= a</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
   2020Q1 : 1.1
   2020Q2 : 1.06
   2020Q3 : 1.036
@@ -489,4 +489,4 @@ _.z.b: same
 _.z: same
 _.x: same
 _: same
-true</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../README/">« README</a><a class="docs-footer-nextpage" href="../../simple_RBC/main/">Simple RBC Model »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Thursday 31 March 2022 16:42">Thursday 31 March 2022</span>. Using Julia version 1.6.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+true</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../README/">« README</a><a class="docs-footer-nextpage" href="../../simple_RBC/main/">Simple RBC Model »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Friday 1 April 2022 23:37">Friday 1 April 2022</span>. Using Julia version 1.6.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
