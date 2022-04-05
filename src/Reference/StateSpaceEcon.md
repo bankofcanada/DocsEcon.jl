@@ -4,30 +4,64 @@
 Pages = ["statespaceecon.md"]
 ```
 
-## Steady state solver
+### Public Interface
+
+#### Steady state solver
 
 ```@autodocs
 Modules = [StateSpaceEcon.SteadyStateSolver]
 Private = false
 ```
 
-## Plans
-
-```@autodocs
-Modules = [StateSpaceEcon.Plans]
-Private = false
-```
-
-## Stacked time solver
+#### Stacked-Time Solver
 
 ```@autodocs
 Modules = [StateSpaceEcon.StackedTimeSolver]
 Private = false
 ```
 
-## Various
+#### Plans
+
+```@autodocs
+Modules = [StateSpaceEcon.Plans]
+Private = false
+```
+
+#### Various
 
 ```@autodocs
 Modules = [StateSpaceEcon]
 Private = false
 ```
+
+### Internals
+
+#### Steady state solver
+
+```@autodocs
+Modules = [StateSpaceEcon.SteadyStateSolver]
+Public = false
+```
+
+#### Stacked-Time Solver
+
+```@autodocs
+Modules = [StateSpaceEcon.StackedTimeSolver]
+Public = false
+```
+
+#### Plans
+
+```@autodocs
+Modules = [StateSpaceEcon.Plans]
+Public = false
+```
+
+#### Various
+
+```@autodocs
+Modules = [StateSpaceEcon]
+Public = false
+```
+
+
