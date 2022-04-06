@@ -3,6 +3,7 @@ using Documenter
 using TimeSeriesEcon
 using ModelBaseEcon
 using StateSpaceEcon
+using FAME
 
 # Scans the src/Tutorials path and populates the tutorials array used below
 # include("scan_tutorials.jl")
@@ -12,11 +13,11 @@ using StateSpaceEcon
 ENV["GKSwstype"] = "100"
 
 makedocs(
-    sitename = "StateSpaceEcon",
-    format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
-    modules = [StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon],
-    doctest = false,
-    pages = [
+    sitename="StateSpaceEcon",
+    format=Documenter.HTML(prettyurls=get(ENV, "CI", nothing) == "true"),
+    modules=[StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon, FAME],
+    doctest=false,
+    pages=[
         "index.md",
         "Tutorials" => [
             "Tutorials/index.md",
@@ -30,6 +31,7 @@ makedocs(
             "TimeSeriesEcon" => "Reference/TimeSeriesEcon.md",
             "ModelBaseEcon" => "Reference/ModelBaseEcon.md",
             "StateSpaceEcon" => "Reference/StateSpaceEcon.md",
+            "FAME" => "Reference/FAME.md",
         ],
         "Design Papers" => [
             "DesignPapers/index.md",
@@ -43,6 +45,6 @@ makedocs(
 ##
 
 if get(ENV, "CI", nothing) == "true"
-    deploydocs(repo = "github.com/bankofcanada/DocsEcon.jl.git",
-        push_preview = true)
+    deploydocs(repo="github.com/bankofcanada/DocsEcon.jl.git",
+        push_preview=true)
 end
