@@ -22,10 +22,10 @@ makedocs(
         "Tutorials" => [
             "Tutorials/index.md",
             "Tutorials/README.md",
-            "Tutorials/TimeSeriesEcon/main.md",
-            "Tutorials/simple_RBC/main.md",
-            "Tutorials/US_SW07/main.md",
-            "FRB/US" => "Tutorials/FRB-US/main.md",
+            "Tutorials/1.TimeSeriesEcon/main.md",
+            "Tutorials/2.simple_RBC/main.md",
+            "Tutorials/3.US_SW07/main.md",
+            "FRB/US" => "Tutorials/4.FRB-US/main.md",
         ],
         "Reference" => [
             "TimeSeriesEcon" => "Reference/TimeSeriesEcon.md",
