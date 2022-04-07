@@ -124,37 +124,37 @@ No additional constraints.</code></pre><h3 id="Solving-for-the-steady-state"><a 
 [ Info: Solving 5 equations for 5 variables.
 [ Info: 1, NR, || Fx || = 1.1986872541507985, || Δx || = 1.1816556883242955
 [ Info: 2, NR, || Fx || = 0.16988440829072368, || Δx || = 1.0865421612684347
-[ Info: 3, NR, || Fx || = 0.03457123918552872, || Δx || = 0.37772016657598595
-[ Info: 4, NR, || Fx || = 0.0060482768002700915, || Δx || = 0.04275820991394088
-[ Info: 5, NR, || Fx || = 2.3987981608660277e-5, || Δx || = 0.0003319498504965059
-[ Info: 6, NR, || Fx || = 5.846874984172246e-9, || Δx || = 2.9439959650870855e-8
-[ Info: 7, NR, || Fx || = 8.881784197001252e-16, || Δx || = 1.837965280579933e-15</code></pre><p>Sometimes the Newton-Raphson solution algorithm, which is used by default because it is the fastest, fails to converge. If this happens, we can use <code>method=:auto</code>, which starts with the Levenberg-Marquardt algorithm and automatically switches to Newton-Raphson when it starts to converge.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; clear_sstate!(m)</code><code class="nohighlight hljs ansi" style="display:block;">┌ Info: Presolved equation 6 for #A#lvl# = 0.0
+[ Info: 3, NR, || Fx || = 0.03457123918552849, || Δx || = 0.37772016657598356
+[ Info: 4, NR, || Fx || = 0.006048276800268759, || Δx || = 0.04275820991394203
+[ Info: 5, NR, || Fx || = 2.3987981608660277e-5, || Δx || = 0.00033194985049862026
+[ Info: 6, NR, || Fx || = 5.846875872350665e-9, || Δx || = 2.943996014370394e-8
+[ Info: 7, NR, || Fx || = 2.2204460492503128e-16, || Δx || = 3.1675381115928992e-15</code></pre><p>Sometimes the Newton-Raphson solution algorithm, which is used by default because it is the fastest, fails to converge. If this happens, we can use <code>method=:auto</code>, which starts with the Levenberg-Marquardt algorithm and automatically switches to Newton-Raphson when it starts to converge.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; clear_sstate!(m)</code><code class="nohighlight hljs ansi" style="display:block;">┌ Info: Presolved equation 6 for #A#lvl# = 0.0
 └     log(A[t]) = λ * log(A[t - 1]) + ea[t]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sssolve!(m; method = :auto)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Presolved 1 equations for 9 variables.
 [ Info: Solving 5 equations for 5 variables.
-[ Info: 0, || Fx || = 1.1986872541507985, || Δx || = 1.0406049051924418, lambda = 0.01
-[ Info: 1, LM, || Fx || = 0.2104983343166885, || Δx || = 0.5726378539417489, lambda = 0.001
-[ Info: 2, LM, || Fx || = 0.0690551664724015, || Δx || = 0.5743851852734401, lambda = 0.0001
-[ Info: 3, LM, || Fx || = 0.013728766203770962, || Δx || = 0.177601647743916, lambda = 1.0e-5
-[ Info: 4, LM, || Fx || = 0.0010910536208781352, || Δx || = 0.011104211132244718, lambda = 1.0000000000000002e-6
-[ Info: 5, LM, || Fx || = 3.4734570970584855e-6, || Δx || = 4.980370518383886e-5, lambda = 1.0000000000000002e-7
-[ Info: 6, NR, || Fx || = 8.145648603395073e-10, || Δx || = 1.1269613984194648e-8
-[ Info: 7, NR, || Fx || = 8.881784197001252e-16, || Δx || = 1.0732357837014894e-15
+[ Info: 0, || Fx || = 1.1986872541507985, || Δx || = 1.0406049051924424, lambda = 0.01
+[ Info: 1, LM, || Fx || = 0.21049833431668807, || Δx || = 0.5726378539417497, lambda = 0.001
+[ Info: 2, LM, || Fx || = 0.06905516647240102, || Δx || = 0.5743851852734362, lambda = 0.0001
+[ Info: 3, LM, || Fx || = 0.013728766203771075, || Δx || = 0.17760164774392048, lambda = 1.0e-5
+[ Info: 4, LM, || Fx || = 0.0010910536208790234, || Δx || = 0.011104211132245457, lambda = 1.0000000000000002e-6
+[ Info: 5, LM, || Fx || = 3.4734570970584855e-6, || Δx || = 4.9803705178168514e-5, lambda = 1.0000000000000002e-7
+[ Info: 6, NR, || Fx || = 8.145650823841124e-10, || Δx || = 1.1269617766427879e-8
+[ Info: 7, NR, || Fx || = 1.7763568394002505e-15, || Δx || = 5.536054283920904e-15
 14-element Vector{Float64}:
-  0.0030386855541790075
+  0.0030386855541783453
   0.0
-  1.139529104940737
+  1.1395291049407343
   0.0
- -0.09813602922363318
+ -0.09813602922363412
   0.0
-  0.0030386855541791147
+  0.0030386855541783974
   0.0
- -1.9279228940409263
+ -1.9279228940409252
   0.0
   0.0
   0.0
   0.0
   0.0</code></pre><p>The function <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.sssolve!-Tuple{Model}"><code>sssolve!</code></a> returns a <code>Vector{Float64}</code> containing the steady state solution, and it also writes that solution into the model object. The vector is of length <code>2*nvariables(m)</code> and contains the level and the slope for each variable.</p><p>If in doubt, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.check_sstate-Tuple{Model}"><code>check_sstate</code></a> to make sure the steady state solution stored in the model object indeed satisfies the steady state system of equations. This function returns the number of equations that are not satisfied. A value of 0 is what we want to see. In verbose mode, it also lists the problematic equations and their residuals.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; check_sstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
-0</code></pre><h3 id="Examining-the-steady-state"><a class="docs-heading-anchor" href="#Examining-the-steady-state">Examining the steady state</a><a id="Examining-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-steady-state" title="Permalink"></a></h3><p>We can access the steady state solution via <code>m.sstate</code> using the dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C</code><code class="nohighlight hljs ansi" style="display:block;">  C = 1.0030433070390217</code></pre><p>We can also assign new values to the steady state solution, but we should be careful to make sure it remains a valid steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C.level = 1.0050</code><code class="nohighlight hljs ansi" style="display:block;">1.005</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) &gt; 0</code><code class="nohighlight hljs ansi" style="display:block;">┌ Warning: The following 2 steady state equations are not satisfied: 
+0</code></pre><h3 id="Examining-the-steady-state"><a class="docs-heading-anchor" href="#Examining-the-steady-state">Examining the steady state</a><a id="Examining-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-steady-state" title="Permalink"></a></h3><p>We can access the steady state solution via <code>m.sstate</code> using the dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C</code><code class="nohighlight hljs ansi" style="display:block;">  C = 1.003043307039021</code></pre><p>We can also assign new values to the steady state solution, but we should be careful to make sure it remains a valid steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.C.level = 1.0050</code><code class="nohighlight hljs ansi" style="display:block;">1.005</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) &gt; 0</code><code class="nohighlight hljs ansi" style="display:block;">┌ Warning: The following 2 steady state equations are not satisfied: 
 │ E5  res= 0.00195669  K[t] + C[t] = A[t] * (K[t - 1] / (1 + g)) ^ α * L[t] ^ (1 - α) + (1 - δ) * (K[t - 1] / (1 + g))
 │ E2  res= 0.00194886  L[t] ^ γ = w[t] / C[t]
 └ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/DlvaY/src/steadystate/diagnose.jl:45
@@ -202,8 +202,8 @@ Test Passed</code></pre><p>We can examine the entire steady state solution with 
     end # options
     # Rest of the model...
 end</code></pre><h4 id="A-quick-sanity-check"><a class="docs-heading-anchor" href="#A-quick-sanity-check">A quick sanity check</a><a id="A-quick-sanity-check-1"></a><a class="docs-heading-anchor-permalink" href="#A-quick-sanity-check" title="Permalink"></a></h4><p>If we were to run a simulation where the economy started in the steady state and there were no shocks at all, we&#39;d expect that the economy would remain in steady state forever.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = simulate(m, p, exog);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
-[ Info: 1, || Fx || = 8.881784197001252e-16</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test ss ≈ steadystatedata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><p>The simulated data, <code>ss</code>, should equal (up to the accuracy of the solution) the steady state data. Similar to <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.steadystatedata"><code>steadystatedata</code></a>, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.zerodata"><code>zerodata</code></a> to create a data set containing zeros to work in the deviation from the steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; zz = simulate(m, p, zerodata(m, p); deviation = true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
-[ Info: 1, || Fx || = 8.881784197001252e-16</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test zz ≈ zerodata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h4 id="Exogenous-data-2"><a class="docs-heading-anchor" href="#Exogenous-data-2">Exogenous data</a><a class="docs-heading-anchor-permalink" href="#Exogenous-data-2" title="Permalink"></a></h4><p>All shocks are exogenous by default. All we have left to do is to set the value of the shock.</p><p>Let&#39;s say that we want to shock <code>ea</code> for the first four quarters by <code>0.1</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[sim_rng[1:4], :ea] .= 0.1;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">162×1 MVTSeries{Quarterly} with range 1999Q4:2040Q1 and variables (ea):
+[ Info: 1, || Fx || = 2.6645352591003757e-15</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test ss ≈ steadystatedata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><p>The simulated data, <code>ss</code>, should equal (up to the accuracy of the solution) the steady state data. Similar to <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.steadystatedata"><code>steadystatedata</code></a>, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.zerodata"><code>zerodata</code></a> to create a data set containing zeros to work in the deviation from the steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; zz = simulate(m, p, zerodata(m, p); deviation = true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
+[ Info: 1, || Fx || = 2.6645352591003757e-15</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test zz ≈ zerodata(m, p)</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h4 id="Exogenous-data-2"><a class="docs-heading-anchor" href="#Exogenous-data-2">Exogenous data</a><a class="docs-heading-anchor-permalink" href="#Exogenous-data-2" title="Permalink"></a></h4><p>All shocks are exogenous by default. All we have left to do is to set the value of the shock.</p><p>Let&#39;s say that we want to shock <code>ea</code> for the first four quarters by <code>0.1</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[sim_rng[1:4], :ea] .= 0.1;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">162×1 MVTSeries{Quarterly} with range 1999Q4:2040Q1 and variables (ea):
            ea
   1999Q4 : 0.0
   2000Q1 : 0.1
@@ -224,11 +224,11 @@ end</code></pre><h4 id="A-quick-sanity-check"><a class="docs-heading-anchor" hre
   2039Q3 : 0.0
   2039Q4 : 0.0
   2040Q1 : 0.0</code></pre><h4 id="Running-the-simulation"><a class="docs-heading-anchor" href="#Running-the-simulation">Running the simulation</a><a id="Running-the-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Running-the-simulation" title="Permalink"></a></h4><p>We call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.StackedTimeSolver.simulate"><code>simulate</code></a>, providing the model, the exogenous data, and the plan. We also specify the type of final condition we want to impose if we want to diverge from the option setting saved in the model.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; irf = simulate(m, p, exog; fctype=fcslope)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2039Q4
-[ Info: 1, || Fx || = 0.1, || Δx || = 0.5206466232473559
-[ Info: 2, || Fx || = 0.15277505186864904, || Δx || = 0.03993870719505268
-[ Info: 3, || Fx || = 0.0010343694178294172, || Δx || = 0.000691396363157369
-[ Info: 4, || Fx || = 0.00011425292530500348, || Δx || = 1.2439741398499554e-7
-[ Info: 5, || Fx || = 0.00011425292530700165, || Δx || = 7.58115759854756e-15
+[ Info: 1, || Fx || = 0.1, || Δx || = 0.520646623247356
+[ Info: 2, || Fx || = 0.1527750518686508, || Δx || = 0.03993870719505423
+[ Info: 3, || Fx || = 0.0010343694178294172, || Δx || = 0.000691396363156543
+[ Info: 4, || Fx || = 0.00011425292530500348, || Δx || = 1.2439741466186473e-7
+[ Info: 5, || Fx || = 0.00011425292530722367, || Δx || = 7.440832823448858e-15
 162×7 MVTSeries{Quarterly} with range 1999Q4:2040Q1 and variables (C,K,L,w,r,…):
            C        K        L         w        r         A        ea
   1999Q4 : 1.00304  3.1253   0.906526  1.00304  0.14545   1.0      0.0
@@ -266,58 +266,58 @@ end</code></pre><h4 id="A-quick-sanity-check"><a class="docs-heading-anchor" hre
   2005Q2 :  0.221188
   2005Q3 :  0.0532813
   2005Q4 : -0.0271735</code></pre><p>Now we are ready to simulate. We can set the shocks to be anticipated or unanticipated by setting the <code>anticipate</code> parameter in <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.StackedTimeSolver.simulate"><code>simulate</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_a = simulate(m, p, exog; fctype=fcnatural, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
-[ Info: 1, || Fx || = 0.22118774995743476, || Δx || = 0.49527636257147284
-[ Info: 2, || Fx || = 0.11135497496290991, || Δx || = 0.04547418349803368
-[ Info: 3, || Fx || = 0.0013651232046569817, || Δx || = 0.0010799446329871937
-[ Info: 4, || Fx || = 9.658946797941326e-7, || Δx || = 2.3355626338287353e-7
-[ Info: 5, || Fx || = 5.851118512107836e-7, || Δx || = 2.18409860367919e-14
-[ Info: 6, || Fx || = 5.851118514328281e-7, || Δx || = 1.8111463924255892e-15</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_u = simulate(m, p, exog; fctype=fcnatural, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
-[ Info: 1, || Fx || = 8.881784197001252e-16
+[ Info: 1, || Fx || = 0.22118774995743476, || Δx || = 0.4952763625714732
+[ Info: 2, || Fx || = 0.11135497496290991, || Δx || = 0.04547418349803575
+[ Info: 3, || Fx || = 0.0013651232046569817, || Δx || = 0.0010799446329871072
+[ Info: 4, || Fx || = 9.658946797941326e-7, || Δx || = 2.3355626409883152e-7
+[ Info: 5, || Fx || = 5.851118509887391e-7, || Δx || = 2.073522750958884e-14
+[ Info: 6, || Fx || = 5.851118512107836e-7, || Δx || = 1.741364520189034e-15</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_u = simulate(m, p, exog; fctype=fcnatural, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
+[ Info: 1, || Fx || = 2.6645352591003757e-15
 [ Info: Simulating 2004Q1:2049Q4
-[ Info: 1, || Fx || = 0.08673472019512457, || Δx || = 0.1256897437873106
-[ Info: 2, || Fx || = 0.007132665886491196, || Δx || = 0.002211869055126581
-[ Info: 3, || Fx || = 2.3632096546322146e-6, || Δx || = 1.9896098115157923e-6
-[ Info: 4, || Fx || = 2.2272532846832555e-7, || Δx || = 4.3951138757054603e-13
-[ Info: 5, || Fx || = 2.227253286903701e-7, || Δx || = 1.5887181827061637e-15
+[ Info: 1, || Fx || = 0.08673472019512457, || Δx || = 0.12568974378731218
+[ Info: 2, || Fx || = 0.0071326658864920844, || Δx || = 0.002211869055125898
+[ Info: 3, || Fx || = 2.363209655520393e-6, || Δx || = 1.9896098096060558e-6
+[ Info: 4, || Fx || = 2.227253286903701e-7, || Δx || = 4.3837844404854026e-13
+[ Info: 5, || Fx || = 2.2272532846832555e-7, || Δx || = 1.8306287289701e-15
 [ Info: Simulating 2004Q2:2049Q4
-[ Info: 1, || Fx || = 0.09017438158453653, || Δx || = 0.12843318055698527
-[ Info: 2, || Fx || = 0.0073075576398906605, || Δx || = 0.0023853029774315625
-[ Info: 3, || Fx || = 2.5649790753590196e-6, || Δx || = 2.3610466802297334e-6
-[ Info: 4, || Fx || = 1.5993261620822552e-8, || Δx || = 5.631773201256458e-13
-[ Info: 5, || Fx || = 1.599326184286716e-8, || Δx || = 2.5952308408483513e-15
+[ Info: 1, || Fx || = 0.09017438158453674, || Δx || = 0.12843318055698422
+[ Info: 2, || Fx || = 0.0073075576398906605, || Δx || = 0.002385302977432731
+[ Info: 3, || Fx || = 2.564979074470841e-6, || Δx || = 2.361046680411748e-6
+[ Info: 4, || Fx || = 1.599326184286716e-8, || Δx || = 5.627263036666305e-13
+[ Info: 5, || Fx || = 1.5993261620822552e-8, || Δx || = 1.5568315629166627e-15
 [ Info: Simulating 2004Q3:2049Q4
-[ Info: 1, || Fx || = 0.04944787535050817, || Δx || = 0.07207007199639898
-[ Info: 2, || Fx || = 0.0021527502945088983, || Δx || = 0.0007429674090533451
-[ Info: 3, || Fx || = 2.4454757685532513e-7, || Δx || = 2.3725601028687886e-7
-[ Info: 4, || Fx || = 1.5093191325576816e-7, || Δx || = 5.827365763936015e-15
+[ Info: 1, || Fx || = 0.04944787535050817, || Δx || = 0.07207007199639894
+[ Info: 2, || Fx || = 0.0021527502945088983, || Δx || = 0.0007429674090539431
+[ Info: 3, || Fx || = 2.4454757863168197e-7, || Δx || = 2.372560107573638e-7
+[ Info: 4, || Fx || = 1.5093191325576816e-7, || Δx || = 6.329062634643854e-15
 [ Info: Simulating 2004Q4:2049Q4
-[ Info: 1, || Fx || = 0.09029142938734866, || Δx || = 0.13278166964783106
-[ Info: 2, || Fx || = 0.006714267644061689, || Δx || = 0.0025333722705362955
-[ Info: 3, || Fx || = 2.646627439872873e-6, || Δx || = 2.8305346949508463e-6
-[ Info: 4, || Fx || = 4.049234186202503e-7, || Δx || = 7.443272577331534e-13
-[ Info: 5, || Fx || = 4.049234183982056e-7, || Δx || = 1.6658923862954805e-15
+[ Info: 1, || Fx || = 0.09029142938734877, || Δx || = 0.1327816696478325
+[ Info: 2, || Fx || = 0.006714267644062577, || Δx || = 0.002533372270535793
+[ Info: 3, || Fx || = 2.646627438096516e-6, || Δx || = 2.830534695426225e-6
+[ Info: 4, || Fx || = 4.049234186202503e-7, || Δx || = 7.453268022068655e-13
+[ Info: 5, || Fx || = 4.049234183982056e-7, || Δx || = 2.2802650256732454e-15
 [ Info: Simulating 2005Q1:2049Q4
-[ Info: 1, || Fx || = 0.0864401313230714, || Δx || = 0.12908770833306502
-[ Info: 2, || Fx || = 0.006389813573256298, || Δx || = 0.002317690272823988
-[ Info: 3, || Fx || = 2.3161130053850343e-6, || Δx || = 2.3147495554618595e-6
-[ Info: 4, || Fx || = 1.5424556344936868e-7, || Δx || = 5.625818511962447e-13
-[ Info: 5, || Fx || = 1.5424556367141334e-7, || Δx || = 1.8005605345556817e-15
+[ Info: 1, || Fx || = 0.08644013132307127, || Δx || = 0.12908770833306485
+[ Info: 2, || Fx || = 0.006389813573256298, || Δx || = 0.002317690272825704
+[ Info: 3, || Fx || = 2.316113004496856e-6, || Δx || = 2.314749557033332e-6
+[ Info: 4, || Fx || = 1.5424556367141334e-7, || Δx || = 5.632149818195855e-13
+[ Info: 5, || Fx || = 1.5424556367141334e-7, || Δx || = 1.9979378973784415e-15
 [ Info: Simulating 2005Q2:2049Q4
-[ Info: 1, || Fx || = 0.22118774995653928, || Δx || = 0.3218160632112652
-[ Info: 2, || Fx || = 0.04747550114631416, || Δx || = 0.014216233839776281
-[ Info: 3, || Fx || = 9.970089022637296e-5, || Δx || = 7.778163280704044e-5
-[ Info: 4, || Fx || = 5.071996539920513e-7, || Δx || = 7.072750210753489e-10
-[ Info: 5, || Fx || = 5.071996537700068e-7, || Δx || = 1.5522107433323819e-15
+[ Info: 1, || Fx || = 0.22118774995653917, || Δx || = 0.3218160632112635
+[ Info: 2, || Fx || = 0.04747550114631238, || Δx || = 0.014216233839774406
+[ Info: 3, || Fx || = 9.970089022548478e-5, || Δx || = 7.778163280608468e-5
+[ Info: 4, || Fx || = 5.071996537700068e-7, || Δx || = 7.072760117809371e-10
+[ Info: 5, || Fx || = 5.071996539920513e-7, || Δx || = 1.913332062634688e-15
 [ Info: Simulating 2005Q3:2049Q4
-[ Info: 1, || Fx || = 0.053281328219990515, || Δx || = 0.07414980755341946
-[ Info: 2, || Fx || = 0.002864711138726328, || Δx || = 0.0007710532528233232
-[ Info: 3, || Fx || = 6.714969119958594e-7, || Δx || = 2.2687553033520883e-7
-[ Info: 4, || Fx || = 6.714969122179037e-7, || Δx || = 6.25344550571788e-15
+[ Info: 1, || Fx || = 0.05328132821999068, || Δx || = 0.07414980755342052
+[ Info: 2, || Fx || = 0.0028647111387281043, || Δx || = 0.0007710532528230781
+[ Info: 3, || Fx || = 6.714969119958594e-7, || Δx || = 2.268755299653634e-7
+[ Info: 4, || Fx || = 6.714969119958594e-7, || Δx || = 6.075374472001218e-15
 [ Info: Simulating 2005Q4:2049Q4
-[ Info: 1, || Fx || = 0.027173539599317093, || Δx || = 0.037863898464504164
-[ Info: 2, || Fx || = 0.0007673093684443799, || Δx || = 0.00020426586085924361
-[ Info: 3, || Fx || = 5.851118512107836e-7, || Δx || = 1.6444740123030995e-8
-[ Info: 4, || Fx || = 5.851118514328281e-7, || Δx || = 2.0873342120212277e-15</code></pre><p>As before, we can review the responses of variables to the shock using <code>plot</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; observed = collect(keys(m.autoexogenize)); # the observed variable is from the autoexogenize list</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = steadystatedata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, sim_a, sim_u,
+[ Info: 1, || Fx || = 0.027173539599317065, || Δx || = 0.03786389846450397
+[ Info: 2, || Fx || = 0.0007673093684434917, || Δx || = 0.00020426586085971196
+[ Info: 3, || Fx || = 5.851118514328281e-7, || Δx || = 1.64447419264775e-8
+[ Info: 4, || Fx || = 5.851118512107836e-7, || Δx || = 1.5900850666330398e-15</code></pre><p>As before, we can review the responses of variables to the shock using <code>plot</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; observed = collect(keys(m.autoexogenize)); # the observed variable is from the autoexogenize list</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = steadystatedata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, sim_a, sim_u,
             vars=m.variables,
             labels=(&quot;SS&quot;, &quot;Anticipated&quot;, &quot;Unanticipated&quot;),
             legend=[true (false for i = 2:length(m.variables))...],
@@ -331,61 +331,61 @@ end</code></pre><h4 id="A-quick-sanity-check"><a class="docs-heading-anchor" hre
   2006Q1:2050Q1 → ea</code></pre><p>As we can see above, the plan now reflects our intentions.</p><p>Finally, we need to set up the exogenous data. This time we do not specify the shocks; instead, we assign the known data for the observed variables for the historic range. We start with initial conditions.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = steadystatedata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>We take the observed data from the simulation above. We show the anticipated version first.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
            exog[shk_rng, v] .= sim_a[v]
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; back_a = simulate(m, p, exog; fctype=fcnatural, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
-[ Info: 1, || Fx || = 0.33023493446953456, || Δx || = 0.495275525214143
-[ Info: 2, || Fx || = 0.06523437671090226, || Δx || = 0.05001660427123191
-[ Info: 3, || Fx || = 0.0020771882319223778, || Δx || = 0.001210409492371334
-[ Info: 4, || Fx || = 1.623920866222761e-6, || Δx || = 4.537609894560838e-7
-[ Info: 5, || Fx || = 5.851118514328281e-7, || Δx || = 1.0116215423002218e-13
-[ Info: 6, || Fx || = 5.851118512107836e-7, || Δx || = 1.3767968290004552e-15</code></pre><p>Now we show the unanticipated case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
+[ Info: 1, || Fx || = 0.33023493446953367, || Δx || = 0.49527552521414253
+[ Info: 2, || Fx || = 0.06523437671090093, || Δx || = 0.05001660427123185
+[ Info: 3, || Fx || = 0.0020771882319223778, || Δx || = 0.0012104094923724822
+[ Info: 4, || Fx || = 1.6239208671109395e-6, || Δx || = 4.5376098871214183e-7
+[ Info: 5, || Fx || = 5.851118514328281e-7, || Δx || = 1.0039468916187544e-13
+[ Info: 6, || Fx || = 5.851118512107836e-7, || Δx || = 1.5507277653481646e-15</code></pre><p>Now we show the unanticipated case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
            exog[shk_rng, v] .= sim_u[v]
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; back_u = simulate(m, p, exog; fctype=fcnatural, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
-[ Info: 1, || Fx || = 0.330234934537855, || Δx || = 0.21779435104931572
-[ Info: 2, || Fx || = 0.0334068489793129, || Δx || = 0.01382033448252435
-[ Info: 3, || Fx || = 0.00026677906834571274, || Δx || = 9.638022482099516e-5
-[ Info: 4, || Fx || = 1.2023799733640317e-8, || Δx || = 4.644870665858901e-9
+[ Info: 1, || Fx || = 0.33023493453785324, || Δx || = 0.21779435104931494
+[ Info: 2, || Fx || = 0.0334068489793129, || Δx || = 0.013820334482524331
+[ Info: 3, || Fx || = 0.0002667790683430482, || Δx || = 9.638022482001762e-5
+[ Info: 4, || Fx || = 1.2023800621818737e-8, || Δx || = 4.644870643498409e-9
 [ Info: 5, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2004Q1:2049Q4
-[ Info: 1, || Fx || = 0.1229669088271903, || Δx || = 0.1235252868323717
-[ Info: 2, || Fx || = 0.003791957972147486, || Δx || = 0.001020629974683538
-[ Info: 3, || Fx || = 9.528237354672342e-7, || Δx || = 1.979069093325735e-7
-[ Info: 4, || Fx || = 2.227253286903701e-7, || Δx || = 1.3689039943418275e-14
-[ Info: 5, || Fx || = 2.2272532846832555e-7, || Δx || = 1.9782995020020204e-15
+[ Info: 1, || Fx || = 0.1229669088271903, || Δx || = 0.12352528683237139
+[ Info: 2, || Fx || = 0.003791957972147486, || Δx || = 0.0010206299746842442
+[ Info: 3, || Fx || = 9.528237345790558e-7, || Δx || = 1.979069092481892e-7
+[ Info: 4, || Fx || = 2.2272532846832555e-7, || Δx || = 1.4453076094450426e-14
+[ Info: 5, || Fx || = 2.227253286903701e-7, || Δx || = 1.5580796924927795e-15
 [ Info: Simulating 2004Q2:2049Q4
-[ Info: 1, || Fx || = 0.13248353214813147, || Δx || = 0.13076675646184535
-[ Info: 2, || Fx || = 0.003954764610131889, || Δx || = 0.0010999488546568003
-[ Info: 3, || Fx || = 1.0366119171933974e-6, || Δx || = 2.296587307288728e-7
-[ Info: 4, || Fx || = 1.599326184286716e-8, || Δx || = 1.963335046186276e-14
-[ Info: 5, || Fx || = 1.5993261620822552e-8, || Δx || = 2.0523430617013923e-15
+[ Info: 1, || Fx || = 0.13248353214813058, || Δx || = 0.13076675646184605
+[ Info: 2, || Fx || = 0.003954764610132777, || Δx || = 0.0010999488546559288
+[ Info: 3, || Fx || = 1.0366119171933974e-6, || Δx || = 2.2965873090365925e-7
+[ Info: 4, || Fx || = 1.599326184286716e-8, || Δx || = 2.006014561526159e-14
+[ Info: 5, || Fx || = 1.5993261620822552e-8, || Δx || = 1.7277971415335749e-15
 [ Info: Simulating 2004Q3:2049Q4
-[ Info: 1, || Fx || = 0.0650536175825609, || Δx || = 0.07275837459462732
-[ Info: 2, || Fx || = 0.0011848601574868667, || Δx || = 0.0003472074002626759
-[ Info: 3, || Fx || = 1.509319129227012e-7, || Δx || = 2.3934966435557373e-8
-[ Info: 4, || Fx || = 1.509319134778128e-7, || Δx || = 1.9023091310023374e-15
+[ Info: 1, || Fx || = 0.0650536175825609, || Δx || = 0.0727583745946274
+[ Info: 2, || Fx || = 0.0011848601574842021, || Δx || = 0.00034720740026211814
+[ Info: 3, || Fx || = 1.509319129227012e-7, || Δx || = 2.393496633748949e-8
+[ Info: 4, || Fx || = 1.509319134778128e-7, || Δx || = 1.9114804903812947e-15
 [ Info: Simulating 2004Q4:2049Q4
-[ Info: 1, || Fx || = 0.1083335286523015, || Δx || = 0.13504222818820524
-[ Info: 2, || Fx || = 0.0037659404552097264, || Δx || = 0.0012302994436555795
-[ Info: 3, || Fx || = 7.393611634043395e-7, || Δx || = 3.209490762635856e-7
-[ Info: 4, || Fx || = 4.049234186202503e-7, || Δx || = 3.3757617837434125e-14
-[ Info: 5, || Fx || = 4.049234186202503e-7, || Δx || = 1.524873404597042e-15
+[ Info: 1, || Fx || = 0.10833352865230239, || Δx || = 0.13504222818820513
+[ Info: 2, || Fx || = 0.0037659404552097264, || Δx || = 0.0012302994436563515
+[ Info: 3, || Fx || = 7.393611616279827e-7, || Δx || = 3.209490756160572e-7
+[ Info: 4, || Fx || = 4.04923418842295e-7, || Δx || = 3.307538648414966e-14
+[ Info: 5, || Fx || = 4.0492341850922796e-7, || Δx || = 1.827547258443763e-15
 [ Info: Simulating 2005Q1:2049Q4
-[ Info: 1, || Fx || = 0.09940402020333972, || Δx || = 0.12700308373348188
-[ Info: 2, || Fx || = 0.0035224373283817556, || Δx || = 0.001088862636188534
-[ Info: 3, || Fx || = 6.880380984952694e-7, || Δx || = 2.4541536113705416e-7
-[ Info: 4, || Fx || = 1.5424556344936868e-7, || Δx || = 2.2789839265153023e-14
-[ Info: 5, || Fx || = 1.5424556367141334e-7, || Δx || = 2.055346777788677e-15
+[ Info: 1, || Fx || = 0.09940402020333883, || Δx || = 0.12700308373348265
+[ Info: 2, || Fx || = 0.003522437328382644, || Δx || = 0.001088862636189805
+[ Info: 3, || Fx || = 6.880380984952694e-7, || Δx || = 2.4541536140673743e-7
+[ Info: 4, || Fx || = 1.5424556367141334e-7, || Δx || = 2.241929819116658e-14
+[ Info: 5, || Fx || = 1.5424556344936868e-7, || Δx || = 1.6497944689331912e-15
 [ Info: Simulating 2005Q2:2049Q4
-[ Info: 1, || Fx || = 0.31013475935419166, || Δx || = 0.30759542142416285
-[ Info: 2, || Fx || = 0.024682448875726237, || Δx || = 0.00708763332766176
-[ Info: 3, || Fx || = 4.397407702683154e-5, || Δx || = 7.743192866777836e-6
-[ Info: 4, || Fx || = 5.071996539920513e-7, || Δx || = 1.878907649014188e-11
-[ Info: 5, || Fx || = 5.071996535479623e-7, || Δx || = 1.8390335591140745e-15
+[ Info: 1, || Fx || = 0.31013475935419166, || Δx || = 0.3075954214241622
+[ Info: 2, || Fx || = 0.02468244887572535, || Δx || = 0.0070876333276631825
+[ Info: 3, || Fx || = 4.397407702683154e-5, || Δx || = 7.74319286680945e-6
+[ Info: 4, || Fx || = 5.071996537700068e-7, || Δx || = 1.878971936586066e-11
+[ Info: 5, || Fx || = 5.071996539920513e-7, || Δx || = 1.5953973322136533e-15
 [ Info: Simulating 2005Q3:2049Q4
-[ Info: 1, || Fx || = 0.09405292165147738, || Δx || = 0.07330820884670149
-[ Info: 2, || Fx || = 0.0016914125629456933, || Δx || = 0.00048530520188063314
-[ Info: 3, || Fx || = 6.714969119958594e-7, || Δx || = 2.6866224991936835e-8
-[ Info: 4, || Fx || = 6.714969122179037e-7, || Δx || = 1.7849571133855893e-15
+[ Info: 1, || Fx || = 0.09405292165147827, || Δx || = 0.07330820884670079
+[ Info: 2, || Fx || = 0.0016914125629456933, || Δx || = 0.0004853052018826065
+[ Info: 3, || Fx || = 6.714969122179037e-7, || Δx || = 2.6866225860235242e-8
+[ Info: 4, || Fx || = 6.714969119958594e-7, || Δx || = 2.0846770463239566e-15
 [ Info: Simulating 2005Q4:2049Q4
-[ Info: 1, || Fx || = 0.04967523549365005, || Δx || = 0.038080861782250244
-[ Info: 2, || Fx || = 0.000426803953563315, || Δx || = 0.00011957700188777987
-[ Info: 3, || Fx || = 5.851118509887391e-7, || Δx || = 1.567393830948045e-9
-[ Info: 4, || Fx || = 5.851118514328281e-7, || Δx || = 2.5798608182620632e-15</code></pre><p>If we did everything correctly, the shocks we recovered must match the shocks we used when we simulated the data.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a[:ea] ≈ back_a[:ea]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u[:ea] ≈ back_u[:ea]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><p>Moreover, we must have the unobserved variables match as well. In fact, all the data must match over the entire simulation range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a ≈ back_a</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u ≈ back_u</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h2 id="Appendix"><a class="docs-heading-anchor" href="#Appendix">Appendix</a><a id="Appendix-1"></a><a class="docs-heading-anchor-permalink" href="#Appendix" title="Permalink"></a></h2><h3 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h3><p><a href="https://archives.dynare.org/DynareShanghai2013/order1.pdf">Villemot, S., 2013. First order approximation of stochastic models.</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../1.TimeSeriesEcon/main/">« Time Series</a><a class="docs-footer-nextpage" href="../../3.US_SW07/main/">Smets and Wouters 2007 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Thursday 7 April 2022 17:35">Thursday 7 April 2022</span>. Using Julia version 1.6.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+[ Info: 1, || Fx || = 0.049675235493647385, || Δx || = 0.038080861782250855
+[ Info: 2, || Fx || = 0.0004268039535642032, || Δx || = 0.00011957700188797987
+[ Info: 3, || Fx || = 5.851118512107836e-7, || Δx || = 1.5673942767318945e-9
+[ Info: 4, || Fx || = 5.851118514328281e-7, || Δx || = 1.648168176255874e-15</code></pre><p>If we did everything correctly, the shocks we recovered must match the shocks we used when we simulated the data.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a[:ea] ≈ back_a[:ea]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u[:ea] ≈ back_u[:ea]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><p>Moreover, we must have the unobserved variables match as well. In fact, all the data must match over the entire simulation range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a ≈ back_a</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u ≈ back_u</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed</code></pre><h2 id="Appendix"><a class="docs-heading-anchor" href="#Appendix">Appendix</a><a id="Appendix-1"></a><a class="docs-heading-anchor-permalink" href="#Appendix" title="Permalink"></a></h2><h3 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h3><p><a href="https://archives.dynare.org/DynareShanghai2013/order1.pdf">Villemot, S., 2013. First order approximation of stochastic models.</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../1.TimeSeriesEcon/main/">« Time Series</a><a class="docs-footer-nextpage" href="../../3.US_SW07/main/">Smets and Wouters 2007 »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Thursday 7 April 2022 18:30">Thursday 7 April 2022</span>. Using Julia version 1.6.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
