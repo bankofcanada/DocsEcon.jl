@@ -3,24 +3,42 @@
 ```@contents
 Pages = ["modelbaseecon.md"]
 ```
+### Public interface
+```@autodocs
+Modules = [ModelBaseEcon]
+Private = false
+```
 
-## Options
+#### Options
 
 ```@autodocs
 Modules = [ModelBaseEcon.OptionsMod]
 Private = false
 ```
 
-## Timer
+#### Timer
 
 ```@autodocs
 Modules = [ModelBaseEcon.Timer]
 Private = false
 ```
 
-## ModelBaseEcon
-
+### Internals
 ```@autodocs
 Modules = [ModelBaseEcon]
-Private = false
+Public = false
+```
+
+#### Options
+
+```@autodocs
+Modules = [ModelBaseEcon.OptionsMod]
+Public = false
+```
+
+#### Timer
+
+```@autodocs
+Modules = [ModelBaseEcon.Timer]
+Public = false
 ```

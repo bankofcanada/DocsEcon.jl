@@ -77,7 +77,7 @@ differentiation.
 
 For regular variables we substitute
 ```math
-Y[t] = lvl_Y + (t-t_ref) * slp_Y
+Y_t = lvl_Y + (t-t_{ref}) * slp_Y
 ```
 in the dynamic equations. `t_ref` is a reference time: time at which
 `Y[t_ref] = lvl_Y`. All lags and leads of `Y` are unknowns in the dynamic
@@ -87,13 +87,13 @@ values of `t`.
 
 In the case of `@log X` variable, we have the steady state substitution
 ```math
-X[t] = exp(lvl_logX + (t-t_ref) * slp_logX).
+X_t = exp(lvl_{logX} + (t-t_{ref}) * slp_{logX}).
 ```
 
 Since the dynamic equations have already been transformed in terms of
-`log(X[t])`, we actually have to do the substitution
+`log(X_t)`, we actually have to do the substitution
 ```math
-log(X[t]) = lvl_logX + (t-t_ref) slp_logX,
+log(X_t) = lvl_{logX} + (t-t_{ref}) slp_{logX},
 ```
 which is the same as for non-log variables. So once again we don't need to do
 anything to the equations, we only need to transform the data.

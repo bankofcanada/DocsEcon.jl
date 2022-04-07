@@ -1,0 +1,54 @@
+name: Docs
+# description: 'Build and deploy the documentation and tutorials for StateSpaceEcon'
+# author: 'Boyan Bejanov'
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Setup Julia environment
+        # You may pin to the exact commit or the version.
+        # uses: julia-actions/setup-julia@ee66464cb7897ffcc5322800f4b18d449794af30
+        uses: julia-actions/setup-julia@v1.6.1
+        with:
+          # The Julia version to download (if necessary) and use. Example: 1.0.4
+          version: 1.6   # optional, default is 1
+          # Architecture of the Julia binaries. Defaults to x64.
+          arch: x64 # optional, default is x64
+          # Display InteractiveUtils.versioninfo() after installing
+          show-versioninfo: false # optional, default is false
+
+      - name: Instantiate project environment
+        run: |
+           using Pkg
+           Pkg.instantiate()
+        shell: julia --color=yes --project {0}
+
+      - name: Make and deploy documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
+        run: |
+          julia --color=yes --project makedocs.jl
+        shell: bash
