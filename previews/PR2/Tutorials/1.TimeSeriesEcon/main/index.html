@@ -6,24 +6,24 @@ using Plots</code></pre><h2 id="Frequency-and-Time"><a class="docs-heading-ancho
  2000M3
  2000M5
  2000M7</code></pre><p>We can create a range that runs backwards by swapping the endpoints and making the step <code>-1</code>. But it is easier to call the standard Julia function <a href="https://docs.julialang.org/en/v1/base/iterators/#Base.Iterators.reverse"><code>reverse</code></a>. This can be helpful when using <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.@rec-Tuple{Any, Any}"><code>@rec</code></a> as shown below.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; rng</code><code class="nohighlight hljs ansi" style="display:block;">2000M1:2001M9</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; reverse(rng)</code><code class="nohighlight hljs ansi" style="display:block;">2001M9:-1:2000M1</code></pre><h2 id="Time-Series-2"><a class="docs-heading-anchor" href="#Time-Series-2">Time Series</a><a class="docs-heading-anchor-permalink" href="#Time-Series-2" title="Permalink"></a></h2><p>TimeSeriesEcon provides the data type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> to represent a macro-economic time series. It is similar to a <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.Vector"><code>Vector</code></a>, but with added functionality for time series.</p><p>The <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> type inherits from the built-in <a href="https://docs.julialang.org/en/v1/base/arrays/#Core.AbstractArray"><code>AbstractArray</code></a> and supports all the basic operations of 1-dimensional arrays in Julia. Refer to the article on <a href="https://docs.julialang.org/en/v1/manual/arrays/#man-multi-dim-arrays">Multi-dimensional Arrays</a> in the Julia manual for details.</p><p>Type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> is also a generic data type. It depends on two type-parameters: its frequency and the data type of its elements.</p><h3 id="Creation-of-TSeries"><a class="docs-heading-anchor" href="#Creation-of-TSeries">Creation of <code>TSeries</code></a><a id="Creation-of-TSeries-1"></a><a class="docs-heading-anchor-permalink" href="#Creation-of-TSeries" title="Permalink"></a></h3><h4 id="Constructors"><a class="docs-heading-anchor" href="#Constructors">Constructors</a><a id="Constructors-1"></a><a class="docs-heading-anchor-permalink" href="#Constructors" title="Permalink"></a></h4><p>The basic constructor of a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> requires an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> (to label the first observation) and a vector of data.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; vals = rand(5)</code><code class="nohighlight hljs ansi" style="display:block;">5-element Vector{Float64}:
- 0.3787664194106273
- 0.602205490365753
- 0.5396211839392178
- 0.8131410339559126
- 0.3669337383771565</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ts = TSeries(2020Q1, vals)</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2020Q1:2021Q1:
-  2020Q1 : 0.3787664194106273
-  2020Q2 : 0.602205490365753
-  2020Q3 : 0.5396211839392178
-  2020Q4 : 0.8131410339559126
-  2021Q1 : 0.3669337383771565</code></pre><p>The frequency of the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> determines the frequency of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. Similarly, the type of the elements of the <code>vals</code> array determines the element type of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><div class="admonition is-info"><header class="admonition-header">Important Caveat</header><div class="admonition-body"><p>Be mindful of the fact that the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> does not copy the original data container. Rather, the <code>ts</code> constructed above is just a wrapper and uses <code>vals</code> for its storage. Specifically, every modification to one of them is immediately reflected in the other. To break the connection use <a href="https://docs.julialang.org/en/v1/base/base/#Base.copy"><code>copy</code></a>.</p><pre><code class="language- hljs">ts = TSeries(2020Q1, copy(vals))</code></pre></div></div><p>We can construct a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> with its own storage from just an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> range. This would construct a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> whose storage is un-initialized (it would contain some arbitrary numbers). We can initialize the storage by providing a constant or a function, such as <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.zeros"><code>zeros</code></a>, <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.ones"><code>ones</code></a>, <a href="https://docs.julialang.org/en/v1/stdlib/Random/#Base.rand"><code>rand</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; rng = 2020Q1:2021Q4</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1:2021Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng)  # uninitialized (arbitrary numbers that happen to be in memory)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 6.9429865316384e-310
-  2020Q2 : 6.94298626553385e-310
-  2020Q3 : 6.94298301904193e-310
-  2020Q4 : 6.9429830190459e-310
-  2021Q1 : 6.94298301904983e-310
-  2021Q2 : 6.9429830190538e-310
-  2021Q3 : 6.94298521164993e-310
-  2021Q4 : 6.94298301905774e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng, pi)    # constant</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly,Irrational{:π}} with range 2020Q1:2021Q4:
+ 0.9876642724097875
+ 0.04068768146489243
+ 0.27578312484145284
+ 0.21351448292227349
+ 0.17882913638727316</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ts = TSeries(2020Q1, vals)</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2020Q1:2021Q1:
+  2020Q1 : 0.9876642724097875
+  2020Q2 : 0.04068768146489243
+  2020Q3 : 0.27578312484145284
+  2020Q4 : 0.21351448292227349
+  2021Q1 : 0.17882913638727316</code></pre><p>The frequency of the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> determines the frequency of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. Similarly, the type of the elements of the <code>vals</code> array determines the element type of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><div class="admonition is-info"><header class="admonition-header">Important Caveat</header><div class="admonition-body"><p>Be mindful of the fact that the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> does not copy the original data container. Rather, the <code>ts</code> constructed above is just a wrapper and uses <code>vals</code> for its storage. Specifically, every modification to one of them is immediately reflected in the other. To break the connection use <a href="https://docs.julialang.org/en/v1/base/base/#Base.copy"><code>copy</code></a>.</p><pre><code class="language- hljs">ts = TSeries(2020Q1, copy(vals))</code></pre></div></div><p>We can construct a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> with its own storage from just an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> range. This would construct a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> whose storage is un-initialized (it would contain some arbitrary numbers). We can initialize the storage by providing a constant or a function, such as <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.zeros"><code>zeros</code></a>, <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.ones"><code>ones</code></a>, <a href="https://docs.julialang.org/en/v1/stdlib/Random/#Base.rand"><code>rand</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; rng = 2020Q1:2021Q4</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1:2021Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng)  # uninitialized (arbitrary numbers that happen to be in memory)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
+  2020Q1 : 5.4e-323
+  2020Q2 : 2.5e-323
+  2020Q3 : 6.4e-323
+  2020Q4 : 3.0e-323
+  2021Q1 : 7.4e-323
+  2021Q2 : 3.5e-323
+  2021Q3 : 6.9060943401056e-310
+  2021Q4 : 6.906097009932e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng, pi)    # constant</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly,Irrational{:π}} with range 2020Q1:2021Q4:
   2020Q1 : π
   2020Q2 : π
   2020Q3 : π
@@ -32,14 +32,14 @@ using Plots</code></pre><h2 id="Frequency-and-Time"><a class="docs-heading-ancho
   2021Q2 : π
   2021Q3 : π
   2021Q4 : π</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; TSeries(rng, rand)  # random numbers</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 0.13806377903029055
-  2020Q2 : 0.5177213710747275
-  2020Q3 : 0.15026680579491303
-  2020Q4 : 0.9984374013431765
-  2021Q1 : 0.16663102759348325
-  2021Q2 : 0.614007668714541
-  2021Q3 : 0.9329811520685058
-  2021Q4 : 0.8714369453831141</code></pre><div class="admonition is-info"><header class="admonition-header">Important</header><div class="admonition-body"><p>Be mindful of the type of the constant you provide as initializer. Specifically, in Julia <code>0</code> is of type <a href="https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/"><code>Int</code></a> while <code>0.0</code> is of type <a href="https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/"><code>Float64</code></a>. If you&#39;re never going to work with <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> that store integers (most people), then we recommend you get used to the idiom <code>TSeries(rng, zeros)</code>, which does what you expect.</p><pre><code class="language- hljs">TSeries(rng,0)   # element type is Int
+  2020Q1 : 0.5983219066454759
+  2020Q2 : 0.7798260978160099
+  2020Q3 : 0.6084584689374604
+  2020Q4 : 0.22474808598516516
+  2021Q1 : 0.8659327789205231
+  2021Q2 : 0.8790796163940622
+  2021Q3 : 0.5957804422137205
+  2021Q4 : 0.6334757488422387</code></pre><div class="admonition is-info"><header class="admonition-header">Important</header><div class="admonition-body"><p>Be mindful of the type of the constant you provide as initializer. Specifically, in Julia <code>0</code> is of type <a href="https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/"><code>Int</code></a> while <code>0.0</code> is of type <a href="https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/"><code>Float64</code></a>. If you&#39;re never going to work with <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> that store integers (most people), then we recommend you get used to the idiom <code>TSeries(rng, zeros)</code>, which does what you expect.</p><pre><code class="language- hljs">TSeries(rng,0)   # element type is Int
 TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Other-ways-to-construct-TSeries"><a class="docs-heading-anchor" href="#Other-ways-to-construct-TSeries">Other ways to construct <code>TSeries</code></a><a id="Other-ways-to-construct-TSeries-1"></a><a class="docs-heading-anchor-permalink" href="#Other-ways-to-construct-TSeries" title="Permalink"></a></h4><p>We can also construct new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> from existing <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. The function <a href="../../../Reference/TimeSeriesEcon/#Base.similar-Tuple{TSeries}"><code>similar(::TSeries)</code></a> creates an uninitialized copy, meaning that the copy has the same frequency and element type, but the storage contains arbitrary values. This is useful if we just want a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> that we will fill in later. The other useful function is <a href="https://docs.julialang.org/en/v1/base/base/#Base.copy"><code>copy</code></a>, which makes an exact copy. In both cases the new and the old <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> have separate storage.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t = TSeries(rng, 2.7)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
   2020Q1 : 2.7
   2020Q2 : 2.7
@@ -49,14 +49,14 @@ TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Ot
   2021Q2 : 2.7
   2021Q3 : 2.7
   2021Q4 : 2.7</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; s = similar(t)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 6.9429835368662e-310
-  2020Q2 : 3.03858435e-316
-  2020Q3 : 6.9429836009572e-310
-  2020Q4 : 6.94298360096114e-310
-  2021Q1 : 6.9429836009651e-310
-  2021Q2 : 6.94298360096904e-310
-  2021Q3 : 6.94298426193086e-310
-  2021Q4 : 6.942983600973e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; c = copy(t)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
+  2020Q1 : 6.90606325719316e-310
+  2020Q2 : 6.90606325719474e-310
+  2020Q3 : 6.9060632571963e-310
+  2020Q4 : 6.9060632571979e-310
+  2021Q1 : 6.90606325740343e-310
+  2021Q2 : 6.9060632573212e-310
+  2021Q3 : 6.906063257239e-310
+  2021Q4 : 3.85e-322</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; c = copy(t)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
   2020Q1 : 2.7
   2020Q2 : 2.7
   2020Q3 : 2.7
@@ -65,36 +65,36 @@ TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Ot
   2021Q2 : 2.7
   2021Q3 : 2.7
   2021Q4 : 2.7</code></pre><p>New <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> are also the results of arithmetic and other operation, which we discuss later in this tutorial.</p><h3 id="Access-to-Elements-of-TSeries"><a class="docs-heading-anchor" href="#Access-to-Elements-of-TSeries">Access to Elements of <code>TSeries</code></a><a id="Access-to-Elements-of-TSeries-1"></a><a class="docs-heading-anchor-permalink" href="#Access-to-Elements-of-TSeries" title="Permalink"></a></h3><h4 id="Reading-(Indexing)"><a class="docs-heading-anchor" href="#Reading-(Indexing)">Reading (Indexing)</a><a id="Reading-(Indexing)-1"></a><a class="docs-heading-anchor-permalink" href="#Reading-(Indexing)" title="Permalink"></a></h4><p>We can access the value for a specific <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> using the standard indexing notation in Julia.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; rng = 2000Q1:2001Q1;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t = TSeries(rng, rand)</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2000Q1:2001Q1:
-  2000Q1 : 0.16358447181529145
-  2000Q2 : 0.5555701726857101
-  2000Q3 : 0.010733070032562964
-  2000Q4 : 0.8900301601494174
-  2001Q1 : 0.3081897618733662</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2000Q1]</code><code class="nohighlight hljs ansi" style="display:block;">0.16358447181529145</code></pre><p>If we ask for a range of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>, the result is a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2000Q2:2000Q4]</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q2:2000Q4:
-  2000Q2 : 0.5555701726857101
-  2000Q3 : 0.010733070032562964
-  2000Q4 : 0.8900301601494174</code></pre><p>We can also use integers. In this case the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> behaves like a <code>Vector</code>. The valid integer bounds are <code>1:length(ts)</code>. Note that if we use an integer range, the result is a <code>Vector</code>, not a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[1]</code><code class="nohighlight hljs ansi" style="display:block;">0.16358447181529145</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2:4]</code><code class="nohighlight hljs ansi" style="display:block;">3-element Vector{Float64}:
- 0.5555701726857101
- 0.010733070032562964
- 0.8900301601494174</code></pre><p>If we attempt to read outside the stored range, we would get a <code>BoundsError</code>, which is the same for <code>Vector</code>s.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[1999Q1]</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: BoundsError: attempt to access 5-element TSeries{Quarterly} with range 2000Q1:2001Q1 at index [1999Q1]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2001Q1:2001Q3]</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: BoundsError: attempt to access 5-element TSeries{Quarterly} with range 2000Q1:2001Q1 at index [2001Q1:2001Q3]</code></pre><p>When specifying a range, we can use <code>begin</code> and <code>end</code> inside the <code>[]</code>. This works exactly the same way for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> as it does for the built-in <code>Vector</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[end-2:end]   # last 3</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q3:2001Q1:
-  2000Q3 : 0.010733070032562964
-  2000Q4 : 0.8900301601494174
-  2001Q1 : 0.3081897618733662</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[begin+1:end-1]  # drop first and last</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q2:2000Q4:
-  2000Q2 : 0.5555701726857101
-  2000Q3 : 0.010733070032562964
-  2000Q4 : 0.8900301601494174</code></pre><div class="admonition is-info"><header class="admonition-header">Important</header><div class="admonition-body"><p>Keep in mind that <code>begin</code> and <code>end</code> for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> are of type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>. Specifically, when using them we must make sure that both limits of the range evaluate to <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> and not integer. For example, <code>julia ts[1:end-1]  # error</code> will result in an error because the first limit is 1, an <code>Int</code>, while the last limit is <code>lastdate(ts)-1</code>, an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>). To make this work we need this. <code>julia ts[begin:end-1] # correct</code> </p></div></div><h4 id="Writing-(Indexed-Assignment)"><a class="docs-heading-anchor" href="#Writing-(Indexed-Assignment)">Writing (Indexed Assignment)</a><a id="Writing-(Indexed-Assignment)-1"></a><a class="docs-heading-anchor-permalink" href="#Writing-(Indexed-Assignment)" title="Permalink"></a></h4><p>When indexing is used on the left side of an assignment, we&#39;re updating the specified element(s) of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. Again, this works the same as with <code>Vector</code>s.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2000Q2] = 5</code><code class="nohighlight hljs ansi" style="display:block;">5</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2000Q1:2001Q1:
-  2000Q1 : 0.16358447181529145
+  2000Q1 : 0.2933294845925929
+  2000Q2 : 0.2171671902436485
+  2000Q3 : 0.6269109321318767
+  2000Q4 : 0.6925243186808498
+  2001Q1 : 0.773279232889672</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2000Q1]</code><code class="nohighlight hljs ansi" style="display:block;">0.2933294845925929</code></pre><p>If we ask for a range of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>, the result is a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2000Q2:2000Q4]</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q2:2000Q4:
+  2000Q2 : 0.2171671902436485
+  2000Q3 : 0.6269109321318767
+  2000Q4 : 0.6925243186808498</code></pre><p>We can also use integers. In this case the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> behaves like a <code>Vector</code>. The valid integer bounds are <code>1:length(ts)</code>. Note that if we use an integer range, the result is a <code>Vector</code>, not a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[1]</code><code class="nohighlight hljs ansi" style="display:block;">0.2933294845925929</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2:4]</code><code class="nohighlight hljs ansi" style="display:block;">3-element Vector{Float64}:
+ 0.2171671902436485
+ 0.6269109321318767
+ 0.6925243186808498</code></pre><p>If we attempt to read outside the stored range, we would get a <code>BoundsError</code>, which is the same for <code>Vector</code>s.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[1999Q1]</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: BoundsError: attempt to access 5-element TSeries{Quarterly} with range 2000Q1:2001Q1 at index [1999Q1]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2001Q1:2001Q3]</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: BoundsError: attempt to access 5-element TSeries{Quarterly} with range 2000Q1:2001Q1 at index [2001Q1:2001Q3]</code></pre><p>When specifying a range, we can use <code>begin</code> and <code>end</code> inside the <code>[]</code>. This works exactly the same way for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> as it does for the built-in <code>Vector</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[end-2:end]   # last 3</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q3:2001Q1:
+  2000Q3 : 0.6269109321318767
+  2000Q4 : 0.6925243186808498
+  2001Q1 : 0.773279232889672</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[begin+1:end-1]  # drop first and last</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q2:2000Q4:
+  2000Q2 : 0.2171671902436485
+  2000Q3 : 0.6269109321318767
+  2000Q4 : 0.6925243186808498</code></pre><div class="admonition is-info"><header class="admonition-header">Important</header><div class="admonition-body"><p>Keep in mind that <code>begin</code> and <code>end</code> for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> are of type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>. Specifically, when using them we must make sure that both limits of the range evaluate to <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> and not integer. For example, <code>julia ts[1:end-1]  # error</code> will result in an error because the first limit is 1, an <code>Int</code>, while the last limit is <code>lastdate(ts)-1</code>, an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>). To make this work we need this. <code>julia ts[begin:end-1] # correct</code> </p></div></div><h4 id="Writing-(Indexed-Assignment)"><a class="docs-heading-anchor" href="#Writing-(Indexed-Assignment)">Writing (Indexed Assignment)</a><a id="Writing-(Indexed-Assignment)-1"></a><a class="docs-heading-anchor-permalink" href="#Writing-(Indexed-Assignment)" title="Permalink"></a></h4><p>When indexing is used on the left side of an assignment, we&#39;re updating the specified element(s) of the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. Again, this works the same as with <code>Vector</code>s.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[2000Q2] = 5</code><code class="nohighlight hljs ansi" style="display:block;">5</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2000Q1:2001Q1:
+  2000Q1 : 0.2933294845925929
   2000Q2 : 5.0
-  2000Q3 : 0.010733070032562964
-  2000Q4 : 0.8900301601494174
-  2001Q1 : 0.3081897618733662</code></pre><p>When assigning to multiple locations (e.g., over a range), we must ensure that the number of values provided on the right-hand side is correct. Otherwise we would get an error.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[begin:begin + 2] = [1, 2, 3]</code><code class="nohighlight hljs ansi" style="display:block;">3-element Vector{Int64}:
+  2000Q3 : 0.6269109321318767
+  2000Q4 : 0.6925243186808498
+  2001Q1 : 0.773279232889672</code></pre><p>When assigning to multiple locations (e.g., over a range), we must ensure that the number of values provided on the right-hand side is correct. Otherwise we would get an error.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[begin:begin + 2] = [1, 2, 3]</code><code class="nohighlight hljs ansi" style="display:block;">3-element Vector{Int64}:
  1
  2
  3</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2000Q1:2001Q1:
   2000Q1 : 1.0
   2000Q2 : 2.0
   2000Q3 : 3.0
-  2000Q4 : 0.8900301601494174
-  2001Q1 : 0.3081897618733662</code></pre><p>If we want to assign a single value to multiple locations we have to make the assignment a <a href="https://docs.julialang.org/en/v1/manual/mathematical-operations/#man-dot-operators"><code>vectorized &quot;dot&quot; operation</code></a>. For this we use <code>.=</code> instead of <code>=</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[end-2:end] .= 42</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q3:2001Q1:
+  2000Q4 : 0.6925243186808498
+  2001Q1 : 0.773279232889672</code></pre><p>If we want to assign a single value to multiple locations we have to make the assignment a <a href="https://docs.julialang.org/en/v1/manual/mathematical-operations/#man-dot-operators"><code>vectorized &quot;dot&quot; operation</code></a>. For this we use <code>.=</code> instead of <code>=</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; t[end-2:end] .= 42</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 2000Q3:2001Q1:
   2000Q3 : 42.0
   2000Q4 : 42.0
   2001Q1 : 42.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; t</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2000Q1:2001Q1:
@@ -141,93 +141,93 @@ TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Ot
   2000Q3 : 3.141592653589793
   2000Q4 : 3.141592653589793
   2001Q1 : 3.141592653589793</code></pre><h2 id="Arithmetic-with-TSeries"><a class="docs-heading-anchor" href="#Arithmetic-with-TSeries">Arithmetic with <code>TSeries</code></a><a id="Arithmetic-with-TSeries-1"></a><a class="docs-heading-anchor-permalink" href="#Arithmetic-with-TSeries" title="Permalink"></a></h2><p>There are two kinds of arithmetic operations with <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. One kind is where we treat the time series as a single object. Similarly to vectors, we have addition of time series and multiplication of a time series by a scalar number. The other kind of arithmetic is where we treat the time series as a collection of numbers and do the operations element-wise.</p><p>In both cases, if there are multiple time series involved in an expression they must all be of the same frequency, otherwise the operation is generally not well defined.</p><p>When we add (or subtract) two or more <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> their ranges are not required to be identical. The resulting <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> has a range containing the common part of all ranges. This is in spirit with the idea that we treat values of a time series outside of its range as unknown or missing, so the result of arithmetic with unknown values remains unknown.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; x = TSeries(20Q1:20Q4, rand)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 0.023051498042248486
-    20Q2 : 0.9565509923468722
-    20Q3 : 0.33189533214891287
-    20Q4 : 0.09583493856676206</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; y = TSeries(20Q3:21Q2, rand)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
-    20Q3 : 0.5725747294437984
-    20Q4 : 0.40521544501578255
-    21Q1 : 0.5603407978753134
-    21Q2 : 0.07333147561436659</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x + y</code><code class="nohighlight hljs ansi" style="display:block;">2-element TSeries{Quarterly} with range 20Q3:20Q4:
-    20Q3 : 0.9044700615927113
-    20Q4 : 0.5010503835825446</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x - y</code><code class="nohighlight hljs ansi" style="display:block;">2-element TSeries{Quarterly} with range 20Q3:20Q4:
-    20Q3 : -0.24067939729488552
-    20Q4 : -0.3093805064490205</code></pre><p>When we multiply (or divide) a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> by a scalar the resulting <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> has the same range as the original.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; 2y</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
-    20Q3 : 1.1451494588875968
-    20Q4 : 0.8104308900315651
-    21Q1 : 1.1206815957506269
-    21Q2 : 0.14666295122873318</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; y/2</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
-    20Q3 : 0.2862873647218992
-    20Q4 : 0.20260772250789127
-    21Q1 : 0.2801703989376567
-    21Q2 : 0.036665737807183296</code></pre><p>For element-wise operations we use Julia&#39;s <a href="https://docs.julialang.org/en/v1/manual/mathematical-operations/#man-dot-operators">&quot;dot&quot; notation</a>. This notation is used for vectorized and broadcasting operations. The time series are aligned so that element-wise operations are performed on matching <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> across all <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> in the expression. For this reason, once again, they all must have the same frequency and the range of the result is the intersection of all ranges.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; log.(x)   # use dot for vectorized function call</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : -3.770024520664383
-    20Q2 : -0.044421180130387726
-    20Q3 : -1.1029356243836919
-    20Q4 : -2.3451279572912607</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; 1 .+ x    # broadcasting addition of scalar 1 to time series x</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 1.0230514980422485
-    20Q2 : 1.9565509923468722
-    20Q3 : 1.3318953321489129
-    20Q4 : 1.095834938566762</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x .+ y    # vectorized addition (same as regular addition of TSeries)</code><code class="nohighlight hljs ansi" style="display:block;">2-element TSeries{Quarterly} with range 20Q3:20Q4:
-    20Q3 : 0.9044700615927113
-    20Q4 : 0.5010503835825446</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; 2 ./ y    # broadcasting division division</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
-    20Q3 : 3.4929938349581175
-    20Q4 : 4.935646023862943
-    21Q1 : 3.569256437481531
-    21Q2 : 27.273418177448676</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; y .^ 3    # broadcasting y-cubed</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
-    20Q3 : 0.18771394184357032
-    20Q4 : 0.06653619651225552
-    21Q1 : 0.17593681780123846
-    21Q2 : 0.0003943403999302802</code></pre><p>When assigning the result of a broadcasting operation within an existing <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> we have to use <code>.=</code> and may optionally specify a range on the left-hand side. When we specify a range on the left-hand side the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> on the left is resized, if necessary, to include the given range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; z = copy(x)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 0.023051498042248486
-    20Q2 : 0.9565509923468722
-    20Q3 : 0.33189533214891287
-    20Q4 : 0.09583493856676206</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z .=  1 .+ y  # assign only within the common range of x and y</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 0.023051498042248486
-    20Q2 : 0.9565509923468722
-    20Q3 : 1.5725747294437984
-    20Q4 : 1.4052154450157825</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 0.023051498042248486
-    20Q2 : 0.9565509923468722
-    20Q3 : 1.5725747294437984
-    20Q4 : 1.4052154450157825</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z[rangeof(y)] .= 3 .+ y  # resize x and assign within the full range of y</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
-    20Q3 : 3.572574729443798
-    20Q4 : 3.4052154450157825
-    21Q1 : 3.5603407978753134
-    21Q2 : 3.0733314756143666</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z</code><code class="nohighlight hljs ansi" style="display:block;">6-element TSeries{Quarterly} with range 20Q1:21Q2:
-    20Q1 : 0.023051498042248486
-    20Q2 : 0.9565509923468722
-    20Q3 : 3.572574729443798
-    20Q4 : 3.4052154450157825
-    21Q1 : 3.5603407978753134
-    21Q2 : 3.0733314756143666</code></pre><p>Broadcasting operations also can be done with mixing <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and <code>Vector</code>s in the same expression. In this case, the <code>Vector</code> must be of the same length as the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and the result is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; v = 3ones(size(x))</code><code class="nohighlight hljs ansi" style="display:block;">4-element Vector{Float64}:
+    20Q1 : 0.338789446989876
+    20Q2 : 0.6367569329277627
+    20Q3 : 0.21508241043796317
+    20Q4 : 0.7435895001480914</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; y = TSeries(20Q3:21Q2, rand)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
+    20Q3 : 0.420305666900896
+    20Q4 : 0.1735914245600072
+    21Q1 : 0.15056315217088478
+    21Q2 : 0.9554114584024584</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x + y</code><code class="nohighlight hljs ansi" style="display:block;">2-element TSeries{Quarterly} with range 20Q3:20Q4:
+    20Q3 : 0.6353880773388592
+    20Q4 : 0.9171809247080986</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x - y</code><code class="nohighlight hljs ansi" style="display:block;">2-element TSeries{Quarterly} with range 20Q3:20Q4:
+    20Q3 : -0.20522325646293282
+    20Q4 : 0.5699980755880842</code></pre><p>When we multiply (or divide) a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> by a scalar the resulting <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> has the same range as the original.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; 2y</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
+    20Q3 : 0.840611333801792
+    20Q4 : 0.3471828491200144
+    21Q1 : 0.30112630434176957
+    21Q2 : 1.910822916804917</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; y/2</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
+    20Q3 : 0.210152833450448
+    20Q4 : 0.0867957122800036
+    21Q1 : 0.07528157608544239
+    21Q2 : 0.4777057292012292</code></pre><p>For element-wise operations we use Julia&#39;s <a href="https://docs.julialang.org/en/v1/manual/mathematical-operations/#man-dot-operators">&quot;dot&quot; notation</a>. This notation is used for vectorized and broadcasting operations. The time series are aligned so that element-wise operations are performed on matching <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> across all <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> in the expression. For this reason, once again, they all must have the same frequency and the range of the result is the intersection of all ranges.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; log.(x)   # use dot for vectorized function call</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : -1.0823764648892467
+    20Q2 : -0.45136727719163994
+    20Q3 : -1.5367340199342054
+    20Q4 : -0.2962661435302754</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; 1 .+ x    # broadcasting addition of scalar 1 to time series x</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : 1.338789446989876
+    20Q2 : 1.6367569329277627
+    20Q3 : 1.2150824104379632
+    20Q4 : 1.7435895001480914</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x .+ y    # vectorized addition (same as regular addition of TSeries)</code><code class="nohighlight hljs ansi" style="display:block;">2-element TSeries{Quarterly} with range 20Q3:20Q4:
+    20Q3 : 0.6353880773388592
+    20Q4 : 0.9171809247080986</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; 2 ./ y    # broadcasting division division</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
+    20Q3 : 4.7584416711459205
+    20Q4 : 11.52130645318046
+    21Q1 : 13.283462594686238
+    21Q2 : 2.0933389299561007</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; y .^ 3    # broadcasting y-cubed</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
+    20Q3 : 0.07424987667715373
+    20Q4 : 0.005231000981221912
+    21Q1 : 0.003413155663298417
+    21Q2 : 0.8721101411569842</code></pre><p>When assigning the result of a broadcasting operation within an existing <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> we have to use <code>.=</code> and may optionally specify a range on the left-hand side. When we specify a range on the left-hand side the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> on the left is resized, if necessary, to include the given range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; z = copy(x)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : 0.338789446989876
+    20Q2 : 0.6367569329277627
+    20Q3 : 0.21508241043796317
+    20Q4 : 0.7435895001480914</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z .=  1 .+ y  # assign only within the common range of x and y</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : 0.338789446989876
+    20Q2 : 0.6367569329277627
+    20Q3 : 1.420305666900896
+    20Q4 : 1.1735914245600072</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : 0.338789446989876
+    20Q2 : 0.6367569329277627
+    20Q3 : 1.420305666900896
+    20Q4 : 1.1735914245600072</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z[rangeof(y)] .= 3 .+ y  # resize x and assign within the full range of y</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q3:21Q2:
+    20Q3 : 3.420305666900896
+    20Q4 : 3.173591424560007
+    21Q1 : 3.150563152170885
+    21Q2 : 3.9554114584024584</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; z</code><code class="nohighlight hljs ansi" style="display:block;">6-element TSeries{Quarterly} with range 20Q1:21Q2:
+    20Q1 : 0.338789446989876
+    20Q2 : 0.6367569329277627
+    20Q3 : 3.420305666900896
+    20Q4 : 3.173591424560007
+    21Q1 : 3.150563152170885
+    21Q2 : 3.9554114584024584</code></pre><p>Broadcasting operations also can be done with mixing <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and <code>Vector</code>s in the same expression. In this case, the <code>Vector</code> must be of the same length as the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and the result is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; v = 3ones(size(x))</code><code class="nohighlight hljs ansi" style="display:block;">4-element Vector{Float64}:
  3.0
  3.0
  3.0
  3.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x .+ v</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 3.0230514980422485
-    20Q2 : 3.9565509923468722
-    20Q3 : 3.331895332148913
-    20Q4 : 3.095834938566762</code></pre><h2 id="Time-Series-Operations"><a class="docs-heading-anchor" href="#Time-Series-Operations">Time Series Operations</a><a id="Time-Series-Operations-1"></a><a class="docs-heading-anchor-permalink" href="#Time-Series-Operations" title="Permalink"></a></h2><h3 id="Shifts"><a class="docs-heading-anchor" href="#Shifts">Shifts</a><a id="Shifts-1"></a><a class="docs-heading-anchor-permalink" href="#Shifts" title="Permalink"></a></h3><p>The lag or lead of a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> is an operation where the data remains the same but the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> labels are shifted accordingly. Functions <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lag"><code>lag</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lead"><code>lead</code></a> produce a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, while <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lag!"><code>lag!</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lead!"><code>lead!</code></a> modify the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> in place. A second integer argument <code>n</code> can be provided to indicate which lag or lead is desired, if something other than 1.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; lag(x)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q2:21Q1:
-    20Q2 : 0.023051498042248486
-    20Q3 : 0.9565509923468722
-    20Q4 : 0.33189533214891287
-    21Q1 : 0.09583493856676206</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; lead(x)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 19Q4:20Q3:
-    19Q4 : 0.023051498042248486
-    20Q1 : 0.9565509923468722
-    20Q2 : 0.33189533214891287
-    20Q3 : 0.09583493856676206</code></pre><h3 id="Diff-and-Undiff"><a class="docs-heading-anchor" href="#Diff-and-Undiff">Diff and Undiff</a><a id="Diff-and-Undiff-1"></a><a class="docs-heading-anchor-permalink" href="#Diff-and-Undiff" title="Permalink"></a></h3><p>The first difference of a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> can be computed with the built-in function <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.diff"><code>diff</code></a>. The built-in version works for any <code>Vector</code>, including <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. In addition, for time series version of <a href="../../../Reference/TimeSeriesEcon/#Base.diff"><code>diff</code></a> allows a second integer argument <code>k</code> to indicate which lag or lead to subtract. The default is <code>k=-1</code>, where a negative value of <code>k</code> indicates a lag and a positive value indicates a lead.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; dx = diff(x)</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 20Q2:20Q4:
-    20Q2 : 0.9334994943046238
-    20Q3 : -0.6246556601979594
-    20Q4 : -0.2360603935821508</code></pre><p>The inverse operation can be done with the function <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.undiff"><code>undiff</code></a>. In its basic form it is the same as the built-in function <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.cumsum"><code>cumsum</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; undiff(dx)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : 3.338789446989876
+    20Q2 : 3.6367569329277627
+    20Q3 : 3.2150824104379634
+    20Q4 : 3.7435895001480914</code></pre><h2 id="Time-Series-Operations"><a class="docs-heading-anchor" href="#Time-Series-Operations">Time Series Operations</a><a id="Time-Series-Operations-1"></a><a class="docs-heading-anchor-permalink" href="#Time-Series-Operations" title="Permalink"></a></h2><h3 id="Shifts"><a class="docs-heading-anchor" href="#Shifts">Shifts</a><a id="Shifts-1"></a><a class="docs-heading-anchor-permalink" href="#Shifts" title="Permalink"></a></h3><p>The lag or lead of a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> is an operation where the data remains the same but the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> labels are shifted accordingly. Functions <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lag"><code>lag</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lead"><code>lead</code></a> produce a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, while <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lag!"><code>lag!</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.lead!"><code>lead!</code></a> modify the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> in place. A second integer argument <code>n</code> can be provided to indicate which lag or lead is desired, if something other than 1.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; lag(x)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q2:21Q1:
+    20Q2 : 0.338789446989876
+    20Q3 : 0.6367569329277627
+    20Q4 : 0.21508241043796317
+    21Q1 : 0.7435895001480914</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; lead(x)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 19Q4:20Q3:
+    19Q4 : 0.338789446989876
+    20Q1 : 0.6367569329277627
+    20Q2 : 0.21508241043796317
+    20Q3 : 0.7435895001480914</code></pre><h3 id="Diff-and-Undiff"><a class="docs-heading-anchor" href="#Diff-and-Undiff">Diff and Undiff</a><a id="Diff-and-Undiff-1"></a><a class="docs-heading-anchor-permalink" href="#Diff-and-Undiff" title="Permalink"></a></h3><p>The first difference of a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> can be computed with the built-in function <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.diff"><code>diff</code></a>. The built-in version works for any <code>Vector</code>, including <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>. In addition, for time series version of <a href="../../../Reference/TimeSeriesEcon/#Base.diff"><code>diff</code></a> allows a second integer argument <code>k</code> to indicate which lag or lead to subtract. The default is <code>k=-1</code>, where a negative value of <code>k</code> indicates a lag and a positive value indicates a lead.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; dx = diff(x)</code><code class="nohighlight hljs ansi" style="display:block;">3-element TSeries{Quarterly} with range 20Q2:20Q4:
+    20Q2 : 0.2979674859378867
+    20Q3 : -0.42167452248979953
+    20Q4 : 0.5285070897101283</code></pre><p>The inverse operation can be done with the function <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.undiff"><code>undiff</code></a>. In its basic form it is the same as the built-in function <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.cumsum"><code>cumsum</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; undiff(dx)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
     20Q1 : 0.0
-    20Q2 : 0.9334994943046238
-    20Q3 : 0.3088438341066644
-    20Q4 : 0.07278344052451358</code></pre><p>We can see that the answer above does not equal <code>x</code>. This is because the first value of <code>x</code> was lost. <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.undiff"><code>undiff</code></a> allows us to specify an &quot;anchor&quot; in the form of <code>date =&gt; value</code>. In this case the resulting <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> will have the given value at the given date.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; x2 = undiff(dx, firstdate(x) =&gt; first(x))</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
-    20Q1 : 0.023051498042248486
-    20Q2 : 0.9565509923468722
-    20Q3 : 0.33189533214891287
-    20Q4 : 0.09583493856676206</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x ≈ x2</code><code class="nohighlight hljs ansi" style="display:block;">true</code></pre><div class="admonition is-info"><header class="admonition-header">Good to know</header><div class="admonition-body"><p>In the call to <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.undiff"><code>undiff</code></a> above we used <a href="https://docs.julialang.org/en/v1/base/collections/#Base.first"><code>first</code></a>, which is a built-in Julia function that returns the first value of a collection. We also used <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.firstdate-Tuple{TSeries}"><code>firstdate</code></a>, which works for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and returns the first date in the stored range of its argument.</p></div></div><h3 id="Moving-Average"><a class="docs-heading-anchor" href="#Moving-Average">Moving Average</a><a id="Moving-Average-1"></a><a class="docs-heading-anchor-permalink" href="#Moving-Average" title="Permalink"></a></h3><p>Moving average can be computed with a call to the function <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.moving"><code>moving</code></a>. It takes a second integer argument <code>n</code> which indicates the length of the window over which the moving average will be computed. If <code>n</code> is positive, the window is backwards-looking (includes lags), while negative <code>n</code> uses a forward-looking window (includes leads). The window always includes the current value (lag 0).</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; tt = TSeries(2020Q1, collect(Float64, 1:10))</code><code class="nohighlight hljs ansi" style="display:block;">10-element TSeries{Quarterly} with range 2020Q1:2022Q2:
+    20Q2 : 0.2979674859378867
+    20Q3 : -0.12370703655191284
+    20Q4 : 0.40480005315821543</code></pre><p>We can see that the answer above does not equal <code>x</code>. This is because the first value of <code>x</code> was lost. <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.undiff"><code>undiff</code></a> allows us to specify an &quot;anchor&quot; in the form of <code>date =&gt; value</code>. In this case the resulting <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> will have the given value at the given date.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; x2 = undiff(dx, firstdate(x) =&gt; first(x))</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 20Q1:20Q4:
+    20Q1 : 0.338789446989876
+    20Q2 : 0.6367569329277627
+    20Q3 : 0.21508241043796317
+    20Q4 : 0.7435895001480914</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; x ≈ x2</code><code class="nohighlight hljs ansi" style="display:block;">true</code></pre><div class="admonition is-info"><header class="admonition-header">Good to know</header><div class="admonition-body"><p>In the call to <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.undiff"><code>undiff</code></a> above we used <a href="https://docs.julialang.org/en/v1/base/collections/#Base.first"><code>first</code></a>, which is a built-in Julia function that returns the first value of a collection. We also used <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.firstdate-Tuple{TSeries}"><code>firstdate</code></a>, which works for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and returns the first date in the stored range of its argument.</p></div></div><h3 id="Moving-Average"><a class="docs-heading-anchor" href="#Moving-Average">Moving Average</a><a id="Moving-Average-1"></a><a class="docs-heading-anchor-permalink" href="#Moving-Average" title="Permalink"></a></h3><p>Moving average can be computed with a call to the function <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.moving"><code>moving</code></a>. It takes a second integer argument <code>n</code> which indicates the length of the window over which the moving average will be computed. If <code>n</code> is positive, the window is backwards-looking (includes lags), while negative <code>n</code> uses a forward-looking window (includes leads). The window always includes the current value (lag 0).</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; tt = TSeries(2020Q1, collect(Float64, 1:10))</code><code class="nohighlight hljs ansi" style="display:block;">10-element TSeries{Quarterly} with range 2020Q1:2022Q2:
   2020Q1 : 1.0
   2020Q2 : 2.0
   2020Q3 : 3.0
@@ -305,13 +305,13 @@ TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Ot
   2022Q3 : 1.0006046617600002
   2022Q4 : 1.000362797056
   2023Q1 : 1.0002176782336</code></pre><h2 id="Multi-variate-Time-Series"><a class="docs-heading-anchor" href="#Multi-variate-Time-Series">Multi-variate Time Series</a><a id="Multi-variate-Time-Series-1"></a><a class="docs-heading-anchor-permalink" href="#Multi-variate-Time-Series" title="Permalink"></a></h2><p>We can store multiple time series in a variable of type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>. This is a collection of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> with the same frequency, the same range, and the same element type. It is like a table, where each row corresponds to an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> and each column to a time series variable.</p><h3 id="Creation-of-MVTSeries"><a class="docs-heading-anchor" href="#Creation-of-MVTSeries">Creation of <code>MVTSeries</code></a><a id="Creation-of-MVTSeries-1"></a><a class="docs-heading-anchor-permalink" href="#Creation-of-MVTSeries" title="Permalink"></a></h3><p>The basic constructor of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> takes an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>, which indicates the label of the first row, a list of names for the columns, and a matrix of values. The number of columns in the given matrix must match the number of column names. The range of the resulting <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> is determined from the first date and the number of rows.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; x = MVTSeries(2020Q1, (:a, :b), rand(6, 2))</code><code class="nohighlight hljs ansi" style="display:block;">6×2 MVTSeries{Quarterly} with range 2020Q1:2021Q2 and variables (a,b):
-           a          b
-  2020Q1 : 0.188276   0.776565
-  2020Q2 : 0.0430083  0.958814
-  2020Q3 : 0.660085   0.347709
-  2020Q4 : 0.961578   0.811789
-  2021Q1 : 0.0522451  0.270993
-  2021Q2 : 0.449562   0.340127</code></pre><p>Similarly to <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, if we specify a range (rather than a single <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>), the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> will be able to allocate its own storage. In this case, we can optionally provide an initializer in the form of a constant value or a function.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; MVTSeries(2020Q1:2021Q3, (:one, :too, :tree), zeros)</code><code class="nohighlight hljs ansi" style="display:block;">7×3 MVTSeries{Quarterly} with range 2020Q1:2021Q3 and variables (one,too,…):
+           a         b
+  2020Q1 : 0.507592  0.230484
+  2020Q2 : 0.537766  0.230007
+  2020Q3 : 0.249998  0.888125
+  2020Q4 : 0.403759  0.148359
+  2021Q1 : 0.341965  0.0652885
+  2021Q2 : 0.853168  0.12268</code></pre><p>Similarly to <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, if we specify a range (rather than a single <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>), the <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> will be able to allocate its own storage. In this case, we can optionally provide an initializer in the form of a constant value or a function.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; MVTSeries(2020Q1:2021Q3, (:one, :too, :tree), zeros)</code><code class="nohighlight hljs ansi" style="display:block;">7×3 MVTSeries{Quarterly} with range 2020Q1:2021Q3 and variables (one,too,…):
            one     too     tree
   2020Q1 : 0.0     0.0     0.0
   2020Q2 : 0.0     0.0     0.0
@@ -328,7 +328,12 @@ TSeries(rng, zeros) # element type is FLoat64</code></pre></div></div><h4 id="Ot
   2020Q2 : 6.0     0.0     3.0
   2020Q3 : 7.0     0.0     3.0
   2020Q4 : 8.0     0.0     3.0
-  2021Q1 : 9.0     0.0     3.0</code></pre><p>New <code>MVTSeries</code> variables can also be created with <a href="../../../Reference/TimeSeriesEcon/#Base.similar-Tuple{MVTSeries}"><code>similar(::MVTSeries)</code></a> and <a href="https://docs.julialang.org/en/v1/base/base/#Base.copy"><code>copy</code></a>. They are also the result of arithmetic operations. This is the same as with <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, so we won&#39;t spend time repeating it.</p><h3 id="Access"><a class="docs-heading-anchor" href="#Access">Access</a><a id="Access-1"></a><a class="docs-heading-anchor-permalink" href="#Access" title="Permalink"></a></h3><p><a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> behaves like a 2-dimensional matrix when indexing is done with integers. Otherwise, we can also index using <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>s (or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> ranges) for the row-indexes and <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#Symbols"><code>Symbol</code></a>s (or tuples of <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#Symbols"><code>Symbol</code></a>s) for the column-indexes.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[2020Q2, :hex]</code><code class="nohighlight hljs ansi" style="display:block;">6.0</code></pre><p>An entire row can be accessed with a single <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> index.  The result of such indexing is a regular <code>Vector</code>.  In order to extract  an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> the index must be a unit range of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[2020Q2]</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: Q2 not defined</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[2020Q2:2020Q2]  # index with range</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: Q2 not defined</code></pre><p>Similarly, we can extract an entire column by its name. The result is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.   If the index is a <a href="https://docs.julialang.org/en/v1/manual/functions/#Tuples">tuple</a> of names, then the result is another <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> containing only the selected columns.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[:zed]</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2020Q1:2021Q1:
+  2021Q1 : 9.0     0.0     3.0</code></pre><p>New <code>MVTSeries</code> variables can also be created with <a href="../../../Reference/TimeSeriesEcon/#Base.similar-Tuple{MVTSeries}"><code>similar(::MVTSeries)</code></a> and <a href="https://docs.julialang.org/en/v1/base/base/#Base.copy"><code>copy</code></a>. They are also the result of arithmetic operations. This is the same as with <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, so we won&#39;t spend time repeating it.</p><h3 id="Access"><a class="docs-heading-anchor" href="#Access">Access</a><a id="Access-1"></a><a class="docs-heading-anchor-permalink" href="#Access" title="Permalink"></a></h3><p><a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> behaves like a 2-dimensional matrix when indexing is done with integers. Otherwise, we can also index using <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>s (or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> ranges) for the row-indexes and <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#Symbols"><code>Symbol</code></a>s (or tuples of <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#Symbols"><code>Symbol</code></a>s) for the column-indexes.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[2020Q2, :hex]</code><code class="nohighlight hljs ansi" style="display:block;">6.0</code></pre><p>An entire row can be accessed with a single <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> index.  The result of such indexing is a regular <code>Vector</code>.  In order to extract  an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> the index must be a unit range of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[2020Q2]</code><code class="nohighlight hljs ansi" style="display:block;">3-element Vector{Float64}:
+ 6.0
+ 0.0
+ 3.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[2020Q2:2020Q2]  # index with range</code><code class="nohighlight hljs ansi" style="display:block;">1×3 MVTSeries{Quarterly} with range 2020Q2:2020Q2 and variables (hex,why,…):
+           hex     why     zed
+  2020Q2 : 6.0     0.0     3.0</code></pre><p>Similarly, we can extract an entire column by its name. The result is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>.   If the index is a <a href="https://docs.julialang.org/en/v1/manual/functions/#Tuples">tuple</a> of names, then the result is another <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> containing only the selected columns.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; data[:zed]</code><code class="nohighlight hljs ansi" style="display:block;">5-element TSeries{Quarterly} with range 2020Q1:2021Q1:
   2020Q1 : 3.0
   2020Q2 : 3.0
   2020Q3 : 3.0
@@ -350,56 +355,56 @@ Average of `zed` is 3.0.</code></pre><div class="admonition is-info"><header cla
            z = rand(16),
        )</code><code class="nohighlight hljs ansi" style="display:block;">16×3 MVTSeries{Quarterly} with range 2020Q1:2023Q4 and variables (x,y,z):
            x     y          z
-  2020Q1 : 0.5   0.0        0.256369
-  2020Q2 : 0.5   0.0666667  0.983283
-  2020Q3 : 0.5   0.133333   0.601914
-  2020Q4 : 0.5   0.2        0.962448
-  2021Q1 : 0.5   0.266667   0.688197
-  2021Q2 : 0.5   0.333333   0.658265
-  2021Q3 : 0.5   0.4        0.352142
-  2021Q4 : 0.5   0.466667   0.469089
-  2022Q1 : 0.5   0.533333   0.419572
-  2022Q2 : 0.5   0.6        0.802111
-  2022Q3 : 0.5   0.666667   0.0728052
-  2022Q4 : 0.5   0.733333   0.944057
-  2023Q1 : 0.5   0.8        0.96613
-  2023Q2 : 0.5   0.866667   0.923134
-  2023Q3 : 0.5   0.933333   0.0525668
-  2023Q4 : 0.5   1.0        0.496796</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(db_a, label=[&quot;db_a&quot;]);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../plot-2.png"><img src="../plot-2.png" alt/></a></p><p>We cal also plot several <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> at the same time.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; db_b = MVTSeries(2020Q1:2023Q4,
+  2020Q1 : 0.5   0.0        0.793838
+  2020Q2 : 0.5   0.0666667  0.265876
+  2020Q3 : 0.5   0.133333   0.946259
+  2020Q4 : 0.5   0.2        0.758487
+  2021Q1 : 0.5   0.266667   0.402491
+  2021Q2 : 0.5   0.333333   0.81043
+  2021Q3 : 0.5   0.4        0.158035
+  2021Q4 : 0.5   0.466667   0.0618559
+  2022Q1 : 0.5   0.533333   0.119219
+  2022Q2 : 0.5   0.6        0.831028
+  2022Q3 : 0.5   0.666667   0.273699
+  2022Q4 : 0.5   0.733333   0.45469
+  2023Q1 : 0.5   0.8        0.651553
+  2023Q2 : 0.5   0.866667   0.998779
+  2023Q3 : 0.5   0.933333   0.950494
+  2023Q4 : 0.5   1.0        0.137624</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(db_a, label=[&quot;db_a&quot;]);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../plot-2.png"><img src="../plot-2.png" alt/></a></p><p>We cal also plot several <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> at the same time.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; db_b = MVTSeries(2020Q1:2023Q4,
            y = 0.5,
            z = 1:-1/15:0,
            w = rand(16),
        )</code><code class="nohighlight hljs ansi" style="display:block;">16×3 MVTSeries{Quarterly} with range 2020Q1:2023Q4 and variables (y,z,w):
            y     z          w
-  2020Q1 : 0.5   1.0        0.298985
-  2020Q2 : 0.5   0.933333   0.60305
-  2020Q3 : 0.5   0.866667   0.368331
-  2020Q4 : 0.5   0.8        0.389091
-  2021Q1 : 0.5   0.733333   0.174733
-  2021Q2 : 0.5   0.666667   0.945154
-  2021Q3 : 0.5   0.6        0.127962
-  2021Q4 : 0.5   0.533333   0.810909
-  2022Q1 : 0.5   0.466667   0.68849
-  2022Q2 : 0.5   0.4        0.813357
-  2022Q3 : 0.5   0.333333   0.381226
-  2022Q4 : 0.5   0.266667   0.00949863
-  2023Q1 : 0.5   0.2        0.273138
-  2023Q2 : 0.5   0.133333   0.0803649
-  2023Q3 : 0.5   0.0666667  0.921508
-  2023Q4 : 0.5   0.0        0.474229</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(db_a, db_b, label=[&quot;db_a&quot; &quot;db_b&quot;]);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../plot-3.png"><img src="../plot-3.png" alt/></a></p><p>We see that all variables are plotted as long as they appear in at least one of the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>. The plot can become very busy very quickly. There is also a limit of 10 variables (which will result in a 5<span>$\times$</span>2 grid). We can select which variables to plot with the option <code>vars=</code>. We can also restrict the range of the plot with <code>trange=</code>. Any other plot attributes work as usual.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(db_a, db_b,
+  2020Q1 : 0.5   1.0        0.545667
+  2020Q2 : 0.5   0.933333   0.91826
+  2020Q3 : 0.5   0.866667   0.814778
+  2020Q4 : 0.5   0.8        0.286662
+  2021Q1 : 0.5   0.733333   0.892634
+  2021Q2 : 0.5   0.666667   0.862384
+  2021Q3 : 0.5   0.6        0.560563
+  2021Q4 : 0.5   0.533333   0.283209
+  2022Q1 : 0.5   0.466667   0.989679
+  2022Q2 : 0.5   0.4        0.185516
+  2022Q3 : 0.5   0.333333   0.144177
+  2022Q4 : 0.5   0.266667   0.0111947
+  2023Q1 : 0.5   0.2        0.118892
+  2023Q2 : 0.5   0.133333   0.705203
+  2023Q3 : 0.5   0.0666667  0.450671
+  2023Q4 : 0.5   0.0        0.105365</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(db_a, db_b, label=[&quot;db_a&quot; &quot;db_b&quot;]);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../plot-3.png"><img src="../plot-3.png" alt/></a></p><p>We see that all variables are plotted as long as they appear in at least one of the given <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>. The plot can become very busy very quickly. There is also a limit of 10 variables (which will result in a 5<span>$\times$</span>2 grid). We can select which variables to plot with the option <code>vars=</code>. We can also restrict the range of the plot with <code>trange=</code>. Any other plot attributes work as usual.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(db_a, db_b,
            label = [&quot;db_a&quot; &quot;db_b&quot;],
            vars = [:y, :z],
            trange = 2020Q3:2022Q3,
            layout = (2,1),
        );</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../plot-4.png"><img src="../plot-4.png" alt/></a></p><div class="admonition is-info"><header class="admonition-header">Good to Know</header><div class="admonition-body"><p>The <code>trange=</code> argument works only when all time series in the plot have the same frequency. When plotting time series with different frequencies, you can use <code>xlim=</code>. You can use <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> in the limits specified by <code>xlim</code></p><ul><li>they are converted to floating point numbers automatically. For example <code>float(2020Q1) == 2020.0</code>, <code>float(2020Q2) = 2020.25</code>, etc. An important difference to keep in mind is that <code>trange=</code> requires a unit range, e.g., <code>trange=2020Q3:2022Q3</code>, while <code>xlim=</code> requires a tuple, e.g., <code>xlim=(2020Q3,2022Q3)</code>.</li></ul></div></div><h2 id="Workspaces"><a class="docs-heading-anchor" href="#Workspaces"><code>Workspace</code>s</a><a id="Workspaces-1"></a><a class="docs-heading-anchor-permalink" href="#Workspaces" title="Permalink"></a></h2><p>When working with models, in addition to time series data, we encounter a lot of other types of data. For example, parameter and steady state values, simulation ranges and dates, etc. The data type <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> is a container that can store all kinds of data. Most operations for <a href="https://docs.julialang.org/en/v1/base/collections/#Dictionaries">dictionaries</a> work also for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s.</p><p>We can create an empty <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> and fill it with data. We can create <em>&quot;variables&quot;</em> in the workspace directly by assignment.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; w = Workspace()</code><code class="nohighlight hljs ansi" style="display:block;">Empty Workspace</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.rng = 2020Q1:2021Q4</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1:2021Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.start = first(w.rng)</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.a = TSeries(w.rng)</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
-  2020Q1 : 6.94301852031784e-310
-  2020Q2 : 0.0
-  2020Q3 : 6.94301854104014e-310
-  2020Q4 : 6.94301852031784e-310
-  2021Q1 : 0.0
-  2021Q2 : 6.94301854104014e-310
-  2021Q3 : 6.94301852031784e-310
-  2021Q4 : 0.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.a .= a</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
+  2020Q1 : 6.9060662589036e-310
+  2020Q2 : 6.90606625890757e-310
+  2020Q3 : 6.9060662589115e-310
+  2020Q4 : 6.90606625891547e-310
+  2021Q1 : 6.9060662589194e-310
+  2021Q2 : 6.90606625892338e-310
+  2021Q3 : 6.90606625892733e-310
+  2021Q4 : 6.9060662589313e-310</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w.a .= a</code><code class="nohighlight hljs ansi" style="display:block;">8-element TSeries{Quarterly} with range 2020Q1:2021Q4:
   2020Q1 : 1.1
   2020Q2 : 1.06
   2020Q3 : 1.036
@@ -419,12 +424,12 @@ Average of `zed` is 3.0.</code></pre><div class="admonition is-info"><header cla
    :rng =&gt; 2020Q1:2021Q4
  :alpha =&gt; 0.1
      :v =&gt; 6-element TSeries{Quarterly} with range 2020Q1:2021Q2:
-  2020Q1 : 0.811071854142849
-  2020Q2 : 0.8760532029238841
-  2020Q3 : 0.12635207346240085
-  2020Q4 : 0.5155395772802838
-  2021Q1 : 0.638753030354611
-  2021Q2 : 0.8479610810637124</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; Workspace(datalist)</code><code class="nohighlight hljs ansi" style="display:block;">Workspace with 3-variables
+  2020Q1 : 0.13005772281634487
+  2020Q2 : 0.3641992717518112
+  2020Q3 : 0.7418449099130218
+  2020Q4 : 0.5678967868486031
+  2021Q1 : 0.4815245450479042
+  2021Q2 : 0.6315934775578471</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; Workspace(datalist)</code><code class="nohighlight hljs ansi" style="display:block;">Workspace with 3-variables
     rng ⇒ 2020Q1:2021Q4
   alpha ⇒ 0.1
       v ⇒ 6-element TSeries{Quarterly} with range 2020Q1:2021Q2</code></pre><p>The last one is particularly useful for converting an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> to a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>, since we can use the <a href="../../../Reference/TimeSeriesEcon/#Base.pairs-Tuple{MVTSeries}"><code>pairs</code></a> function.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; w_a = Workspace(pairs(db_a; copy = true))</code><code class="nohighlight hljs ansi" style="display:block;">Workspace with 3-variables
@@ -432,22 +437,22 @@ Average of `zed` is 3.0.</code></pre><div class="admonition is-info"><header cla
   y ⇒ 16-element TSeries{Quarterly} with range 2020Q1:2023Q4
   z ⇒ 16-element TSeries{Quarterly} with range 2020Q1:2023Q4</code></pre><p>Note that by default <code>copy=false</code>, which means that the time series in the new <code>w_a</code> would share their storage with the corresponding columns of <code>db_a</code>. This is more efficient than copying the data. However, if we need the new workspace to hold its own copy of the data, we can force that by setting <code>copy=true</code>.</p><p>The next example is an idiom for converting a workspace back to an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>. Note that in this case we always get a copy, so there&#39;s no optional parameter <code>copy=</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; MVTSeries(rangeof(w_a); pairs(w_a)...)</code><code class="nohighlight hljs ansi" style="display:block;">16×3 MVTSeries{Quarterly} with range 2020Q1:2023Q4 and variables (x,y,z):
            x     y          z
-  2020Q1 : 0.5   0.0        0.256369
-  2020Q2 : 0.5   0.0666667  0.983283
-  2020Q3 : 0.5   0.133333   0.601914
-  2020Q4 : 0.5   0.2        0.962448
-  2021Q1 : 0.5   0.266667   0.688197
-  2021Q2 : 0.5   0.333333   0.658265
-  2021Q3 : 0.5   0.4        0.352142
-  2021Q4 : 0.5   0.466667   0.469089
-  2022Q1 : 0.5   0.533333   0.419572
-  2022Q2 : 0.5   0.6        0.802111
-  2022Q3 : 0.5   0.666667   0.0728052
-  2022Q4 : 0.5   0.733333   0.944057
-  2023Q1 : 0.5   0.8        0.96613
-  2023Q2 : 0.5   0.866667   0.923134
-  2023Q3 : 0.5   0.933333   0.0525668
-  2023Q4 : 0.5   1.0        0.496796</code></pre><p>In the above we used <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.rangeof-Tuple{Workspace}"><code>rangeof(::Workspace)</code></a> on the <code>Workspace</code> variable <code>w_a</code>, which returns the intersection of the ranges of all variables in the workspace. </p><h3 id="MVTSeries-vs-Workspace"><a class="docs-heading-anchor" href="#MVTSeries-vs-Workspace"><code>MVTSeries</code> vs <code>Workspace</code></a><a id="MVTSeries-vs-Workspace-1"></a><a class="docs-heading-anchor-permalink" href="#MVTSeries-vs-Workspace" title="Permalink"></a></h3><p>You&#39;ve probably already noticed the remarkable similarity between <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>. Both are containers for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and in many ways are interchangeable. In both cases we can access data by name using the traditional &quot;dot&quot; notation (e.g., <code>db.x</code>), and we can also access them using indexing notation (e.g., db[:x]).</p><p>One important differences are that <code>MVTSeries</code> is a matrix, so we can use it for <a href="https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/">linear algebra</a> and <a href="https://docs.julialang.org/en/v1/stdlib/Statistics/">statistics</a>. <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> also has the constraint that all variables are <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> with the same frequency.</p><p>In contrast, <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> is a dictionary, which can store variables of any type. So in a workspace we can have multiple time series of different frequencies. Also, a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> can contain nested <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s.</p><p>Another important difference is that we can add and delete variables in a workspace, while in an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> the columns are fixed and in order to add or remove any column we must create a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> instance.</p><h2 id="overlay"><a class="docs-heading-anchor" href="#overlay"><code>overlay</code></a><a id="overlay-1"></a><a class="docs-heading-anchor-permalink" href="#overlay" title="Permalink"></a></h2><p>Function <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.overlay"><code>overlay</code></a> has two modes of operation: one is when all inputs are <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and the other is when the arguments are a mixture of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>.</p><p>In the first case all time series must have the same frequency and the result is a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> whose range is the union of all ranges of the inputs. For each <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> the output will have the first non-missing value found in the inputs from left to right. (<code>NaN</code> is considered missing, as well as values outside the allocated range.)</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; x1 = TSeries(2020Q1:2020Q4, 1.0)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 2020Q1:2020Q4:
+  2020Q1 : 0.5   0.0        0.793838
+  2020Q2 : 0.5   0.0666667  0.265876
+  2020Q3 : 0.5   0.133333   0.946259
+  2020Q4 : 0.5   0.2        0.758487
+  2021Q1 : 0.5   0.266667   0.402491
+  2021Q2 : 0.5   0.333333   0.81043
+  2021Q3 : 0.5   0.4        0.158035
+  2021Q4 : 0.5   0.466667   0.0618559
+  2022Q1 : 0.5   0.533333   0.119219
+  2022Q2 : 0.5   0.6        0.831028
+  2022Q3 : 0.5   0.666667   0.273699
+  2022Q4 : 0.5   0.733333   0.45469
+  2023Q1 : 0.5   0.8        0.651553
+  2023Q2 : 0.5   0.866667   0.998779
+  2023Q3 : 0.5   0.933333   0.950494
+  2023Q4 : 0.5   1.0        0.137624</code></pre><p>In the above we used <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.rangeof-Tuple{Workspace}"><code>rangeof(::Workspace)</code></a> on the <code>Workspace</code> variable <code>w_a</code>, which returns the intersection of the ranges of all variables in the workspace. </p><h3 id="MVTSeries-vs-Workspace"><a class="docs-heading-anchor" href="#MVTSeries-vs-Workspace"><code>MVTSeries</code> vs <code>Workspace</code></a><a id="MVTSeries-vs-Workspace-1"></a><a class="docs-heading-anchor-permalink" href="#MVTSeries-vs-Workspace" title="Permalink"></a></h3><p>You&#39;ve probably already noticed the remarkable similarity between <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>. Both are containers for <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and in many ways are interchangeable. In both cases we can access data by name using the traditional &quot;dot&quot; notation (e.g., <code>db.x</code>), and we can also access them using indexing notation (e.g., db[:x]).</p><p>One important differences are that <code>MVTSeries</code> is a matrix, so we can use it for <a href="https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/">linear algebra</a> and <a href="https://docs.julialang.org/en/v1/stdlib/Statistics/">statistics</a>. <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> also has the constraint that all variables are <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> with the same frequency.</p><p>In contrast, <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> is a dictionary, which can store variables of any type. So in a workspace we can have multiple time series of different frequencies. Also, a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> can contain nested <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s.</p><p>Another important difference is that we can add and delete variables in a workspace, while in an <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> the columns are fixed and in order to add or remove any column we must create a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> instance.</p><h2 id="overlay"><a class="docs-heading-anchor" href="#overlay"><code>overlay</code></a><a id="overlay-1"></a><a class="docs-heading-anchor-permalink" href="#overlay" title="Permalink"></a></h2><p>Function <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.overlay"><code>overlay</code></a> has two modes of operation: one is when all inputs are <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> and the other is when the arguments are a mixture of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>.</p><p>In the first case all time series must have the same frequency and the result is a new <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> whose range is the union of all ranges of the inputs. For each <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MIT"><code>MIT</code></a> the output will have the first non-missing value found in the inputs from left to right. (<code>NaN</code> is considered missing, as well as values outside the allocated range.)</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; x1 = TSeries(2020Q1:2020Q4, 1.0)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 2020Q1:2020Q4:
   2020Q1 : 1.0
   2020Q2 : 1.0
   2020Q3 : 1.0
@@ -471,7 +476,11 @@ Average of `zed` is 3.0.</code></pre><div class="admonition is-info"><header cla
   2020Q2 : NaN        2.0      3.0      2.0
   2020Q3 : NaN      NaN        3.0      3.0
   2020Q4 :   1.0    NaN        3.0      1.0
-  2021Q1 : NaN      NaN        3.0      3.0</code></pre><p>We can force the output to have a specific range by putting that range as the first argument of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.overlay"><code>overlay</code></a></p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; overlay(2020Q1:2020Q4, x1, x2, x3)</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: Q1 not defined</code></pre><p>In the second case, when we call <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.overlay"><code>overlay</code></a> on a list of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> variables, the result is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> in which all variables are recursively overlaid. For example, a variable in the result is taken form the first input (from left to right) in which it is found. But if that variable is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, then it is overlaid from all inputs in which it appears. The same applies to other &quot;overlay-able&quot; data types, such as nested <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; w1 = Workspace(; x = x1, a = 1)</code><code class="nohighlight hljs ansi" style="display:block;">Workspace with 2-variables
+  2021Q1 : NaN      NaN        3.0      3.0</code></pre><p>We can force the output to have a specific range by putting that range as the first argument of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.overlay"><code>overlay</code></a></p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; overlay(2020Q1:2020Q4, x1, x2, x3)</code><code class="nohighlight hljs ansi" style="display:block;">4-element TSeries{Quarterly} with range 2020Q1:2020Q4:
+  2020Q1 : 1.0
+  2020Q2 : 2.0
+  2020Q3 : 3.0
+  2020Q4 : 1.0</code></pre><p>In the second case, when we call <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.overlay"><code>overlay</code></a> on a list of <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a> or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> variables, the result is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a> in which all variables are recursively overlaid. For example, a variable in the result is taken form the first input (from left to right) in which it is found. But if that variable is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a>, then it is overlaid from all inputs in which it appears. The same applies to other &quot;overlay-able&quot; data types, such as nested <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s and <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; w1 = Workspace(; x = x1, a = 1)</code><code class="nohighlight hljs ansi" style="display:block;">Workspace with 2-variables
   x ⇒ 4-element TSeries{Quarterly} with range 2020Q1:2020Q4
   a ⇒ 1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; w2 = MVTSeries(; x = x2, b = 2)    # w2.b is a `TSeries`!</code><code class="nohighlight hljs ansi" style="display:block;">4×2 MVTSeries{Quarterly} with range 2019Q3:2020Q2 and variables (x,b):
            x       b
@@ -489,7 +498,7 @@ Average of `zed` is 3.0.</code></pre><div class="admonition is-info"><header cla
   x ⇒ 7-element TSeries{Quarterly} with range 2019Q3:2021Q1</code></pre><p>In the example above, <code>x</code> is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> in all three inputs and so it is overlaid; <code>a</code> is a scalar taken from <code>w1</code>; <code>b</code> is a <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.TSeries"><code>TSeries</code></a> in <code>w2</code> and a scalar in <code>w3</code>, so it is not overlaid and instead it is simply taken from <code>w2</code>, because that&#39;s where it appears first; and finally <code>c</code> is taken from <code>w3</code>, since it is missing from the other two.</p><h2 id="compare-and-@compare"><a class="docs-heading-anchor" href="#compare-and-@compare"><code>compare</code> and <code>@compare</code></a><a id="compare-and-@compare-1"></a><a class="docs-heading-anchor-permalink" href="#compare-and-@compare" title="Permalink"></a></h2><p>The <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.compare"><code>compare</code></a> function and the accompanying <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.@compare"><code>@compare</code></a> macro can be used to compare two <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.Workspace"><code>Workspace</code></a>s or <a href="../../../Reference/TimeSeriesEcon/#TimeSeriesEcon.MVTSeries"><code>MVTSeries</code></a>. The comparison is done recursively.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; v1 = Workspace(;
                x = 3,
                y = TSeries(2020Q1, ones(10)),
-               z = MVTSeries(2020Q1, (:a, :b), rand(6,2)));</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2 = deepcopy(v1);    # always use deepcopy() with Workspace</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2.y[2020Q3] += 1e-7</code><code class="nohighlight hljs ansi" style="display:block;">1.0000001</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2.z.a[2020Q3] += 0.001</code><code class="nohighlight hljs ansi" style="display:block;">0.8384942298663568</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2.b = &quot;Hello&quot;</code><code class="nohighlight hljs ansi" style="display:block;">&quot;Hello&quot;</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @compare(v1, v2)</code><code class="nohighlight hljs ansi" style="display:block;">_.b: missing in v1
+               z = MVTSeries(2020Q1, (:a, :b), rand(6,2)));</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2 = deepcopy(v1);    # always use deepcopy() with Workspace</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2.y[2020Q3] += 1e-7</code><code class="nohighlight hljs ansi" style="display:block;">1.0000001</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2.z.a[2020Q3] += 0.001</code><code class="nohighlight hljs ansi" style="display:block;">0.43668707170208776</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; v2.b = &quot;Hello&quot;</code><code class="nohighlight hljs ansi" style="display:block;">&quot;Hello&quot;</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @compare(v1, v2)</code><code class="nohighlight hljs ansi" style="display:block;">_.b: missing in v1
 _.y: different
 _.z.a: different
 _.z: different
@@ -504,4 +513,4 @@ _.z.b: same
 _.z: same
 _.x: same
 _: same
-true</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../README/">« README</a><a class="docs-footer-nextpage" href="../../2.simple_RBC/main/">Simple RBC Model »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Thursday 7 April 2022 18:30">Thursday 7 April 2022</span>. Using Julia version 1.6.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+true</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../README/">« README</a><a class="docs-footer-nextpage" href="../../2.simple_RBC/main/">Simple RBC Model »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Thursday 7 April 2022 19:12">Thursday 7 April 2022</span>. Using Julia version 1.6.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
