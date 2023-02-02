@@ -51,203 +51,212 @@ end</code></pre></li><li><p>The EViews syntax is translated to Julia syntax. EVi
  exp(aux114[t]) = zyhst[t]
  exp(aux115[t]) = zyhst[t - 1]
  exp(aux116[t]) = zyhtst[t]
- exp(aux117[t]) = zyhtst[t - 1]</code></pre><p>For example, we see that variable <code>aux1</code> was added with the first equation in the above list. At the same time, in equation for <code>dpgap</code>, the expression <code>log(phr[t] * pxp[t])</code> has been replaced by <code>aux1[t]</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.equations[2]</code><code class="nohighlight hljs ansi" style="display:block;">&quot;Price inflation aggregation discrepancy&quot; dpgap[t] - dpgap_a[t] = pipxnc[t] / 400 - (y_dpgap[1] * @d(aux1[t], 0, 1) + y_dpgap[2] * @d(aux2[t], 0, 1) + (y_dpgap[3] + y_dpgap[4]) * @d(aux3[t], 0, 1) + (y_dpgap[5] + y_dpgap[6]) * @d(aux4[t], 0, 1) + y_dpgap[7] * @d(aux5[t], 0, 1))</code></pre><p>A detailed discussion of auxiliary variables and equations is beyond the scope of this tutorial. It suffices to say that we can safely ignore their presence for now.</p><h2 id="Load-the-Longbase-Data"><a class="docs-heading-anchor" href="#Load-the-Longbase-Data">Load the Longbase Data</a><a id="Load-the-Longbase-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Load-the-Longbase-Data" title="Permalink"></a></h2><p>Unfortunately the <code>longbase</code> data is available only in EViews format, which cannot be read automatically by open source software (at least to our knowledge). For convenience, here we have included the version of <code>longbase</code> from 23-07-2020 in a csv format and a function that loads that data. The function is defined in file <a href="../load_longbase.jl"><code>load_longbase.jl</code></a>. Note that this is not a module, so we load it by calling <code>include()</code>, not <code>using</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; include(&quot;load_longbase.jl&quot;)</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; longbase = load_longbase(&quot;longbase_23072020.csv&quot;)</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: SystemError: opening file &quot;/home/runner/work/DocsEcon.jl/DocsEcon.jl/build/Tutorials/4.FRB-US/models/longbase_23072020.csv&quot;: No such file or directory</code><code class="nohighlight hljs ansi" style="display:block;">Error During Test at REPL[3]:1
-  Test threw exception
+ exp(aux117[t]) = zyhtst[t - 1]</code></pre><p>For example, we see that variable <code>aux1</code> was added with the first equation in the above list. At the same time, in equation for <code>dpgap</code>, the expression <code>log(phr[t] * pxp[t])</code> has been replaced by <code>aux1[t]</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.equations[2]</code><code class="nohighlight hljs ansi" style="display:block;">&quot;Price inflation aggregation discrepancy&quot; dpgap[t] - dpgap_a[t] = pipxnc[t] / 400 - (y_dpgap[1] * @d(aux1[t], 0, 1) + y_dpgap[2] * @d(aux2[t], 0, 1) + (y_dpgap[3] + y_dpgap[4]) * @d(aux3[t], 0, 1) + (y_dpgap[5] + y_dpgap[6]) * @d(aux4[t], 0, 1) + y_dpgap[7] * @d(aux5[t], 0, 1))</code></pre><p>A detailed discussion of auxiliary variables and equations is beyond the scope of this tutorial. It suffices to say that we can safely ignore their presence for now.</p><h2 id="Load-the-Longbase-Data"><a class="docs-heading-anchor" href="#Load-the-Longbase-Data">Load the Longbase Data</a><a id="Load-the-Longbase-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Load-the-Longbase-Data" title="Permalink"></a></h2><p>Unfortunately the <code>longbase</code> data is loaded from the LONGBASE.TXT file provided in the FRB/US data package. The file is read and parsed via the function defined in <a href="../load_longbase.jl"><code>load_longbase.jl</code></a>. Note that this is not a module,  so we load it by calling <code>include()</code>, not <code>using</code>. We have saved a copy of this file as of 2022-11-29, named <code>longbase_2022-11-29.csv</code></p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; include(&quot;load_longbase.jl&quot;)</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; longbase = load_longbase(&quot;longbase_2022-11-29.csv&quot;)</code><code class="nohighlight hljs ansi" style="display:block;">843×651 MVTSeries{Quarterly} with range 1962Q1:2172Q3 and variables (delrff,…):
+           delrff        dpgap        … zyhst_a     zyhtst_a
+  1962Q1 :  0.0685484     0.000717931 … 0.0         0.0
+  1962Q2 :  0.217238      0.00279794  … 0.0         0.0
+  1962Q3 :  0.204613      0.000676539 … 0.0         0.0
+  1962Q4 :  0.0769286    -0.00222033  … 0.0         0.0
+  1963Q1 :  0.031112      0.00371643  … 0.0         0.0
+  1963Q2 : -0.000739006  -7.93421e-5  … 0.0         0.0
+  1963Q3 :  0.34871      -0.00262161  … 0.0         0.0
+  1963Q4 :  0.129242      0.00267605  … 0.0         0.0
+  1964Q1 :  0.0220479    -0.000558833 … 0.0         0.0
+           ⋮             ⋮            ⋱ ⋮           ⋮
+  2170Q3 :  6.21725e-14   0.0         … 0.0         0.0
+  2170Q4 :  8.30447e-14   0.0         … 0.0         0.0
+  2171Q1 :  2.53131e-14   0.0         … 0.0         0.0
+  2171Q2 :  2.35367e-14   0.0         … 0.0         0.0
+  2171Q3 : -1.90958e-14   0.0         … 0.0         0.0
+  2171Q4 :  0.0           0.0         … 0.0         0.0
+  2172Q1 : -7.54952e-14   0.0         … 0.0         0.0
+  2172Q2 :  0.0           0.0         … 0.0         0.0
+  2172Q3 : -2.9754e-14    0.0         … 0.0         0.0</code><code class="nohighlight hljs ansi" style="display:block;">Test Failed at REPL[3]:1
   Expression: size(longbase) == (834, 659)
-  UndefVarError: longbase not defined
-  Stacktrace:
-    [1] top-level scope
-      @ /opt/hostedtoolcache/julia/1.7.3/x64/share/julia/stdlib/v1.7/Test/src/Test.jl:445
-    [2] eval
-      @ ./boot.jl:373 [inlined]
-    [3] #21
-      @ ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:721 [inlined]
-    [4] cd(f::Documenter.Expanders.var&quot;#21#23&quot;{Module}, dir::String)
-      @ Base.Filesystem ./file.jl:110
-    [5] (::Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module})()
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:720
-    [6] (::IOCapture.var&quot;#3#5&quot;{DataType, Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module}, Task, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}})()
-      @ IOCapture ~/.julia/packages/IOCapture/sXY71/src/IOCapture.jl:118
-    [7] with_logstate(f::Function, logstate::Any)
-      @ Base.CoreLogging ./logging.jl:511
-    [8] with_logger
-      @ ./logging.jl:623 [inlined]
-    [9] capture(f::Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module}; rethrow::Type, color::Bool)
-      @ IOCapture ~/.julia/packages/IOCapture/sXY71/src/IOCapture.jl:116
-   [10] runner(#unused#::Type{Documenter.Expanders.REPLBlocks}, x::Markdown.Code, page::Documenter.Documents.Page, doc::Documenter.Documents.Document)
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:719
-   [11] dispatch(::Type{Documenter.Expanders.ExpanderPipeline}, ::Markdown.Code, ::Vararg{Any})
-      @ Documenter.Utilities.Selectors ~/.julia/packages/Documenter/H5y27/src/Utilities/Selectors.jl:170
-   [12] expand(doc::Documenter.Documents.Document)
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:42
-   [13] runner(#unused#::Type{Documenter.Builder.ExpandTemplates}, doc::Documenter.Documents.Document)
-      @ Documenter.Builder ~/.julia/packages/Documenter/H5y27/src/Builder.jl:226
-   [14] dispatch(#unused#::Type{Documenter.Builder.DocumentPipeline}, x::Documenter.Documents.Document)
-      @ Documenter.Utilities.Selectors ~/.julia/packages/Documenter/H5y27/src/Utilities/Selectors.jl:170
-   [15] #2
-      @ ~/.julia/packages/Documenter/H5y27/src/Documenter.jl:273 [inlined]
-   [16] cd(f::Documenter.var&quot;#2#3&quot;{Documenter.Documents.Document}, dir::String)
-      @ Base.Filesystem ./file.jl:110
-   [17] #makedocs#1
-      @ ~/.julia/packages/Documenter/H5y27/src/Documenter.jl:272 [inlined]
-   [18] top-level scope
-      @ ~/work/DocsEcon.jl/DocsEcon.jl/makedocs.jl:15
-   [19] include(mod::Module, _path::String)
-      @ Base ./Base.jl:418
-   [20] exec_options(opts::Base.JLOptions)
-      @ Base ./client.jl:292
-   [21] _start()
-      @ Base ./client.jl:495</code></pre><h2 id="Load-set_policy.jl"><a class="docs-heading-anchor" href="#Load-set_policy.jl">Load <code>set_policy.jl</code></a><a id="Load-set_policy.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Load-set_policy.jl" title="Permalink"></a></h2><p>The model contains a number of switch variables to control which monetary policy function is used and which fiscal policy function is used at each period of the simulation. For convenience, we have included functions <code>set_mp!()</code> and <code>set_fp!()</code>, which are defined in <a href="../set_policy.jl"><code>set_policy.jl</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; include(&quot;set_policy.jl&quot;)</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @doc set_mp!</code><code class="nohighlight hljs ansi" style="display:block;">  set_mp!(data, switch[, range])
+   Evaluated: (843, 651) == (834, 659)</code></pre><h2 id="Load-set_policy.jl"><a class="docs-heading-anchor" href="#Load-set_policy.jl">Load <code>set_policy.jl</code></a><a id="Load-set_policy.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Load-set_policy.jl" title="Permalink"></a></h2><p>The model contains a number of switch variables to control which monetary policy function is used and which fiscal policy function is used at each period of the simulation. For convenience, we have included functions <code>set_mp!()</code> and <code>set_fp!()</code>, which are defined in <a href="../set_policy.jl"><code>set_policy.jl</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; include(&quot;set_policy.jl&quot;)</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @doc set_mp!</code><code class="nohighlight hljs ansi" style="display:block;">  set_mp!(data, switch[, range])
 
   Set the monetary policy function over the given range. The given switch is
   set to 1 and all other monetary policy switches are set to 0. If range is
   not given, the switch is set over the full range of the data.
 
-  The set of valid switch values is in dmp_switches.</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; dmp_switches</code><code class="nohighlight hljs ansi" style="display:block;">(:dmpintay, :dmptay, :dmptlr, :dmpalt, :dmpgen, :dmpex, :dmprr)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @doc set_fp!</code><code class="nohighlight hljs ansi" style="display:block;">  set_fp!(data, switch[, range])
+  The set of valid switch values is in dmp_switches.</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # these are the mp switches
+       dmp_switches</code><code class="nohighlight hljs ansi" style="display:block;">(:dmpintay, :dmptay, :dmptlr, :dmpalt, :dmpgen, :dmpex, :dmprr)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; #  these are their descriptions
+       for s in dmp_switches
+           v = filter(x -&gt; x.name == s, m.variables)[1]
+           println(&quot;$s : \t$(v.doc)&quot;)
+       end</code><code class="nohighlight hljs ansi" style="display:block;">dmpintay : 	Monetary policy switch:  inertial taylor rule
+dmptay : 	Monetary policy switch:  Taylor&#39;s reaction function
+dmptlr : 	Monetary policy switch:  Taylor&#39;s reaction function with unemployment gap
+dmpalt : 	Monetary policy switch: MA rule
+dmpgen : 	Monetary policy switch:  Generalized reaction function
+dmpex : 	Monetary policy switch:  exogenous federal funds rate
+dmprr : 	Monetary policy switch:  exogenous real federal funds rate</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @doc set_fp!</code><code class="nohighlight hljs ansi" style="display:block;">  set_fp!(data, switch[, range])
 
   Set the fiscal policy function over the given range. The given switch is set
   to 1 and all other fiscal policy switches are set to 0. If range is not
   given, the switch is set over the full range of the data.
 
-  The set of valid switch values is in dfp_switches.</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; dfp_switches</code><code class="nohighlight hljs ansi" style="display:block;">(:dfpex, :dfpsrp, :dfpdbt)</code></pre><h2 id="Prepare-the-Simulation-Plan"><a class="docs-heading-anchor" href="#Prepare-the-Simulation-Plan">Prepare the Simulation Plan</a><a id="Prepare-the-Simulation-Plan-1"></a><a class="docs-heading-anchor-permalink" href="#Prepare-the-Simulation-Plan" title="Permalink"></a></h2><p>The simulation is controlled by a <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.Plan"><code>Plan</code></a> object. The plan is defined by a model object and a simulation range. The full range handled by the plan contains additional periods before and after the simulation range, which account for initial and final conditions. By default, the simulation plan is setup such that all shocks are exogenous and all variables are endogenous, except for the variables that are declared either in an <code>@exogenous</code> block or with the <code>@exog</code> declaration within an <code>@variables</code> block in the model file.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim = 2020Q1:2025Q4     # simulation range</code><code class="nohighlight hljs ansi" style="display:block;">2020Q1:2025Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim)        # the plan object</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 2016Q2:2025Q4
-  2016Q2:2025Q4 → adjlegrt, d79a, d8095, d83, d87, ddockm, ddockx, deuc, …</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ini = firstdate(p):first(sim) - 1      # range of initial conditions</code><code class="nohighlight hljs ansi" style="display:block;">2016Q2:2019Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; fin = last(sim) + 1:lastdate(p)        # range of final conditions</code><code class="nohighlight hljs ansi" style="display:block;">2026Q1:2025Q4</code></pre><p>Note that the <code>fin</code> range is actually empty. This is because this model doesn&#39;t have any leads.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; isempty(fin)</code><code class="nohighlight hljs ansi" style="display:block;">true</code></pre><h2 id="Prepare-the-Exogenous-Data"><a class="docs-heading-anchor" href="#Prepare-the-Exogenous-Data">Prepare the Exogenous Data</a><a id="Prepare-the-Exogenous-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Prepare-the-Exogenous-Data" title="Permalink"></a></h2><p>We start by pre-allocating simulation data that is set to 0 everywhere.  Then we assign within it the data from <code>longbase</code> using Julia&#39;s <code>.=</code> operator.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed .= longbase[p.range];</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: longbase not defined</code></pre><p>Next we set the monetary policy, the fiscal policy and a few other switches.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; # set monetary policy
+  The set of valid switch values is in dfp_switches.</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # these are the fp switches
+       dfp_switches</code><code class="nohighlight hljs ansi" style="display:block;">(:dfpex, :dfpsrp, :dfpdbt)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # these are their descriptions
+       for s in dfp_switches
+           v = filter(x -&gt; x.name == s, m.variables)[1]
+           println(&quot;$s : \t$(v.doc)&quot;)
+       end</code><code class="nohighlight hljs ansi" style="display:block;">dfpex : 	Fiscal policy switch:  1 for exogenous personal income trend tax rates
+dfpsrp : 	Fiscal policy switch:  1 for surplus ratio stabilization
+dfpdbt : 	Fiscal policy switch:  1 for debt ratio stabilization</code></pre><h2 id="Prepare-the-Simulation-Plan"><a class="docs-heading-anchor" href="#Prepare-the-Simulation-Plan">Prepare the Simulation Plan</a><a id="Prepare-the-Simulation-Plan-1"></a><a class="docs-heading-anchor-permalink" href="#Prepare-the-Simulation-Plan" title="Permalink"></a></h2><p>The simulation is controlled by a <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.Plan"><code>Plan</code></a> object. The plan is defined by a model object and a simulation range. The full range handled by the plan contains additional periods before and after the simulation range, which account for initial and final conditions. By default, the simulation plan is setup such that all shocks are exogenous and all variables are endogenous, except for the variables that are declared either in an <code>@exogenous</code> block or with the <code>@exog</code> declaration within an <code>@variables</code> block in the model file.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim = 2022Q1:2027Q4     # simulation range</code><code class="nohighlight hljs ansi" style="display:block;">2022Q1:2027Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim)        # the plan object</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 2018Q2:2027Q4
+  2018Q2:2027Q4 → adjlegrt, d79a, d8095, d83, d87, ddockm, ddockx, deuc, …</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ini = firstdate(p):first(sim) - 1      # range of initial conditions</code><code class="nohighlight hljs ansi" style="display:block;">2018Q2:2021Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; fin = last(sim) + 1:lastdate(p)        # range of final conditions</code><code class="nohighlight hljs ansi" style="display:block;">2028Q1:2027Q4</code></pre><p>Note that the <code>fin</code> range is actually empty. This is because this model doesn&#39;t have any leads.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; isempty(fin)</code><code class="nohighlight hljs ansi" style="display:block;">true</code></pre><h2 id="Prepare-the-Exogenous-Data"><a class="docs-heading-anchor" href="#Prepare-the-Exogenous-Data">Prepare the Exogenous Data</a><a id="Prepare-the-Exogenous-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Prepare-the-Exogenous-Data" title="Permalink"></a></h2><p>We start by pre-allocating simulation data that is set to 0 everywhere.  Then we assign within it the data from <code>longbase</code> using Julia&#39;s <code>.=</code> operator.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed .= longbase[p.range];</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>Next we set the monetary policy, the fiscal policy and a few other switches.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; # set monetary policy (Inertial Taylor Rule)
        set_mp!(ed, :dmpintay);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # turn off zero bound and policy thresholds;
        # hold policy maker&#39;s perceived equilibrium real interest rate
-       ed.dmptrsh .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed.rffmin .= -9999;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed.drstar .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # set fiscal policy
-       set_fp!(ed, :dfpsrp);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><h2 id="Back-out-the-Shocks"><a class="docs-heading-anchor" href="#Back-out-the-Shocks">Back out the Shocks</a><a id="Back-out-the-Shocks-1"></a><a class="docs-heading-anchor-permalink" href="#Back-out-the-Shocks" title="Permalink"></a></h2><p>The first simulation test is to compute the shocks given the variable paths from <code>longbase</code>. To do this, we swap the variables and shocks, making variables exogenous and shocks endogenous. The mapping between variables and their corresponding shocks is declared in the model file, so we can simply call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.autoexogenize!-Tuple{Plan, Model, Any}"><code>autoexogenize!</code></a>. We make a copy of the plan <code>p</code>, so that the original plan would not be modified. We also make a copy of the exogenous data, <code>ed</code>, so that the original would remain unchanged.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p_0 = autoexogenize!(copy(p), m, sim)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 2016Q2:2025Q4
-  2016Q2:2019Q4 → adjlegrt, d79a, d8095, d83, d87, ddockm, ddockx, deuc, …
-  2020Q1:2025Q4 → delrff, dpgap, ebfin, ecnian, egfen, egfln, egsen, egsln, …</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_0 = copy(ed)</code><code class="nohighlight hljs ansi" style="display:block;">39×651 MVTSeries{Quarterly} with range 2016Q2:2025Q4 and variables (delrff,…):
-           delrff     dpgap     ebfin    … zyhst_a     zyhtst_a
-  2016Q2 : 0.0        0.0       1.0      … 0.0         0.0
-  2016Q3 : 0.0        0.0       1.0      … 0.0         0.0
-  2016Q4 : 0.0        0.0       1.0      … 0.0         0.0
-  2017Q1 : 0.0        0.0       1.0      … 0.0         0.0
-  2017Q2 : 0.0        0.0       1.0      … 0.0         0.0
-  2017Q3 : 0.0        0.0       1.0      … 0.0         0.0
-  2017Q4 : 0.0        0.0       1.0      … 0.0         0.0
-  2018Q1 : 0.0        0.0       1.0      … 0.0         0.0
-  2018Q2 : 0.0        0.0       1.0      … 0.0         0.0
-           ⋮          ⋮         ⋮        ⋱ ⋮           ⋮
-  2023Q4 : 0.0        0.0       1.0      … 0.0         0.0
-  2024Q1 : 0.0        0.0       1.0      … 0.0         0.0
-  2024Q2 : 0.0        0.0       1.0      … 0.0         0.0
-  2024Q3 : 0.0        0.0       1.0      … 0.0         0.0
-  2024Q4 : 0.0        0.0       1.0      … 0.0         0.0
-  2025Q1 : 0.0        0.0       1.0      … 0.0         0.0
-  2025Q2 : 0.0        0.0       1.0      … 0.0         0.0
-  2025Q3 : 0.0        0.0       1.0      … 0.0         0.0
-  2025Q4 : 0.0        0.0       1.0      … 0.0         0.0</code></pre><p>Now we run the <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.simulate"><code>simulate</code></a> command. Note that the first time we run a function in Julia it takes a bit longer due to compilation time. In this case, it takes much longer because the model is very large and each and every equation gets compiled together with its automatic derivative.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_0 = @time simulate(m, p_0, ed_0; verbose=true, tol=1e-12);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2020Q1:2025Q4
-┌ Error: The system is underdetermined with the given set of equations and final conditions.
-└ @ StateSpaceEcon.StackedTimeSolver ~/.julia/packages/StateSpaceEcon/zsS6U/src/stackedtime/solverdata.jl:621
-ERROR: LinearAlgebra.SingularException(0)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sol_0[m.variables] ≈ ed[m.variables]</code><code class="nohighlight hljs ansi" style="display:block;">Error During Test at REPL[2]:1
-  Test threw exception
+       ed.dmptrsh .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed.rffmin .= -9999;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed.drstar .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # set fiscal policy (Surplus Ratio Stabilization)
+       set_fp!(ed, :dfpsrp);</code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><h2 id="Back-out-the-Shocks"><a class="docs-heading-anchor" href="#Back-out-the-Shocks">Back out the Shocks</a><a id="Back-out-the-Shocks-1"></a><a class="docs-heading-anchor-permalink" href="#Back-out-the-Shocks" title="Permalink"></a></h2><p>The first simulation test is to compute the shocks given the variable paths from <code>longbase</code>. To do this, we swap the variables and shocks, making variables exogenous and shocks endogenous. The mapping between variables and their corresponding shocks is declared in the model file, so we can simply call <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.autoexogenize!-Tuple{Plan, Model, Any}"><code>autoexogenize!</code></a>. We make a copy of the plan <code>p</code>, so that the original plan would not be modified. We also make a copy of the exogenous data, <code>ed</code>, so that the original would remain unchanged.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p_0 = autoexogenize!(copy(p), m, sim)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 2018Q2:2027Q4
+  2018Q2:2021Q4 → adjlegrt, d79a, d8095, d83, d87, ddockm, ddockx, deuc, …
+  2022Q1:2027Q4 → delrff, dpgap, ebfin, ecnian, egfen, egfln, egsen, egsln, …</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_0 = copy(ed)</code><code class="nohighlight hljs ansi" style="display:block;">39×651 MVTSeries{Quarterly} with range 2018Q2:2027Q4 and variables (delrff,…):
+           delrff       dpgap        … zyhst_a     zyhtst_a
+  2018Q2 :  0.289284     0.00069891  … 0.0         0.0
+  2018Q3 :  0.186305     0.00051661  … 0.0         0.0
+  2018Q4 :  0.293605     0.000629633 … 0.0         0.0
+  2019Q1 :  0.184215    -0.000929157 … 0.0         0.0
+  2019Q2 : -0.00349898   0.000139446 … 0.0         0.0
+  2019Q3 : -0.2         -0.000163501 … 0.0         0.0
+  2019Q4 : -0.547329     0.000976262 … 0.0         0.0
+  2020Q1 : -0.417581    -0.000343449 … 0.0         0.0
+  2020Q2 : -1.17415     -0.00277455  … 0.0         0.0
+           ⋮            ⋮            ⋱ ⋮           ⋮
+  2025Q4 : -0.273057     0.000784251 … 0.0         0.0
+  2026Q1 : -0.136529     0.000843528 … 0.0         0.0
+  2026Q2 : -0.0497604    0.000882637 … 0.0         0.0
+  2026Q3 : -0.0422963    0.000896193 … 0.0         0.0
+  2026Q4 : -0.0359519    0.000886621 … 0.0         0.0
+  2027Q1 : -0.0305591    0.000857853 … 0.0         0.0
+  2027Q2 : -0.0259752    0.000811801 … 0.0         0.0
+  2027Q3 : -0.0220789    0.000750954 … 0.0         0.0
+  2027Q4 : -0.0187671    0.000678757 … 0.0         0.0</code></pre><p>Now we run the <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.simulate"><code>simulate</code></a> command. Note that the first time we run a function in Julia it takes a bit longer due to compilation time. In this case, it takes much longer because the model is very large and each and every equation gets compiled together with its automatic derivative.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_0 = @time simulate(m, p_0, ed_0; verbose=true, tol=1e-12);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2022Q1:2027Q4
+[ Info: 1, || Fx || = 10.853465085036248, || Δx || = 10.853465085036248
+[ Info: 2, || Fx || = 1.0186340659856796e-10, || Δx || = 1.663794833867629e-13
+ 53.797750 seconds (77.57 M allocations: 7.728 GiB, 2.52% gc time, 97.89% compilation time)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sol_0[m.variables] ≈ ed[m.variables]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: sol_0[m.variables] ≈ ed[m.variables]
-  UndefVarError: sol_0 not defined
-  Stacktrace:
-    [1] top-level scope
-      @ /opt/hostedtoolcache/julia/1.7.3/x64/share/julia/stdlib/v1.7/Test/src/Test.jl:445
-    [2] eval
-      @ ./boot.jl:373 [inlined]
-    [3] #21
-      @ ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:721 [inlined]
-    [4] cd(f::Documenter.Expanders.var&quot;#21#23&quot;{Module}, dir::String)
-      @ Base.Filesystem ./file.jl:110
-    [5] (::Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module})()
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:720
-    [6] (::IOCapture.var&quot;#3#5&quot;{DataType, Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module}, Task, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}})()
-      @ IOCapture ~/.julia/packages/IOCapture/sXY71/src/IOCapture.jl:118
-    [7] with_logstate(f::Function, logstate::Any)
-      @ Base.CoreLogging ./logging.jl:511
-    [8] with_logger
-      @ ./logging.jl:623 [inlined]
-    [9] capture(f::Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module}; rethrow::Type, color::Bool)
-      @ IOCapture ~/.julia/packages/IOCapture/sXY71/src/IOCapture.jl:116
-   [10] runner(#unused#::Type{Documenter.Expanders.REPLBlocks}, x::Markdown.Code, page::Documenter.Documents.Page, doc::Documenter.Documents.Document)
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:719
-   [11] dispatch(::Type{Documenter.Expanders.ExpanderPipeline}, ::Markdown.Code, ::Vararg{Any})
-      @ Documenter.Utilities.Selectors ~/.julia/packages/Documenter/H5y27/src/Utilities/Selectors.jl:170
-   [12] expand(doc::Documenter.Documents.Document)
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:42
-   [13] runner(#unused#::Type{Documenter.Builder.ExpandTemplates}, doc::Documenter.Documents.Document)
-      @ Documenter.Builder ~/.julia/packages/Documenter/H5y27/src/Builder.jl:226
-   [14] dispatch(#unused#::Type{Documenter.Builder.DocumentPipeline}, x::Documenter.Documents.Document)
-      @ Documenter.Utilities.Selectors ~/.julia/packages/Documenter/H5y27/src/Utilities/Selectors.jl:170
-   [15] #2
-      @ ~/.julia/packages/Documenter/H5y27/src/Documenter.jl:273 [inlined]
-   [16] cd(f::Documenter.var&quot;#2#3&quot;{Documenter.Documents.Document}, dir::String)
-      @ Base.Filesystem ./file.jl:110
-   [17] #makedocs#1
-      @ ~/.julia/packages/Documenter/H5y27/src/Documenter.jl:272 [inlined]
-   [18] top-level scope
-      @ ~/work/DocsEcon.jl/DocsEcon.jl/makedocs.jl:15
-   [19] include(mod::Module, _path::String)
-      @ Base ./Base.jl:418
-   [20] exec_options(opts::Base.JLOptions)
-      @ Base ./client.jl:292
-   [21] _start()
-      @ Base ./client.jl:495
-ERROR: There was an error during testing</code></pre><p>The compilation is done once and the compiled code is used in every call after that. So the second call to <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.simulate"><code>simulate</code></a> is much, much faster.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_0 = @time simulate(m, p_0, ed_0; verbose=true, tol=1e-12);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2020Q1:2025Q4
-┌ Error: The system is underdetermined with the given set of equations and final conditions.
-└ @ StateSpaceEcon.StackedTimeSolver ~/.julia/packages/StateSpaceEcon/zsS6U/src/stackedtime/solverdata.jl:621
-ERROR: LinearAlgebra.SingularException(0)</code></pre><h2 id="Recover-the-Baseline-Case"><a class="docs-heading-anchor" href="#Recover-the-Baseline-Case">Recover the Baseline Case</a><a id="Recover-the-Baseline-Case-1"></a><a class="docs-heading-anchor-permalink" href="#Recover-the-Baseline-Case" title="Permalink"></a></h2><p>Next simulation is a sanity check test. If we run a simulation with the shocks set to the values we just backed out, the resulting variable paths must match the ones we started with.</p><p>Once again we start with an exogenous data set everywhere to 0. Then we assign only the initial conditions and the shocks we just backed out.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p_r = Plan(m, sim);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r = zerodata(m, p_r);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # initial conditions for the variables are taken from longbase
-       ed_r[ini, m.variables] .= longbase[ini, m.variables];</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: longbase not defined</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # shocks are taken from from sol_0
-       ed_r[p_r.range, m.shocks] .= sol_0[p_r.range, m.shocks];</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: sol_0 not defined</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # exogenous variables are also taken  from sol_0
-       exogenous = [v for v in m.variables if isexog(v)];</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r[p_r.range, exogenous] .= sol_0[p_r.range, exogenous];</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: sol_0 not defined</code></pre><p>Now, the only thing left is to set the initial guess for the endogenous variables. If we leave it at 0, that would be an initial guess too far from the solution and the Newton-Raphson will likely diverge. If we set it to the known solution, that would diminish this exercise to merely verifying that it is indeed a solution (we already know that). So, to make things a bit more interesting, we add a bit of noise to the true solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; endogenous = [v for v in m.variables if !isexog(v)];</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r[sim, endogenous] .= longbase[sim, endogenous] .+ 0.03.*randn(length(sim), length(endogenous));</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: longbase not defined</code></pre><p>Once again we have to set the monetary policy and the fiscal policy rules, as well as the values of some of the other switches.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; set_mp!(ed_r, :dmpintay);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r.dmptrsh .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r.rffmin .= -9999;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r.drstar .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; set_fp!(ed_r, :dfpsrp);</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>And finally we can run the simulation and check to make sure that indeed the recovered simulation matches the base case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_r = @time simulate(m, p_r, ed_r; verbose=true, tol=1e-9);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2020Q1:2025Q4
-┌ Error: The system is underdetermined with the given set of equations and final conditions.
-└ @ StateSpaceEcon.StackedTimeSolver ~/.julia/packages/StateSpaceEcon/zsS6U/src/stackedtime/solverdata.jl:621
-ERROR: LinearAlgebra.SingularException(0)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sol_r ≈ sol_0</code><code class="nohighlight hljs ansi" style="display:block;">Error During Test at REPL[2]:1
-  Test threw exception
+   Evaluated: 39×367 MVTSeries{Quarterly} with range 2018Q2:2027Q4 and variables (delrff,…):
+           delrff       dpgap        … uyni     uyp      ymsdn
+  2018Q2 :  0.289284     0.00069891  … 1.0      1.012    0.0
+  2018Q3 :  0.186305     0.00051661  … 1.0      1.01196  0.0
+  2018Q4 :  0.293605     0.000629633 … 1.0      1.01192  0.0
+  2019Q1 :  0.184215    -0.000929157 … 1.0      1.01164  0.0
+  2019Q2 : -0.00349898   0.000139446 … 1.0      1.01188  0.0
+  2019Q3 : -0.2         -0.000163501 … 1.0      1.01161  0.0
+  2019Q4 : -0.547329     0.000976262 … 1.0      1.01171  0.0
+  2020Q1 : -0.417581    -0.000343449 … 1.0      1.01121  0.0
+  2020Q2 : -1.17415     -0.00277455  … 1.0      1.01041  0.0
+           ⋮            ⋮            ⋱ ⋮        ⋮        ⋮
+  2025Q4 : -0.273057     0.000784251 … 1.0      1.01064  0.0
+  2026Q1 : -0.136529     0.000843528 … 1.0      1.01064  0.0
+  2026Q2 : -0.0497604    0.000882637 … 1.0      1.01064  0.0
+  2026Q3 : -0.0422963    0.000896193 … 1.0      1.01064  0.0
+  2026Q4 : -0.0359519    0.000886621 … 1.0      1.01064  0.0
+  2027Q1 : -0.0305591    0.000857853 … 1.0      1.01064  0.0
+  2027Q2 : -0.0259752    0.000811801 … 1.0      1.01064  0.0
+  2027Q3 : -0.0220789    0.000750954 … 1.0      1.01064  0.0
+  2027Q4 : -0.0187671    0.000678757 … 1.0      1.01064  0.0      ≈ 39×367 MVTSeries{Quarterly} with range 2018Q2:2027Q4 and variables (delrff,…):
+           delrff       dpgap        … uyni     uyp      ymsdn
+  2018Q2 :  0.289284     0.00069891  … 1.0      1.012    0.0
+  2018Q3 :  0.186305     0.00051661  … 1.0      1.01196  0.0
+  2018Q4 :  0.293605     0.000629633 … 1.0      1.01192  0.0
+  2019Q1 :  0.184215    -0.000929157 … 1.0      1.01164  0.0
+  2019Q2 : -0.00349898   0.000139446 … 1.0      1.01188  0.0
+  2019Q3 : -0.2         -0.000163501 … 1.0      1.01161  0.0
+  2019Q4 : -0.547329     0.000976262 … 1.0      1.01171  0.0
+  2020Q1 : -0.417581    -0.000343449 … 1.0      1.01121  0.0
+  2020Q2 : -1.17415     -0.00277455  … 1.0      1.01041  0.0
+           ⋮            ⋮            ⋱ ⋮        ⋮        ⋮
+  2025Q4 : -0.273057     0.000784251 … 1.0      1.01064  0.0
+  2026Q1 : -0.136529     0.000843528 … 1.0      1.01064  0.0
+  2026Q2 : -0.0497604    0.000882637 … 1.0      1.01064  0.0
+  2026Q3 : -0.0422963    0.000896193 … 1.0      1.01064  0.0
+  2026Q4 : -0.0359519    0.000886621 … 1.0      1.01064  0.0
+  2027Q1 : -0.0305591    0.000857853 … 1.0      1.01064  0.0
+  2027Q2 : -0.0259752    0.000811801 … 1.0      1.01064  0.0
+  2027Q3 : -0.0220789    0.000750954 … 1.0      1.01064  0.0
+  2027Q4 : -0.0187671    0.000678757 … 1.0      1.01064  0.0</code></pre><p>The compilation is done once and the compiled code is used in every call after that. So the second call to <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.simulate"><code>simulate</code></a> is much, much faster.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_0 = @time simulate(m, p_0, ed_0; verbose=true, tol=1e-12);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2022Q1:2027Q4
+[ Info: 1, || Fx || = 10.853465085036248, || Δx || = 10.853465085036248
+[ Info: 2, || Fx || = 1.0186340659856796e-10, || Δx || = 1.663794833867629e-13
+  1.052605 seconds (995.18 k allocations: 3.800 GiB, 21.98% gc time)</code></pre><h2 id="Recover-the-Baseline-Case"><a class="docs-heading-anchor" href="#Recover-the-Baseline-Case">Recover the Baseline Case</a><a id="Recover-the-Baseline-Case-1"></a><a class="docs-heading-anchor-permalink" href="#Recover-the-Baseline-Case" title="Permalink"></a></h2><p>Next simulation is a sanity check test. If we run a simulation with the shocks set to the values we just backed out, the resulting variable paths must match the ones we started with.</p><p>Once again we start with an exogenous data set everywhere to 0. Then we assign only the initial conditions and the shocks we just backed out.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p_r = Plan(m, sim);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r = zerodata(m, p_r);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # initial conditions for the variables are taken from longbase
+       ed_r[ini, m.variables] .= longbase[ini, m.variables];</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # shocks are taken from from sol_0
+       ed_r[p_r.range, m.shocks] .= sol_0[p_r.range, m.shocks];</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # exogenous variables are also taken  from sol_0
+       exogenous = [v for v in m.variables if isexog(v)];</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r[p_r.range, exogenous] .= sol_0[p_r.range, exogenous];</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>Now, the only thing left is to set the initial guess for the endogenous variables. If we leave it at 0, that would be an initial guess too far from the solution and the Newton-Raphson will likely diverge. If we set it to the known solution, that would diminish this exercise to merely verifying that it is indeed a solution (we already know that). So, to make things a bit more interesting, we add a bit of noise to the true solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; endogenous = [v for v in m.variables if !isexog(v)];</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r[sim, endogenous] .= longbase[sim, endogenous] .+ 0.03.*randn(length(sim), length(endogenous));</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>Once again we have to set the monetary policy and the fiscal policy rules, as well as the values of some of the other switches.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; set_mp!(ed_r, :dmpintay);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r.dmptrsh .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r.rffmin .= -9999;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_r.drstar .= 0.0;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; set_fp!(ed_r, :dfpsrp);</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>And finally we can run the simulation and check to make sure that indeed the recovered simulation matches the base case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_r = @time simulate(m, p_r, ed_r; verbose=true, tol=1e-9);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2022Q1:2027Q4
+[ Info: 1, || Fx || = 2090.051818221041, || Δx || = 2422.5570839130064
+[ Info: 2, || Fx || = 169.08344092464358, || Δx || = 2393.940190027985
+[ Info: 3, || Fx || = 83.75689792118646, || Δx || = 81.16208323309168
+[ Info: 4, || Fx || = 0.7982482461120526, || Δx || = 0.22855938702525214
+[ Info: 5, || Fx || = 9.340475389763014e-5, || Δx || = 9.472054033411055e-6
+[ Info: 6, || Fx || = 1.7462298274040222e-10
+  1.624607 seconds (1.89 M allocations: 4.025 GiB, 14.52% gc time)</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sol_r ≈ sol_0</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: sol_r ≈ sol_0
-  UndefVarError: sol_r not defined
-  Stacktrace:
-    [1] top-level scope
-      @ /opt/hostedtoolcache/julia/1.7.3/x64/share/julia/stdlib/v1.7/Test/src/Test.jl:445
-    [2] eval
-      @ ./boot.jl:373 [inlined]
-    [3] #21
-      @ ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:721 [inlined]
-    [4] cd(f::Documenter.Expanders.var&quot;#21#23&quot;{Module}, dir::String)
-      @ Base.Filesystem ./file.jl:110
-    [5] (::Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module})()
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:720
-    [6] (::IOCapture.var&quot;#3#5&quot;{DataType, Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module}, Task, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}, IOContext{Base.PipeEndpoint}})()
-      @ IOCapture ~/.julia/packages/IOCapture/sXY71/src/IOCapture.jl:118
-    [7] with_logstate(f::Function, logstate::Any)
-      @ Base.CoreLogging ./logging.jl:511
-    [8] with_logger
-      @ ./logging.jl:623 [inlined]
-    [9] capture(f::Documenter.Expanders.var&quot;#20#22&quot;{Documenter.Documents.Page, Module}; rethrow::Type, color::Bool)
-      @ IOCapture ~/.julia/packages/IOCapture/sXY71/src/IOCapture.jl:116
-   [10] runner(#unused#::Type{Documenter.Expanders.REPLBlocks}, x::Markdown.Code, page::Documenter.Documents.Page, doc::Documenter.Documents.Document)
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:719
-   [11] dispatch(::Type{Documenter.Expanders.ExpanderPipeline}, ::Markdown.Code, ::Vararg{Any})
-      @ Documenter.Utilities.Selectors ~/.julia/packages/Documenter/H5y27/src/Utilities/Selectors.jl:170
-   [12] expand(doc::Documenter.Documents.Document)
-      @ Documenter.Expanders ~/.julia/packages/Documenter/H5y27/src/Expanders.jl:42
-   [13] runner(#unused#::Type{Documenter.Builder.ExpandTemplates}, doc::Documenter.Documents.Document)
-      @ Documenter.Builder ~/.julia/packages/Documenter/H5y27/src/Builder.jl:226
-   [14] dispatch(#unused#::Type{Documenter.Builder.DocumentPipeline}, x::Documenter.Documents.Document)
-      @ Documenter.Utilities.Selectors ~/.julia/packages/Documenter/H5y27/src/Utilities/Selectors.jl:170
-   [15] #2
-      @ ~/.julia/packages/Documenter/H5y27/src/Documenter.jl:273 [inlined]
-   [16] cd(f::Documenter.var&quot;#2#3&quot;{Documenter.Documents.Document}, dir::String)
-      @ Base.Filesystem ./file.jl:110
-   [17] #makedocs#1
-      @ ~/.julia/packages/Documenter/H5y27/src/Documenter.jl:272 [inlined]
-   [18] top-level scope
-      @ ~/work/DocsEcon.jl/DocsEcon.jl/makedocs.jl:15
-   [19] include(mod::Module, _path::String)
-      @ Base ./Base.jl:418
-   [20] exec_options(opts::Base.JLOptions)
-      @ Base ./client.jl:292
-   [21] _start()
-      @ Base ./client.jl:495
-ERROR: There was an error during testing</code></pre><h2 id="Simulate-a-shock"><a class="docs-heading-anchor" href="#Simulate-a-shock">Simulate a shock</a><a id="Simulate-a-shock-1"></a><a class="docs-heading-anchor-permalink" href="#Simulate-a-shock" title="Permalink"></a></h2><p>The last exercise is to simulate the impulse response to a unit shock in <code>rffintay</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.rffintay</code><code class="nohighlight hljs ansi" style="display:block;">&quot;Value of eff. federal funds rate given by the inertial Taylor rule&quot; rffintay</code></pre><p>We start with the base case and add 1 to the <code>rffintay_a</code> shock at the first period of the simulation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p_1 = Plan(m, sim);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_1 = copy(sol_0);</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: sol_0 not defined</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_1.rffintay_a[first(sim)] += 1;</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: ed_1 not defined</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_1 = @time simulate(m, p_1, ed_1; verbose=true, tol=1e-9);</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: ed_1 not defined</code></pre><p>Finally, we can plot the impulse response function to see what we&#39;ve done.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; # compute the differences between the base case and the shocked simulation.
+   Evaluated: 39×651 MVTSeries{Quarterly} with range 2018Q2:2027Q4 and variables (delrff,…):
+           delrff       dpgap        … zyhst_a       zyhtst_a
+  2018Q2 :  0.289284     0.00069891  …  0.0           0.0
+  2018Q3 :  0.186305     0.00051661  …  0.0           0.0
+  2018Q4 :  0.293605     0.000629633 …  0.0           0.0
+  2019Q1 :  0.184215    -0.000929157 …  0.0           0.0
+  2019Q2 : -0.00349898   0.000139446 …  0.0           0.0
+  2019Q3 : -0.2         -0.000163501 …  0.0           0.0
+  2019Q4 : -0.547329     0.000976262 …  0.0           0.0
+  2020Q1 : -0.417581    -0.000343449 …  0.0           0.0
+  2020Q2 : -1.17415     -0.00277455  …  0.0           0.0
+           ⋮            ⋮            ⋱ ⋮             ⋮
+  2025Q4 : -0.273057     0.000784251 … -0.000139393  -1.75781e-5
+  2026Q1 : -0.136529     0.000843528 … -0.000125454  -1.58203e-5
+  2026Q2 : -0.0497604    0.000882637 … -0.000119181  -1.50293e-5
+  2026Q3 : -0.0422963    0.000896193 … -0.000113222  -1.42778e-5
+  2026Q4 : -0.0359519    0.000886621 … -0.000107561  -1.35639e-5
+  2027Q1 : -0.0305591    0.000857853 … -0.000102183  -1.28857e-5
+  2027Q2 : -0.0259752    0.000811801 … -9.70738e-5   -1.22414e-5
+  2027Q3 : -0.0220789    0.000750954 … -9.22201e-5   -1.16294e-5
+  2027Q4 : -0.0187671    0.000678757 … -8.76091e-5   -1.10479e-5  ≈ 39×651 MVTSeries{Quarterly} with range 2018Q2:2027Q4 and variables (delrff,…):
+           delrff       dpgap        … zyhst_a       zyhtst_a
+  2018Q2 :  0.289284     0.00069891  …  0.0           0.0
+  2018Q3 :  0.186305     0.00051661  …  0.0           0.0
+  2018Q4 :  0.293605     0.000629633 …  0.0           0.0
+  2019Q1 :  0.184215    -0.000929157 …  0.0           0.0
+  2019Q2 : -0.00349898   0.000139446 …  0.0           0.0
+  2019Q3 : -0.2         -0.000163501 …  0.0           0.0
+  2019Q4 : -0.547329     0.000976262 …  0.0           0.0
+  2020Q1 : -0.417581    -0.000343449 …  0.0           0.0
+  2020Q2 : -1.17415     -0.00277455  …  0.0           0.0
+           ⋮            ⋮            ⋱ ⋮             ⋮
+  2025Q4 : -0.273057     0.000784251 … -0.000139393  -1.75781e-5
+  2026Q1 : -0.136529     0.000843528 … -0.000125454  -1.58203e-5
+  2026Q2 : -0.0497604    0.000882637 … -0.000119181  -1.50293e-5
+  2026Q3 : -0.0422963    0.000896193 … -0.000113222  -1.42778e-5
+  2026Q4 : -0.0359519    0.000886621 … -0.000107561  -1.35639e-5
+  2027Q1 : -0.0305591    0.000857853 … -0.000102183  -1.28857e-5
+  2027Q2 : -0.0259752    0.000811801 … -9.70738e-5   -1.22414e-5
+  2027Q3 : -0.0220789    0.000750954 … -9.22201e-5   -1.16294e-5
+  2027Q4 : -0.0187671    0.000678757 … -8.76091e-5   -1.10479e-5</code></pre><h2 id="Simulate-a-shock"><a class="docs-heading-anchor" href="#Simulate-a-shock">Simulate a shock</a><a id="Simulate-a-shock-1"></a><a class="docs-heading-anchor-permalink" href="#Simulate-a-shock" title="Permalink"></a></h2><p>The last exercise is to simulate the impulse response to a unit shock in <code>rffintay</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.rffintay</code><code class="nohighlight hljs ansi" style="display:block;">&quot;Value of eff. federal funds rate given by the inertial Taylor rule&quot; rffintay</code></pre><p>We start with the base case and add 1 to the <code>rffintay_a</code> shock at the first period of the simulation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p_1 = Plan(m, sim);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_1 = copy(sol_0);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ed_1.rffintay_a[first(sim)] += 1;</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sol_1 = @time simulate(m, p_1, ed_1; verbose=true, tol=1e-9);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2022Q1:2027Q4
+[ Info: 1, || Fx || = 1.0, || Δx || = 5299.663208477447
+[ Info: 2, || Fx || = 348.8940862391828, || Δx || = 337.8388824933116
+[ Info: 3, || Fx || = 0.21547953282424714, || Δx || = 0.012655202761443982
+[ Info: 4, || Fx || = 1.080850470458472e-5, || Δx || = 7.925499011881226e-7
+[ Info: 5, || Fx || = 1.8917489796876907e-10
+  2.171818 seconds (1.66 M allocations: 3.978 GiB, 36.45% gc time)</code></pre><p>Finally, we can plot the impulse response function to see what we&#39;ve done.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; # compute the differences between the base case and the shocked simulation.
        dd = MVTSeries(p.range;
            d_rff=sol_1.rff - sol_0.rff,
            d_rg10=sol_1.rg10 - sol_0.rg10,
            d_lur=sol_1.lur - sol_0.lur,
            d_pic4=sol_1.pic4 - sol_0.pic4,
-       );</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: sol_1 not defined</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # produce the plot
-       plot(dd, trange=sim, vars=(:d_rff, :d_rg10, :d_lur, :d_pic4),
-           legend=false, size=(900, 600),  linewidth=1.5);</code><code class="nohighlight hljs ansi" style="display:block;">ERROR: UndefVarError: dd not defined</code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../3.US_SW07/main/">« Smets and Wouters 2007</a><a class="docs-footer-nextpage" href="../../../Reference/TimeSeriesEcon/">TimeSeriesEcon »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Thursday 2 February 2023 17:14">Thursday 2 February 2023</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+       );</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; # produce the plot
+       plt = plot(dd, trange=sim, vars=(:d_rff, :d_rg10, :d_lur, :d_pic4),
+           legend=false, size=(900, 600),  linewidth=1.5,
+           titlefontsize=8
+       );</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot!(plt[1,1], title=&quot;d_rff: $(m.rff.doc) (s-c)&quot;);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot!(plt[1,2], title=&quot;d_rg10: $(m.rg10.doc) (s-c)&quot;);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot!(plt[2,1], title=&quot;d_lur: $(m.lur.doc) (s-c)&quot;);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot!(plt[2,2], title=&quot;d_pic4: $(m.pic4.doc) (s-c)&quot;);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plt</code><code class="nohighlight hljs ansi" style="display:block;">Plot{Plots.GRBackend() n=4}
+Captured extra kwargs:
+  Series{1}:
+    trange: 2022Q1:2027Q4
+    vars: (:d_rff, :d_rg10, :d_lur, :d_pic4)
+  Series{2}:
+    trange: 2022Q1:2027Q4
+    vars: (:d_rff, :d_rg10, :d_lur, :d_pic4)
+  Series{3}:
+    trange: 2022Q1:2027Q4
+    vars: (:d_rff, :d_rg10, :d_lur, :d_pic4)
+  Series{4}:
+    trange: 2022Q1:2027Q4
+    vars: (:d_rff, :d_rg10, :d_lur, :d_pic4)</code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../3.US_SW07/main/">« Smets and Wouters 2007</a><a class="docs-footer-nextpage" href="../../../Reference/TimeSeriesEcon/">TimeSeriesEcon »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Thursday 2 February 2023 18:12">Thursday 2 February 2023</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
