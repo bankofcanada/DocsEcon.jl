@@ -80,7 +80,7 @@ When `trim = :both`, both rules are applied. This is the *default behavior*.
 ```
 fconvert(Quarterly, 2022M3:2022M10, trim=:end) # 2022Q1:2022Q3
 ```
-In this example, the last day of 2022M10 is October 31st, 2022. This is included in the days covered by 2022Q4. However, since the last day of 2022Q4 is December 31st, 2022 (i.e. different from October 31st, 2022), this MIT is dropped from the output range. The last MIT in the output range is therefore 2022Q4.
+In this example, the last MIT in the input range, 2022M10, ends within the days covered by 2022Q4. However, there are one or more full MITs in the input frequency which also end within 2022Q4, but which are not part of the input range (2022M11 and 2022M12). As such, 2022Q4 is dropped from the output range.
 
 ![Conversion of an MIT UnitRange](../assets/fconvert/mitrange_end.png)
 
@@ -92,7 +92,7 @@ Missalignment at the start of the range is ignored in this case.
 ```
 fconvert(Quarterly, 2022M3:2022M10, trim=:begin) # 2022Q2:2022Q4
 ```
-In this example, the first day of 2022M3 is March 1st, 2022. This is included in the days covered by 2022Q1. However, since the first day of 2022Q1 is January 1st, 2022 (i.e. different from March 1st, 2022), this MIT is dropped from the output range. The firt MIT in the output range is therefore 2022Q2.
+In this example, the first MIT in the input range, 2022M3, starts within the days covered by 2022Q1. However, there are one or more full MITs in the input frequency which also start within 2022Q1, but which are not part of the input range (2022M1 and 2022M2). As such, 2022Q1 is dropped from the output range.
 
 ![Conversion of an MIT UnitRange](../assets/fconvert/mitrange_begin.png)
 
@@ -104,7 +104,7 @@ Missalignment at the end of the range is ignored in this case.
 ```
 fconvert(Quarterly, 2022M3:2022M10, trim=:both) # 2022Q2:2022Q3
 ```
-In this example, both ends do not align perfectly with any output MITs. The first day in the first MIT of the input range comes after the first day of the matched output MIT, and the last day of the last MIT in the input range comes before the last dat of the matched output MIT so both the first and last MIT in the output range are excluded.
+In this example, both ends are missing full input periods and so both ends are trimmed.
 
 ![Conversion of an MIT UnitRange](../assets/fconvert/mitrange_both.png)
 
