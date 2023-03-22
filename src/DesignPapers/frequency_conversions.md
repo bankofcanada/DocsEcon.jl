@@ -112,7 +112,7 @@ Two conversion methods are available: `:const` and `:even`.
 * `:const` applies the values of the input MITs to each mapped MIT in the output range.
 * `:even` divides the value in the input MITs evenly between mapped MITs in the output range.
 
-The default is `:const`.
+The default is `:const`. The default `values_base` is `:end`.
 
 ---
 
@@ -255,6 +255,7 @@ Once the values corresponding to the output period have been determined, a caluc
 * `:min` - The lowest value is selected from among the input values.
 * `:max` - The highest value is selected from among the input values.
 
+The default is `:mean`. The default `values_base` is `:end`.
 
 ---
 
@@ -293,4 +294,31 @@ In this example, the start of 2023Q1 falls within 2023Y{11} as do the starts of 
 ![Conversion of a tseries](../assets/fconvert/tseries_mean_begin_2.png)
 
 --- 
+
+## TimeSeriesEcon vs FAME
+Much of the behavior of time series conversions is implemented to mirror conversions performed with the FAME (Forecasting Analysis and Modeling Environment) software. The conversions of TSeries correspond in large part to the following table.
+
+| TSE method | TSE values_base | FAME technique | FAME observed |
+|------------|-----------------|----------------|---------------|
+| :mean      | :end/:begin*    | discrete       | averaged      |
+| :min       | :end/:begin*    | discrete       | low           |
+| :max       | :end/:begin*    | discrete       | high          |
+| :sum       | :end/:begin*    | discrete       | summed        |
+| :const     | :end            | constant       | end           |
+| :const     | :begin**        | constant       | beginning     |
+| :even      | :end            | discrete       | summed        |
+| :even      | :begin          | N/A            | N/A           |
+| :point     | :end            | discrete       | end           |
+| :point     | :begin          | discrete       | beginning     |
+
+*When `values_base=:begin` achieving the FAME equvalent requires first converting the input series to a daily series using `convert(ts, daily, discrete, beginning)` with `ignore off`.
+
+**Achieving the FAME equvalent requires first converting the input series to a daily series using `convert(ts, daily, constant, beginning)`  with `ignore off`.
+
+For conversions using `values_base=:begin` the range of the FAME series may be longer than the range of the TimeSeriesEcon series due to the effect of the `ignore` option.
+
+## Converting a TSeries with the `:linear` method
+
+under construnction...
+
 
