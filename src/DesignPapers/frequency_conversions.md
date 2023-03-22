@@ -98,9 +98,8 @@ In this example, both ends do not align perfectly with any output MITs. The firs
 ---
 
 
-## Converting TSeries
+## Converting TSeries to a higher frequency
 
-### Converting to a higher frequency
 Conversion of a TSeries to a higher frequency proceeds in two stages.
 
 1. Each MIT in the input range is mapped onto the last day in MITs in the output frequency. If `values_base = :begin` they are mapped onto the first day in the output MITs. 
@@ -164,13 +163,13 @@ The days covered by 2022Q2 include the end-days of three months, 2022M4, 2022M5,
 
 If we had specified `values_base=:begin`, we would have checked against the start day of each Monthly MIT, but in this case the outcome would have been the same.
 
----
-
-### Converting to a lower frequency
+## Converting TSeries to a lower or equal frequency
 Conversion of TSeries to a lower or equal frequency depends on the `method` and `values_base` chosen, with the main differences arriving between the `:point` method and the other methods.
 
-#### **method = :point**
-When method is `:point` we only need to determine which single value from the input tseries corresponds to each period of the output tseries. When values_base is `:end` the values for both the input and the output series are assumed to be recorded on the last day of each MIT, and the approach is to determine whether a valid value in the input series corresponds to the last day in the output MITs. On the other hand,when values_base is `:begin`, the values for both the input and output series are assumed to be recorded on the first day of each MIT and the approach is similarly to determine whether a valid value in the input series corresponds to the first day in the output MITs. The following goes into  more detail.
+### **On or before** principle with `method = :point` 
+When the conversion method is `:point` the output series will contain the latest input values whose start/end dates fall **on or before** the start/end date of each output MIT, depending on the value of `values_base`.
+
+With this method, it is only necessary to determine which single value from the input tseries corresponds to each period of the output tseries. When values_base is `:end` the values for both the input and the output series are assumed to be recorded on the last day of each MIT, and the approach is to determine whether a valid value in the input series corresponds to the last day in the output MITs. On the other hand,when values_base is `:begin`, the values for both the input and output series are assumed to be recorded on the first day of each MIT and the approach is similarly to determine whether a valid value in the input series corresponds to the first day in the output MITs. The following goes into  more detail.
 
 When the method is `:point` and the values_base is `:end` each value in the input TSeries is ascribed to the last date in each MIT in that series. The last value which comes *on or before* the last date in each output period is then chosen as the value for each output period.
 
@@ -236,9 +235,10 @@ As mentioned in the example above, the value for each output period is taken fro
 
 ---
 
-### **method = :mean | :sum | :max | :min**
+### **Within** principle with `method = :mean | :sum | :max | :min` 
+When the conversion method is `method = :mean | :sum | :max | :min` the output series will contain values corresponding to some transformation of the collection of input values whoes start/end dates fall **within** each output MIT, depending on the value of `values_base`.
 
-The approach for these methods are similar to the the `:point` method but with some nuance around the assignment of imput-period values to output periods and the requirements around the inclusion of output periods.
+The approach is similar to the the `:point` method but with some nuance around the assignment of imput-period values to output periods and the requirements around the inclusion of output periods.
 
 Specifically:
 * Input period values are assigned to each output period covering the start or end date of each input period, depending on the `values_base` argument. 
