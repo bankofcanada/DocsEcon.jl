@@ -318,7 +318,10 @@ Much of the behavior of time series conversions is implemented to mirror convers
 For conversions using `values_base=:begin` the range of the FAME series may be longer than the range of the TimeSeriesEcon series due to the effect of the `ignore` option.
 
 ## Converting a TSeries with the `:linear` method
+The `:linear` method is avaiable when converting to a `Daily`, `BDaily` or `Monthly` frequency from a TSeries with a lower frequency. 
 
-under construnction...
+When `values_base=:end` the values will be interpolated linearly between end-points in the input series with the observed values falling on the output MIT covering the last date in each input MIT. The values change between the first and second of the input MITs are interpolated linearly backwards across the the output MITs covered by the first input MIT so that the entire range covered by the input MITs is represented in the output MITs.
+
+When `values_base=:begin` the values will be interpolated linearly between start-points in the input series with the observed values falling on the output MIT covering the first date in each input MIT. The values change between the second-to-last and last of the input MITs are interpolated linearly forward across the the output MITs covered by the first input MIT so that the entire range covered by the input MITs is represented in the output MITs.
 
 
