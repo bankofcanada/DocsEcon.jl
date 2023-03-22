@@ -53,13 +53,26 @@ The last day in 2022Q3 is September 30th, 2022, which is included in the days co
 
 
 ### Options: `trim`
-The `trim` option determines which MITs are included in the output range whenever the beginning and/or end of the input range does not perfectly align with the beginning/end MITs in the output range.
+The `trim` option determines which MITs are included in the output range whenever the beginning and/or end of the input range does not perfectly align with the beginning/end MITs in the output range. The exact behavior depends on the relative frequencies of the input and the output ranges.
 
-When `trim = :end` the last mapped MIT in the output range will be removed whenever the last day in said MIT does not align with the last day in the last MIT of the input range.
 
-When `trim = :begin` the first mapped MIT in the output range will be removed whenever the first day of said MIT does not align with the first day in the first MIT of the input range.
+**Converting to a higher frequency**
+
+When `trim = :end` the last mapped MIT in the output range will be removed when it ends after the last input MIT.
+
+When `trim = :begin` the first mapped MIT in the output range will be removed when it starts before the first input MIT.
 
 When `trim = :both`, both rules are applied. This is the *default behavior*.
+
+**Converting to a lower frequency**
+
+When `trim = :end` the last mapped MIT in the output range will be removed whenever the period between the last day in the last input MIT and the last day in the last output MIT is greater than the length of each input MIT. In other words, when there is at least one full input MIT missing before the end of the output MIT.
+
+When `trim = :begin` the first mapped MIT in the output range will be removed whenever the period between the first day in the first input MIT and the first day in the first output MIT is greater than the length of each input MIT. In other words, when there is at least one full input MIT missing before the end of the output MIT.
+
+When `trim = :both`, both rules are applied. This is the *default behavior*.
+
+
 
 ---
 
