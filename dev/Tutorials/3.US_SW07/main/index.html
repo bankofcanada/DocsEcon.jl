@@ -32,45 +32,45 @@
     crkky = @link crk * cky, cwhlc = @link ((((1 / clandaw) * (1 - calfa)) / calfa) * crk * cky) / ccy
     cwly = @link 1 - crk * cky, czcap = 0.5462
 41 equations(s): 
-   E1:   0 * (1 - calfa) * a[t] + 1 * a[t] = calfa * rkf[t] + (1 - calfa) * wf[t]
+   E1:   0 * ((1 - calfa) * a[t]) + 1 * a[t] = calfa * rkf[t] + (1 - calfa) * wf[t]
    E2:   zcapf[t] = (1 / (czcap / (1 - czcap))) * rkf[t]
    E3:   rkf[t] = (wf[t] + labf[t]) - kf[t]
    E4:   kf[t] = kpf[t - 1] + zcapf[t]
-   E5:   invef[t] = (1 / (1 + cbetabar * cgamma)) * (invef[t - 1] + cbetabar * cgamma * invef[t + 1] + (1 / (cgamma ^ 2 * csadjcost)) * pkf[t]) + qs[t]
-   E6:   pkf[t] = (-(rrf[t]) - 0 * b[t]) + (1 / ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma)))) * b[t] + (crk / (crk + (1 - ctou))) * rkf[t + 1] + ((1 - ctou) / (crk + (1 - ctou))) * pkf[t + 1]
-   E7:   cf[t] = ((((chabb / cgamma) / (1 + chabb / cgamma)) * cf[t - 1] + (1 / (1 + chabb / cgamma)) * cf[t + 1] + (((csigma - 1) * cwhlc) / (csigma * (1 + chabb / cgamma))) * (labf[t] - labf[t + 1])) - ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma))) * (rrf[t] + 0 * b[t])) + b[t]
-   E8:   yf[t] = ccy * cf[t] + ciy * invef[t] + g[t] + crkky * zcapf[t]
-   E9:   yf[t] = cfc * (calfa * kf[t] + (1 - calfa) * labf[t] + a[t])
+   E5:   invef[t] = (1 / (1 + cbetabar * cgamma)) * (invef[t - 1] + (cbetabar * cgamma * invef[t + 1] + (1 / (cgamma ^ 2 * csadjcost)) * pkf[t])) + qs[t]
+   E6:   pkf[t] = (-(rrf[t]) - 0 * b[t]) + ((1 / ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma)))) * b[t] + ((crk / (crk + (1 - ctou))) * rkf[t + 1] + ((1 - ctou) / (crk + (1 - ctou))) * pkf[t + 1]))
+   E7:   cf[t] = ((((chabb / cgamma) / (1 + chabb / cgamma)) * cf[t - 1] + ((1 / (1 + chabb / cgamma)) * cf[t + 1] + (((csigma - 1) * cwhlc) / (csigma * (1 + chabb / cgamma))) * (labf[t] - labf[t + 1]))) - ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma))) * (rrf[t] + 0 * b[t])) + b[t]
+   E8:   yf[t] = ccy * cf[t] + (ciy * invef[t] + (g[t] + crkky * zcapf[t]))
+   E9:   yf[t] = cfc * (calfa * kf[t] + ((1 - calfa) * labf[t] + a[t]))
    E10:   wf[t] = (csigl * labf[t] + (1 / (1 - chabb / cgamma)) * cf[t]) - ((chabb / cgamma) / (1 - chabb / cgamma)) * cf[t - 1]
-   E11:   kpf[t] = (1 - cikbar) * kpf[t - 1] + cikbar * invef[t] + cikbar * (cgamma ^ 2 * csadjcost) * qs[t]
-   E12:   mc[t] = ((calfa * rk[t] + (1 - calfa) * w[t]) - 1 * a[t]) - 0 * (1 - calfa) * a[t]
+   E11:   kpf[t] = (1 - cikbar) * kpf[t - 1] + (cikbar * invef[t] + cikbar * (cgamma ^ 2 * csadjcost) * qs[t])
+   E12:   mc[t] = ((calfa * rk[t] + (1 - calfa) * w[t]) - 1 * a[t]) - 0 * ((1 - calfa) * a[t])
    E13:   zcap[t] = (1 / (czcap / (1 - czcap))) * rk[t]
    E14:   rk[t] = (w[t] + lab[t]) - k[t]
    E15:   k[t] = kp[t - 1] + zcap[t]
-   E16:   inve[t] = (1 / (1 + cbetabar * cgamma)) * (inve[t - 1] + cbetabar * cgamma * inve[t + 1] + (1 / (cgamma ^ 2 * csadjcost)) * pk[t]) + qs[t]
-   E17:   pk[t] = ((-(r[t]) + pinf[t + 1]) - 0 * b[t]) + (1 / ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma)))) * b[t] + (crk / (crk + (1 - ctou))) * rk[t + 1] + ((1 - ctou) / (crk + (1 - ctou))) * pk[t + 1]
-   E18:   c[t] = ((((chabb / cgamma) / (1 + chabb / cgamma)) * c[t - 1] + (1 / (1 + chabb / cgamma)) * c[t + 1] + (((csigma - 1) * cwhlc) / (csigma * (1 + chabb / cgamma))) * (lab[t] - lab[t + 1])) - ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma))) * ((r[t] - pinf[t + 1]) + 0 * b[t])) + b[t]
-   E19:   y[t] = ccy * c[t] + ciy * inve[t] + g[t] + 1 * crkky * zcap[t]
-   E20:   y[t] = cfc * (calfa * k[t] + (1 - calfa) * lab[t] + a[t])
-   E21:   pinf[t] = (1 / (1 + cbetabar * cgamma * cindp)) * (cbetabar * cgamma * pinf[t + 1] + cindp * pinf[t - 1] + ((((1 - cprobp) * (1 - cbetabar * cgamma * cprobp)) / cprobp) / ((cfc - 1) * curvp + 1)) * mc[t]) + spinf[t]
-   E22:   w[t] = (((1 / (1 + cbetabar * cgamma)) * w[t - 1] + ((cbetabar * cgamma) / (1 + cbetabar * cgamma)) * w[t + 1] + (cindw / (1 + cbetabar * cgamma)) * pinf[t - 1]) - ((1 + cbetabar * cgamma * cindw) / (1 + cbetabar * cgamma)) * pinf[t]) + ((cbetabar * cgamma) / (1 + cbetabar * cgamma)) * pinf[t + 1] + (((1 - cprobw) * (1 - cbetabar * cgamma * cprobw)) / ((1 + cbetabar * cgamma) * cprobw)) * (1 / ((clandaw - 1) * curvw + 1)) * (((csigl * lab[t] + (1 / (1 - chabb / cgamma)) * c[t]) - ((chabb / cgamma) / (1 - chabb / cgamma)) * c[t - 1]) - w[t]) + 1 * sw[t]
-   E23:   r[t] = crpi * (1 - crr) * pinf[t] + cry * (1 - crr) * (y[t] - yf[t]) + crdy * (((y[t] - yf[t]) - y[t - 1]) + yf[t - 1]) + crr * r[t - 1] + ms[t]
+   E16:   inve[t] = (1 / (1 + cbetabar * cgamma)) * (inve[t - 1] + (cbetabar * cgamma * inve[t + 1] + (1 / (cgamma ^ 2 * csadjcost)) * pk[t])) + qs[t]
+   E17:   pk[t] = ((-(r[t]) + pinf[t + 1]) - 0 * b[t]) + ((1 / ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma)))) * b[t] + ((crk / (crk + (1 - ctou))) * rk[t + 1] + ((1 - ctou) / (crk + (1 - ctou))) * pk[t + 1]))
+   E18:   c[t] = ((((chabb / cgamma) / (1 + chabb / cgamma)) * c[t - 1] + ((1 / (1 + chabb / cgamma)) * c[t + 1] + (((csigma - 1) * cwhlc) / (csigma * (1 + chabb / cgamma))) * (lab[t] - lab[t + 1]))) - ((1 - chabb / cgamma) / (csigma * (1 + chabb / cgamma))) * ((r[t] - pinf[t + 1]) + 0 * b[t])) + b[t]
+   E19:   y[t] = ccy * c[t] + (ciy * inve[t] + (g[t] + 1 * crkky * zcap[t]))
+   E20:   y[t] = cfc * (calfa * k[t] + ((1 - calfa) * lab[t] + a[t]))
+   E21:   pinf[t] = (1 / (1 + cbetabar * (cgamma * cindp))) * (cbetabar * cgamma * pinf[t + 1] + (cindp * pinf[t - 1] + ((((1 - cprobp) * (1 - cbetabar * cgamma * cprobp)) / cprobp) / ((cfc - 1) * curvp + 1)) * mc[t])) + spinf[t]
+   E22:   w[t] = (((1 / (1 + cbetabar * cgamma)) * w[t - 1] + ((cbetabar * cgamma) / (1 + cbetabar * cgamma)) * w[t + 1] + (cindw / (1 + cbetabar * cgamma)) * pinf[t - 1]) - ((1 + cbetabar * cgamma * cindw) / (1 + cbetabar * cgamma)) * pinf[t]) + (((cbetabar * cgamma) / (1 + cbetabar * cgamma)) * pinf[t + 1] + ((((1 - cprobw) * (1 - cbetabar * cgamma * cprobw)) / ((1 + cbetabar * cgamma) * cprobw)) * (1 / ((clandaw - 1) * curvw + 1)) * (((csigl * lab[t] + (1 / (1 - chabb / cgamma)) * c[t]) - ((chabb / cgamma) / (1 - chabb / cgamma)) * c[t - 1]) - w[t]) + 1 * sw[t]))
+   E23:   r[t] = crpi * (1 - crr) * pinf[t] + (cry * (1 - crr) * (y[t] - yf[t]) + (crdy * (((y[t] - yf[t]) - y[t - 1]) + yf[t - 1]) + (crr * r[t - 1] + ms[t])))
    E24:   a[t] = crhoa * a[t - 1] + ea[t]
    E25:   b[t] = crhob * b[t - 1] + eb[t]
-   E26:   g[t] = crhog * g[t - 1] + eg[t] + cgy * ea[t]
+   E26:   g[t] = crhog * g[t - 1] + (eg[t] + cgy * ea[t])
    E27:   qs[t] = crhoqs * qs[t - 1] + eqs[t]
    E28:   ms[t] = crhoms * ms[t - 1] + em[t]
    E29:   spinf[t] = (crhopinf * spinf[t - 1] + epinfma[t]) - cmap * epinfma[t - 1]
    E30:   epinfma[t] = epinf[t]
    E31:   sw[t] = (crhow * sw[t - 1] + ewma[t]) - cmaw * ewma[t - 1]
    E32:   ewma[t] = ew[t]
-   E33:   kp[t] = (1 - cikbar) * kp[t - 1] + cikbar * inve[t] + cikbar * cgamma ^ 2 * csadjcost * qs[t]
+   E33:   kp[t] = (1 - cikbar) * kp[t - 1] + (cikbar * inve[t] + cikbar * cgamma ^ 2 * csadjcost * qs[t])
    E34:   dy[t] = (y[t] - y[t - 1]) + ctrend
    E35:   dc[t] = (c[t] - c[t - 1]) + ctrend
    E36:   dinve[t] = (inve[t] - inve[t - 1]) + ctrend
    E37:   dw[t] = (w[t] - w[t - 1]) + ctrend
    E38:   pinfobs[t] = 1 * pinf[t] + constepinf
-   E39:   pinf4[t] = pinf[t] + pinf[t - 1] + pinf[t - 2] + pinf[t - 3]
+   E39:   pinf4[t] = pinf[t] + (pinf[t - 1] + (pinf[t - 2] + pinf[t - 3]))
    E40:   robs[t] = 1 * r[t] + constebeta
    E41:   labobs[t] = lab[t] + constelab</code></pre><p>We can also examine individual components using the commands <code>parameters</code>, <code>variables</code>, <code>shocks</code>, <code>equations</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; parameters(m)</code><code class="nohighlight hljs ansi" style="display:block;">Parameters{ModelParam} with 51 entries:
   :calfa      =&gt; 0.1901
@@ -110,7 +110,7 @@ No additional constraints.</code></pre><div class="admonition is-info"><header c
 ┌ Info: Presolved equation 25 for #b#lvl# = 0.0
 └     b[t] = crhob * b[t - 1] + eb[t]
 ┌ Info: Presolved equation 26 for #g#lvl# = 0.0
-└     g[t] = crhog * g[t - 1] + eg[t] + cgy * ea[t]
+└     g[t] = crhog * g[t - 1] + (eg[t] + cgy * ea[t])
 ┌ Info: Presolved equation 27 for #qs#lvl# = 0.0
 └     qs[t] = crhoqs * qs[t - 1] + eqs[t]
 ┌ Info: Presolved equation 28 for #ms#lvl# = 0.0
@@ -125,10 +125,10 @@ No additional constraints.</code></pre><div class="admonition is-info"><header c
 └     sw[t] = (crhow * sw[t - 1] + ewma[t]) - cmaw * ewma[t - 1]</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sssolve!(m);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Presolved 9 equations for 64 variables.
 [ Info: Solving 32 equations for 32 variables.
 [ Info: 1, NR, || Fx || = 0.7869, || Δx || = 0.6868999999999992
-[ Info: 2, NR, || Fx || = 2.220446049250313e-16, || Δx || = 4.82808237833864e-14</code></pre><p>If in doubt, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.check_sstate-Tuple{Model}"><code>check_sstate</code></a> to make sure the steady state solution stored in the model object indeed satisfies the steady state system of equations. This function returns the number of equations that are not satisfied. A value of 0 is what we want to see. In verbose mode, it also lists the problematic equations and their residuals.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; check_sstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
+[ Info: 2, NR, || Fx || = 1.8041124150158794e-16, || Δx || = 4.6990189517260035e-14</code></pre><p>If in doubt, we can use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.SteadyStateSolver.check_sstate-Tuple{Model}"><code>check_sstate</code></a> to make sure the steady state solution stored in the model object indeed satisfies the steady state system of equations. This function returns the number of equations that are not satisfied. A value of 0 is what we want to see. In verbose mode, it also lists the problematic equations and their residuals.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; check_sstate(m)</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
 0</code></pre><h3 id="Examining-the-steady-state"><a class="docs-heading-anchor" href="#Examining-the-steady-state">Examining the steady state</a><a id="Examining-the-steady-state-1"></a><a class="docs-heading-anchor-permalink" href="#Examining-the-steady-state" title="Permalink"></a></h3><p>We can access the steady state solution via <code>m.sstate</code> using the dot notation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.dc</code><code class="nohighlight hljs ansi" style="display:block;">  dc = 0.4312</code></pre><p>We can also assign new values to the steady state solution, but we should be careful to make sure it remains a valid steady state solution.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.dc.level = 0.43121</code><code class="nohighlight hljs ansi" style="display:block;">0.43121</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) &gt; 0</code><code class="nohighlight hljs ansi" style="display:block;">┌ Warning: The following steady state equation is not satisfied: 
 │ E35  res= 1e-05      dc[t] = (c[t] - c[t - 1]) + ctrend
-└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/zsS6U/src/steadystate/diagnose.jl:49
+└ @ StateSpaceEcon.SteadyStateSolver ~/.julia/packages/StateSpaceEcon/ouTWa/src/steadystate/diagnose.jl:49
 Test Passed
   Expression: check_sstate(m) &gt; 0
    Evaluated: 1 &gt; 0</code></pre><p>As the code above shows, a wrong steady state solution (based on the specified precision in the <code>tol</code> option) will result in one or more equation not being satisfied. Let&#39;s put back the correct value.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; m.sstate.dc.level = 0.4312</code><code class="nohighlight hljs ansi" style="display:block;">0.4312</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test check_sstate(m) == 0</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: All steady state equations are satisfied.
@@ -182,7 +182,7 @@ Test Passed
        em = 0.0   
     epinf = 0.0   
       eqs = 0.0   
-       ew = 0.0</code></pre><h2 id="Part-3:-Impulse-response"><a class="docs-heading-anchor" href="#Part-3:-Impulse-response">Part 3: Impulse response</a><a id="Part-3:-Impulse-response-1"></a><a class="docs-heading-anchor-permalink" href="#Part-3:-Impulse-response" title="Permalink"></a></h2><h3 id="Simulation-plan"><a class="docs-heading-anchor" href="#Simulation-plan">Simulation plan</a><a id="Simulation-plan-1"></a><a class="docs-heading-anchor-permalink" href="#Simulation-plan" title="Permalink"></a></h3><p>Before we can simulate the model, we have to decide on the length of the simulation and what data is available for each period, i.e., what values are known (exogenous). This is done with an object of type <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.Plan"><code>Plan</code></a>.</p><p>To create a plan, all we need is the model object and a range for the simulation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2039Q4</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2039Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q2:2040Q1
+       ew = 0.0</code></pre><h2 id="Part-3:-Impulse-response"><a class="docs-heading-anchor" href="#Part-3:-Impulse-response">Part 3: Impulse response</a><a id="Part-3:-Impulse-response-1"></a><a class="docs-heading-anchor-permalink" href="#Part-3:-Impulse-response" title="Permalink"></a></h2><h3 id="Simulation-plan"><a class="docs-heading-anchor" href="#Simulation-plan">Simulation plan</a><a id="Simulation-plan-1"></a><a class="docs-heading-anchor-permalink" href="#Simulation-plan" title="Permalink"></a></h3><p>Before we can simulate the model, we have to decide on the length of the simulation and what data is available for each period, i.e., what values are known (exogenous). This is done with an object of type <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.Plan"><code>Plan</code></a>.</p><p>To create a plan, all we need is the model object and a range for the simulation.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2039Q4</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2039Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly{3}}} with range 1999Q2:2040Q1
   1999Q2:2040Q1 → ea, eb, eg, em, epinf, eqs, ew</code></pre><p>The plan shows us the list of exogenous values (variable or shocks) for each period or sub-range of the simulation. By default, all shocks are exogenous and all variables are endogenous.</p><p>We also see that the range of the plan has been extended before and after the simulation range. This is necessary because we need to set initial and final conditions. The number of periods for initial conditions is equal to the largest lag in the model. Similarly, final conditions have to be imposed over as many periods as the largest lead.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; p.range          # the full range of the plan</code><code class="nohighlight hljs ansi" style="display:block;">1999Q2:2040Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; init_rng = first(p.range):first(sim_rng)-1   # the range for initial conditions</code><code class="nohighlight hljs ansi" style="display:block;">1999Q2:1999Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; final_rng = last(sim_rng)+1:last(p.range)     # the range for final conditions</code><code class="nohighlight hljs ansi" style="display:block;">2040Q1:2040Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test length(init_rng) == m.maxlag</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: length(init_rng) == m.maxlag
    Evaluated: 3 == 3</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test length(final_rng) == m.maxlead</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
@@ -287,7 +287,7 @@ end</code></pre></div></div><h4 id="Final-conditions"><a class="docs-heading-anc
             vars=(:pinfobs, :dy, :labobs, :robs),
             label=[&quot;SS&quot; &quot;IRF&quot;],
             legend=[true false false false],
-           );</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p><h2 id="Part-4:-Stochastic-shocks-simulation"><a class="docs-heading-anchor" href="#Part-4:-Stochastic-shocks-simulation">Part 4: Stochastic shocks simulation</a><a id="Part-4:-Stochastic-shocks-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Part-4:-Stochastic-shocks-simulation" title="Permalink"></a></h2><p>Now let&#39;s run a simulation with stochastic shocks. We will have random shocks over two years and then have no shocks for several years afterwards to allow time for the economy to return to its steady state.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2049Q4      # simulate 50 years starting 2000</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2049Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; shk_rng = 2004Q1 .+ (0:7)    # shock 8 quarters starting in 2004</code><code class="nohighlight hljs ansi" style="display:block;">2004Q1:2005Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q2:2050Q1
+           );</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../irf.png"><img src="../irf.png" alt="Impulse Response Graph"/></a></p><h2 id="Part-4:-Stochastic-shocks-simulation"><a class="docs-heading-anchor" href="#Part-4:-Stochastic-shocks-simulation">Part 4: Stochastic shocks simulation</a><a id="Part-4:-Stochastic-shocks-simulation-1"></a><a class="docs-heading-anchor-permalink" href="#Part-4:-Stochastic-shocks-simulation" title="Permalink"></a></h2><p>Now let&#39;s run a simulation with stochastic shocks. We will have random shocks over two years and then have no shocks for several years afterwards to allow time for the economy to return to its steady state.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_rng = 2000Q1:2049Q4      # simulate 50 years starting 2000</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2049Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; shk_rng = 2004Q1 .+ (0:7)    # shock 8 quarters starting in 2004</code><code class="nohighlight hljs ansi" style="display:block;">2004Q1:2005Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p = Plan(m, sim_rng)</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly{3}}} with range 1999Q2:2050Q1
   1999Q2:2050Q1 → ea, eb, eg, em, epinf, eqs, ew</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; init_rng = first(p.range):first(sim_rng) - 1</code><code class="nohighlight hljs ansi" style="display:block;">1999Q2:1999Q4</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; final_rng = last(sim_rng) + 1:last(p.range)</code><code class="nohighlight hljs ansi" style="display:block;">2050Q1:2050Q1</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in variables(m)
            exog[init_rng, v] .= m.sstate[v].level
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>The distributions of the shocks are assumed normal with mean zero and standard deviations that have been estimated in the <a href="#replication_data"><code>replication data</code></a>. We use packages <code>Distributions</code> and <code>Random</code> to draw the necessary random values.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; shk_dist = (ea = Normal(0.0, 0.4618),
@@ -299,51 +299,51 @@ end</code></pre></div></div><h4 id="Final-conditions"><a class="docs-heading-anc
                    ew = Normal(0.0, 0.2089));</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for (shk, dist) in pairs(shk_dist)
            exog[shk_rng, shk] .= rand(dist, length(shk_rng))
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog[shk_rng, shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">8×7 MVTSeries{Quarterly} with range 2004Q1:2005Q4 and variables (ea,eb,eg,…):
-           ea         eb         … eqs        ew
-  2004Q1 : -0.166123  -0.564464  …  0.162691   0.0670042
-  2004Q2 :  0.502073   0.854736  …  0.950275   0.261376
-  2004Q3 : -0.193766  -1.56427   … -0.371988  -0.221382
-  2004Q4 :  0.331993   1.64157   … -0.883887   0.21712
-  2005Q1 :  0.19407    0.0251292 … -0.438972  -0.0897429
-  2005Q2 : -0.316643   0.195593  … -0.382848   0.0958436
-  2005Q3 :  0.94889   -1.00182   … -0.123728   0.309218
-  2005Q4 :  0.150035  -1.27784   …  0.463732   0.185612</code></pre><p>Now we are ready to simulate. We can set the shocks to be anticipated or unanticipated by setting the <code>anticipate</code> parameter in <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.simulate"><code>simulate</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_a = simulate(m, p, exog; fctype=fcslope, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
-[ Info: 1, || Fx || = 1.6415694240609404, || Δx || = 35.013664940593436
-[ Info: 2, || Fx || = 1.4210854715202004e-14</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_u = simulate(m, p, exog; fctype=fcslope, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4 with (1.0e-10, 20)
+           ea          eb        … eqs         ew
+  2004Q1 :  0.448249    3.00245  … -0.0873753   0.0245586
+  2004Q2 : -0.452203   -1.41382  …  1.25253    -0.36206
+  2004Q3 :  0.416479   -0.989907 … -0.620108    0.0445248
+  2004Q4 : -0.0151485  -1.54975  … -0.532392    0.140022
+  2005Q1 : -0.277446   -0.184928 …  1.55412    -0.0826688
+  2005Q2 : -0.667383   -1.34431  … -0.288241   -0.0395756
+  2005Q3 :  1.25029    -0.445367 … -0.156082   -0.0248482
+  2005Q4 :  0.70399     1.74528  …  0.414442    0.283304</code></pre><p>Now we are ready to simulate. We can set the shocks to be anticipated or unanticipated by setting the <code>anticipate</code> parameter in <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.simulate"><code>simulate</code></a>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_a = simulate(m, p, exog; fctype=fcslope, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
+[ Info: 1, || Fx || = 3.0024525394068884, || Δx || = 25.680188355976632
+[ Info: 2, || Fx || = 3.552713678800501e-15</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; sim_u = simulate(m, p, exog; fctype=fcslope, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4 with (1.0e-10, 20)
 [ Info: 1, || Fx || = 0.7869, || Δx || = 0.7869
 [ Info: 2, || Fx || = 5.551115123125783e-17
 [ Info: Simulating 2004Q1:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 0.6564447219942127, || Δx || = 4.739896897252588
-[ Info: 2, || Fx || = 4.996003610813204e-16
+[ Info: 1, || Fx || = 3.0024525394068884, || Δx || = 27.80863110706991
+[ Info: 2, || Fx || = 3.552713678800501e-15
 [ Info: Simulating 2004Q2:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 0.9502752236384066, || Δx || = 7.309047318875551
+[ Info: 1, || Fx || = 1.4138173624316919, || Δx || = 15.558219818407464
 [ Info: 2, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2004Q3:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 1.5642702203268493, || Δx || = 14.694782065547553
+[ Info: 1, || Fx || = 0.9899065946591128, || Δx || = 8.41194023914995
 [ Info: 2, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2004Q4:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 1.6415694240609404, || Δx || = 16.938858542561135
-[ Info: 2, || Fx || = 3.774758283725532e-15
-[ Info: Simulating 2005Q1:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 0.5966871449692748, || Δx || = 4.427405828218022
-[ Info: 2, || Fx || = 8.881784197001252e-16
-[ Info: Simulating 2005Q2:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 0.3828475368679308, || Δx || = 5.547186298501733
+[ Info: 1, || Fx || = 1.5497531321281541, || Δx || = 13.438537019491138
 [ Info: 2, || Fx || = 1.7763568394002505e-15
+[ Info: Simulating 2005Q1:2049Q4 with (1.0e-5, 5)
+[ Info: 1, || Fx || = 1.5541237658528908, || Δx || = 11.632044872868242
+[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: Simulating 2005Q2:2049Q4 with (1.0e-5, 5)
+[ Info: 1, || Fx || = 1.344307287446711, || Δx || = 12.917762840897584
+[ Info: 2, || Fx || = 4.440892098500626e-15
 [ Info: Simulating 2005Q3:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 1.0018187589816072, || Δx || = 9.597460790487942
-[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: 1, || Fx || = 1.2502883762843473, || Δx || = 4.993254894749362
+[ Info: 2, || Fx || = 1.1102230246251565e-15
 [ Info: Simulating 2005Q4:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 1.2778415082398045, || Δx || = 11.718318502955102
-[ Info: 2, || Fx || = 3.552713678800501e-15
+[ Info: 1, || Fx || = 1.745281307718729, || Δx || = 15.984049604266733
+[ Info: 2, || Fx || = 2.1371793224034263e-15
 [ Info: Simulating 2005Q4:2049Q4 with (1.0e-10, 20)
-[ Info: 1, || Fx || = 3.552713678800501e-15</code></pre><p>As before, we can review the responses of the observed variables to these shocks using <code>plot</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; observed = (:dy, :dc, :dinve, :labobs, :pinfobs, :dw, :robs);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = steadystatedata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, sim_a, sim_u,
+[ Info: 1, || Fx || = 2.1371793224034263e-15</code></pre><p>As before, we can review the responses of the observed variables to these shocks using <code>plot</code>.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; observed = (:dy, :dc, :dinve, :labobs, :pinfobs, :dw, :robs);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; ss = steadystatedata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; plot(ss, sim_a, sim_u,
             trange=sim_rng,
             vars=observed,
             label=[&quot;SS&quot;, &quot;Anticipated&quot;, &quot;Unanticipated&quot;],
             legend=[true (false for i = 1:6)...],
             linewidth=1.5,
-           );</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../stoch_shk.png"><img src="../stoch_shk.png" alt="Stochastic Shock Response Graph"/></a></p><p>We see that when the shocks are anticipated, the variables start to react to them right away; in the unanticipated case, there is no movement until the shocks actually hit.</p><h2 id="Part-5:-Backing-out-historical-shocks"><a class="docs-heading-anchor" href="#Part-5:-Backing-out-historical-shocks">Part 5: Backing out historical shocks</a><a id="Part-5:-Backing-out-historical-shocks-1"></a><a class="docs-heading-anchor-permalink" href="#Part-5:-Backing-out-historical-shocks" title="Permalink"></a></h2><p>Now let&#39;s pretend that the simulated values are historical data and that we do not know the magnitude of the shocks. We can treat the observed (simulated) values of the variables as known by making them exogenous. At the same time we will make the shocks endogenous, so that we can solve for their values during the simulation.</p><p>The &quot;historic&quot; (simulated, assumed observed) range is from the first period of the simulation until the last shock in the previous exercise.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; hist_rng = first(sim_rng):last(shk_rng)</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2005Q4</code></pre><p>We use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.exogenize!-Tuple{Plan, Any, Any}"><code>exogenize!</code></a> and <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.endogenize!-Tuple{Plan, Any, Any}"><code>endogenize!</code></a> to set up a plan in which observed variables are exogenous and shocks are endogenous throughout the historic range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; endogenize!(p, shocks(m), hist_rng);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exogenize!(p, observed, hist_rng);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly}} with range 1999Q2:2050Q1
+           );</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p><a href="../stoch_shk.png"><img src="../stoch_shk.png" alt="Stochastic Shock Response Graph"/></a></p><p>We see that when the shocks are anticipated, the variables start to react to them right away; in the unanticipated case, there is no movement until the shocks actually hit.</p><h2 id="Part-5:-Backing-out-historical-shocks"><a class="docs-heading-anchor" href="#Part-5:-Backing-out-historical-shocks">Part 5: Backing out historical shocks</a><a id="Part-5:-Backing-out-historical-shocks-1"></a><a class="docs-heading-anchor-permalink" href="#Part-5:-Backing-out-historical-shocks" title="Permalink"></a></h2><p>Now let&#39;s pretend that the simulated values are historical data and that we do not know the magnitude of the shocks. We can treat the observed (simulated) values of the variables as known by making them exogenous. At the same time we will make the shocks endogenous, so that we can solve for their values during the simulation.</p><p>The &quot;historic&quot; (simulated, assumed observed) range is from the first period of the simulation until the last shock in the previous exercise.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; hist_rng = first(sim_rng):last(shk_rng)</code><code class="nohighlight hljs ansi" style="display:block;">2000Q1:2005Q4</code></pre><p>We use <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.exogenize!-Tuple{Plan, Any, Any}"><code>exogenize!</code></a> and <a href="../../../Reference/StateSpaceEcon/#StateSpaceEcon.Plans.endogenize!-Tuple{Plan, Any, Any}"><code>endogenize!</code></a> to set up a plan in which observed variables are exogenous and shocks are endogenous throughout the historic range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; endogenize!(p, shocks(m), hist_rng);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; exogenize!(p, observed, hist_rng);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; p</code><code class="nohighlight hljs ansi" style="display:block;">Plan{MIT{Quarterly{3}}} with range 1999Q2:2050Q1
   1999Q2:1999Q4 → ea, eb, eg, em, epinf, eqs, ew
   2000Q1:2005Q4 → dc, dinve, dw, dy, labobs, pinfobs, robs
   2006Q1:2050Q1 → ea, eb, eg, em, epinf, eqs, ew</code></pre><p>As we can see above, the plan now reflects our intentions.</p><p>Finally, we need to set up the exogenous data. This time we do not specify the shocks; instead, we assign the known data for the observed variables for the historic range. We start with initial conditions.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; exog = zerodata(m, p);</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in variables(m)
@@ -351,70 +351,70 @@ end</code></pre></div></div><h4 id="Final-conditions"><a class="docs-heading-anc
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code></pre><p>We take the observed data from the simulation above. We show the anticipated version first.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
            exog[hist_rng, v] .= sim_a[v]
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; back_a = simulate(m, p, exog; fctype=fcslope, anticipate=true);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4
-[ Info: 1, || Fx || = 10.610291685467828, || Δx || = 35.013664940593436
-[ Info: 2, || Fx || = 7.105427357601002e-15</code></pre><p>Now we show the unanticipated case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
+[ Info: 1, || Fx || = 6.914308327521269, || Δx || = 25.680188355976643
+[ Info: 2, || Fx || = 3.552713678800501e-15</code></pre><p>Now we show the unanticipated case.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; for v in observed
            exog[hist_rng, v] .= sim_u[v]
        end</code><code class="nohighlight hljs ansi" style="display:block;"></code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; back_u = simulate(m, p, exog; fctype=fcslope, anticipate=false);</code><code class="nohighlight hljs ansi" style="display:block;">[ Info: Simulating 2000Q1:2049Q4 with (1.0e-10, 20)
-[ Info: 1, || Fx || = 5.568174231561725, || Δx || = 5.568174231561725
+[ Info: 1, || Fx || = 6.634422995554733, || Δx || = 6.634422995554732
 [ Info: 2, || Fx || = 4.440892098500626e-16
 [ Info: Simulating 2004Q1:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 1.2300932134094211, || Δx || = 4.739896897252589
-[ Info: 2, || Fx || = 4.440892098500626e-16
+[ Info: 1, || Fx || = 6.634422995554733, || Δx || = 27.80863110706991
+[ Info: 2, || Fx || = 3.552713678800501e-15
 [ Info: Simulating 2004Q2:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 4.786461705892574, || Δx || = 7.309047318875552
+[ Info: 1, || Fx || = 3.1359399254503466, || Δx || = 15.55821981840747
 [ Info: 2, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2004Q3:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 3.9116446977961212, || Δx || = 14.694782065547548
+[ Info: 1, || Fx || = 2.9734383160699633, || Δx || = 8.411940239149951
 [ Info: 2, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2004Q4:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 3.7119235685518537, || Δx || = 16.93885854256114
-[ Info: 2, || Fx || = 3.774758283725532e-15
+[ Info: 1, || Fx || = 4.879241298622106, || Δx || = 13.438537019491129
+[ Info: 2, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2005Q1:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 2.292686473994989, || Δx || = 4.4274058282180215
-[ Info: 2, || Fx || = 9.992007221626409e-16
+[ Info: 1, || Fx || = 6.085766380863383, || Δx || = 11.632044872868233
+[ Info: 2, || Fx || = 3.552713678800501e-15
 [ Info: Simulating 2005Q2:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 2.021297639938964, || Δx || = 5.547186298501733
+[ Info: 1, || Fx || = 4.083979758127988, || Δx || = 12.917762840897584
 [ Info: 2, || Fx || = 1.7763568394002505e-15
 [ Info: Simulating 2005Q3:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 2.6771557225401166, || Δx || = 9.597460790487942
-[ Info: 2, || Fx || = 2.886579864025407e-15
+[ Info: 1, || Fx || = 1.7568941715300272, || Δx || = 4.99325489474936
+[ Info: 2, || Fx || = 1.3322676295501878e-15
 [ Info: Simulating 2005Q4:2049Q4 with (1.0e-5, 5)
-[ Info: 1, || Fx || = 2.80888265263709, || Δx || = 11.718318502955098
-[ Info: 2, || Fx || = 3.1086244689504383e-15
+[ Info: 1, || Fx || = 4.651463336621746, || Δx || = 15.984049604266735
+[ Info: 2, || Fx || = 3.9968028886505635e-15
 [ Info: Simulating 2005Q4:2049Q4 with (1.0e-10, 20)
-[ Info: 1, || Fx || = 3.1086244689504383e-15</code></pre><p>If we did everything correctly, the shocks we recovered must match exactly the shocks we used when we simulated the &quot;historical&quot; data.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a[shocks(m)] ≈ back_a[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
+[ Info: 1, || Fx || = 3.9968028886505635e-15</code></pre><p>If we did everything correctly, the shocks we recovered must match exactly the shocks we used when we simulated the &quot;historical&quot; data.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a[shocks(m)] ≈ back_a[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: sim_a[shocks(m)] ≈ back_a[shocks(m)]
    Evaluated: 204×7 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (ea,eb,eg,…):
-           ea         eb         … eqs        ew
-  1999Q2 :  0.0        0.0       …  0.0        0.0
-  1999Q3 :  0.0        0.0       …  0.0        0.0
-  1999Q4 :  0.0        0.0       …  0.0        0.0
-  2000Q1 :  0.0        0.0       …  0.0        0.0
-  2000Q2 :  0.0        0.0       …  0.0        0.0
-  2000Q3 :  0.0        0.0       …  0.0        0.0
-  2000Q4 :  0.0        0.0       …  0.0        0.0
-  2001Q1 :  0.0        0.0       …  0.0        0.0
-  2001Q2 :  0.0        0.0       …  0.0        0.0
-           ⋮          ⋮          ⋱ ⋮          ⋮
-  2048Q1 :  0.0        0.0       …  0.0        0.0
-  2048Q2 :  0.0        0.0       …  0.0        0.0
-  2048Q3 :  0.0        0.0       …  0.0        0.0
-  2048Q4 :  0.0        0.0       …  0.0        0.0
-  2049Q1 :  0.0        0.0       …  0.0        0.0
-  2049Q2 :  0.0        0.0       …  0.0        0.0
-  2049Q3 :  0.0        0.0       …  0.0        0.0
-  2049Q4 :  0.0        0.0       …  0.0        0.0
-  2050Q1 :  0.0        0.0       …  0.0        0.0       ≈ 204×7 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (ea,eb,eg,…):
+           ea          eb        … eqs         ew
+  1999Q2 :  0.0         0.0      …  0.0         0.0
+  1999Q3 :  0.0         0.0      …  0.0         0.0
+  1999Q4 :  0.0         0.0      …  0.0         0.0
+  2000Q1 :  0.0         0.0      …  0.0         0.0
+  2000Q2 :  0.0         0.0      …  0.0         0.0
+  2000Q3 :  0.0         0.0      …  0.0         0.0
+  2000Q4 :  0.0         0.0      …  0.0         0.0
+  2001Q1 :  0.0         0.0      …  0.0         0.0
+  2001Q2 :  0.0         0.0      …  0.0         0.0
+           ⋮           ⋮         ⋱ ⋮           ⋮
+  2048Q1 :  0.0         0.0      …  0.0         0.0
+  2048Q2 :  0.0         0.0      …  0.0         0.0
+  2048Q3 :  0.0         0.0      …  0.0         0.0
+  2048Q4 :  0.0         0.0      …  0.0         0.0
+  2049Q1 :  0.0         0.0      …  0.0         0.0
+  2049Q2 :  0.0         0.0      …  0.0         0.0
+  2049Q3 :  0.0         0.0      …  0.0         0.0
+  2049Q4 :  0.0         0.0      …  0.0         0.0
+  2050Q1 :  0.0         0.0      …  0.0         0.0       ≈ 204×7 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (ea,eb,eg,…):
            ea            eb           … eqs           ew
   1999Q2 :  0.0           0.0         …  0.0           0.0
   1999Q3 :  0.0           0.0         …  0.0           0.0
   1999Q4 :  0.0           0.0         …  0.0           0.0
-  2000Q1 : -1.59227e-17  -5.44141e-17 …  3.19441e-16  -6.68853e-17
-  2000Q2 : -1.33079e-17   4.98106e-17 …  1.01826e-16   4.03614e-17
-  2000Q3 : -6.1787e-17   -1.39706e-17 … -1.14734e-17  -4.10776e-17
-  2000Q4 : -2.90637e-17  -2.30676e-17 … -1.08705e-16   4.47886e-17
-  2001Q1 :  1.10247e-16  -4.30198e-18 …  4.74293e-16  -7.64605e-17
-  2001Q2 : -1.67091e-17  -7.2378e-18  … -1.16513e-16   7.13116e-17
+  2000Q1 : -8.18879e-17   5.38914e-18 …  1.16768e-16   5.55112e-17
+  2000Q2 :  3.98123e-17  -1.33254e-17 …  2.07582e-16  -6.20892e-17
+  2000Q3 :  7.2593e-17    7.93703e-17 …  7.5955e-17    9.84737e-19
+  2000Q4 :  1.00073e-16   3.52124e-17 …  2.44976e-17   8.37322e-19
+  2001Q1 :  6.25075e-17  -4.2643e-17  …  6.71423e-16  -1.1031e-16
+  2001Q2 :  5.87613e-17   4.77276e-17 … -9.32407e-16   2.73246e-16
            ⋮             ⋮            ⋱ ⋮             ⋮
   2048Q1 :  0.0           0.0         …  0.0           0.0
   2048Q2 :  0.0           0.0         …  0.0           0.0
@@ -427,127 +427,127 @@ end</code></pre></div></div><h4 id="Final-conditions"><a class="docs-heading-anc
   2050Q1 :  0.0           0.0         …  0.0           0.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u[shocks(m)] ≈ back_u[shocks(m)]</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: sim_u[shocks(m)] ≈ back_u[shocks(m)]
    Evaluated: 204×7 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (ea,eb,eg,…):
-           ea         eb         … eqs        ew
-  1999Q2 :  0.0        0.0       …  0.0        0.0
-  1999Q3 :  0.0        0.0       …  0.0        0.0
-  1999Q4 :  0.0        0.0       …  0.0        0.0
-  2000Q1 :  0.0        0.0       …  0.0        0.0
-  2000Q2 :  0.0        0.0       …  0.0        0.0
-  2000Q3 :  0.0        0.0       …  0.0        0.0
-  2000Q4 :  0.0        0.0       …  0.0        0.0
-  2001Q1 :  0.0        0.0       …  0.0        0.0
-  2001Q2 :  0.0        0.0       …  0.0        0.0
-           ⋮          ⋮          ⋱ ⋮          ⋮
-  2048Q1 :  0.0        0.0       …  0.0        0.0
-  2048Q2 :  0.0        0.0       …  0.0        0.0
-  2048Q3 :  0.0        0.0       …  0.0        0.0
-  2048Q4 :  0.0        0.0       …  0.0        0.0
-  2049Q1 :  0.0        0.0       …  0.0        0.0
-  2049Q2 :  0.0        0.0       …  0.0        0.0
-  2049Q3 :  0.0        0.0       …  0.0        0.0
-  2049Q4 :  0.0        0.0       …  0.0        0.0
-  2050Q1 :  0.0        0.0       …  0.0        0.0       ≈ 204×7 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (ea,eb,eg,…):
-           ea         eb         … eqs        ew
-  1999Q2 :  0.0        0.0       …  0.0        0.0
-  1999Q3 :  0.0        0.0       …  0.0        0.0
-  1999Q4 :  0.0        0.0       …  0.0        0.0
-  2000Q1 :  0.0        0.0       …  0.0        0.0
-  2000Q2 :  0.0        0.0       …  0.0        0.0
-  2000Q3 :  0.0        0.0       …  0.0        0.0
-  2000Q4 :  0.0        0.0       …  0.0        0.0
-  2001Q1 :  0.0        0.0       …  0.0        0.0
-  2001Q2 :  0.0        0.0       …  0.0        0.0
-           ⋮          ⋮          ⋱ ⋮          ⋮
-  2048Q1 :  0.0        0.0       …  0.0        0.0
-  2048Q2 :  0.0        0.0       …  0.0        0.0
-  2048Q3 :  0.0        0.0       …  0.0        0.0
-  2048Q4 :  0.0        0.0       …  0.0        0.0
-  2049Q1 :  0.0        0.0       …  0.0        0.0
-  2049Q2 :  0.0        0.0       …  0.0        0.0
-  2049Q3 :  0.0        0.0       …  0.0        0.0
-  2049Q4 :  0.0        0.0       …  0.0        0.0
-  2050Q1 :  0.0        0.0       …  0.0        0.0</code></pre><p>Moreover, we must have the unobserved variables match as well. In fact, all the data must match over the entire simulation range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a ≈ back_a</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
+           ea          eb        … eqs         ew
+  1999Q2 :  0.0         0.0      …  0.0         0.0
+  1999Q3 :  0.0         0.0      …  0.0         0.0
+  1999Q4 :  0.0         0.0      …  0.0         0.0
+  2000Q1 :  0.0         0.0      …  0.0         0.0
+  2000Q2 :  0.0         0.0      …  0.0         0.0
+  2000Q3 :  0.0         0.0      …  0.0         0.0
+  2000Q4 :  0.0         0.0      …  0.0         0.0
+  2001Q1 :  0.0         0.0      …  0.0         0.0
+  2001Q2 :  0.0         0.0      …  0.0         0.0
+           ⋮           ⋮         ⋱ ⋮           ⋮
+  2048Q1 :  0.0         0.0      …  0.0         0.0
+  2048Q2 :  0.0         0.0      …  0.0         0.0
+  2048Q3 :  0.0         0.0      …  0.0         0.0
+  2048Q4 :  0.0         0.0      …  0.0         0.0
+  2049Q1 :  0.0         0.0      …  0.0         0.0
+  2049Q2 :  0.0         0.0      …  0.0         0.0
+  2049Q3 :  0.0         0.0      …  0.0         0.0
+  2049Q4 :  0.0         0.0      …  0.0         0.0
+  2050Q1 :  0.0         0.0      …  0.0         0.0       ≈ 204×7 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (ea,eb,eg,…):
+           ea          eb        … eqs         ew
+  1999Q2 :  0.0         0.0      …  0.0         0.0
+  1999Q3 :  0.0         0.0      …  0.0         0.0
+  1999Q4 :  0.0         0.0      …  0.0         0.0
+  2000Q1 :  0.0         0.0      …  0.0         0.0
+  2000Q2 :  0.0         0.0      …  0.0         0.0
+  2000Q3 :  0.0         0.0      …  0.0         0.0
+  2000Q4 :  0.0         0.0      …  0.0         0.0
+  2001Q1 :  0.0         0.0      …  0.0         0.0
+  2001Q2 :  0.0         0.0      …  0.0         0.0
+           ⋮           ⋮         ⋱ ⋮           ⋮
+  2048Q1 :  0.0         0.0      …  0.0         0.0
+  2048Q2 :  0.0         0.0      …  0.0         0.0
+  2048Q3 :  0.0         0.0      …  0.0         0.0
+  2048Q4 :  0.0         0.0      …  0.0         0.0
+  2049Q1 :  0.0         0.0      …  0.0         0.0
+  2049Q2 :  0.0         0.0      …  0.0         0.0
+  2049Q3 :  0.0         0.0      …  0.0         0.0
+  2049Q4 :  0.0         0.0      …  0.0         0.0
+  2050Q1 :  0.0         0.0      …  0.0         0.0</code></pre><p>Moreover, we must have the unobserved variables match as well. In fact, all the data must match over the entire simulation range.</p><pre><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_a ≈ back_a</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: sim_a ≈ back_a
    Evaluated: 204×48 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (a,b,c,cf,…):
-           a             b             … eqs        ew
-  1999Q2 :  0.0           0.0          …  0.0        0.0
-  1999Q3 :  0.0           0.0          …  0.0        0.0
-  1999Q4 :  0.0           0.0          …  0.0        0.0
-  2000Q1 :  0.0           0.0          …  0.0        0.0
-  2000Q2 :  0.0           0.0          …  0.0        0.0
-  2000Q3 :  0.0           0.0          …  0.0        0.0
-  2000Q4 :  0.0           0.0          …  0.0        0.0
-  2001Q1 :  0.0           0.0          …  0.0        0.0
-  2001Q2 :  0.0           0.0          …  0.0        0.0
-           ⋮             ⋮             ⋱ ⋮          ⋮
-  2048Q1 :  0.000892355  -6.92912e-112 …  0.0        0.0
-  2048Q2 :  0.000854608  -1.52025e-112 …  0.0        0.0
-  2048Q3 :  0.000818458  -3.33542e-113 …  0.0        0.0
-  2048Q4 :  0.000783837  -7.31792e-114 …  0.0        0.0
-  2049Q1 :  0.000750681  -1.60555e-114 …  0.0        0.0
-  2049Q2 :  0.000718927  -3.52258e-115 …  0.0        0.0
-  2049Q3 :  0.000688517  -7.72854e-116 …  0.0        0.0
-  2049Q4 :  0.000659392  -1.69564e-116 …  0.0        0.0
-  2050Q1 :  0.000659392  -1.69564e-116 …  0.0        0.0       ≈ 204×48 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (a,b,c,cf,…):
+           a             b             … eqs         ew
+  1999Q2 :  0.0           0.0          …  0.0         0.0
+  1999Q3 :  0.0           0.0          …  0.0         0.0
+  1999Q4 :  0.0           0.0          …  0.0         0.0
+  2000Q1 :  0.0           0.0          …  0.0         0.0
+  2000Q2 :  0.0           0.0          …  0.0         0.0
+  2000Q3 :  0.0           0.0          …  0.0         0.0
+  2000Q4 :  0.0           0.0          …  0.0         0.0
+  2001Q1 :  0.0           0.0          …  0.0         0.0
+  2001Q2 :  0.0           0.0          …  0.0         0.0
+           ⋮             ⋮             ⋱ ⋮           ⋮
+  2048Q1 :  0.000908524   7.35776e-112 …  0.0         0.0
+  2048Q2 :  0.000870094   1.61429e-112 …  0.0         0.0
+  2048Q3 :  0.000833289   3.54176e-113 …  0.0         0.0
+  2048Q4 :  0.000798041   7.77062e-114 …  0.0         0.0
+  2049Q1 :  0.000764283   1.70487e-114 …  0.0         0.0
+  2049Q2 :  0.000731954   3.74049e-115 …  0.0         0.0
+  2049Q3 :  0.000700993   8.20664e-116 …  0.0         0.0
+  2049Q4 :  0.000671341   1.80054e-116 …  0.0         0.0
+  2050Q1 :  0.000671341   1.80054e-116 …  0.0         0.0       ≈ 204×48 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (a,b,c,cf,…):
            a             b             … eqs           ew
   1999Q2 :  0.0           0.0          …  0.0           0.0
   1999Q3 :  0.0           0.0          …  0.0           0.0
   1999Q4 :  0.0           0.0          …  0.0           0.0
-  2000Q1 : -1.59227e-17  -5.44141e-17  …  3.19441e-16  -6.68853e-17
-  2000Q2 : -2.8557e-17    3.78721e-17  …  1.01826e-16   4.03614e-17
-  2000Q3 : -8.91361e-17  -5.66149e-18  … -1.14734e-17  -4.10776e-17
-  2000Q4 : -1.14429e-16  -2.43098e-17  … -1.08705e-16   4.47886e-17
-  2001Q1 :  6.5841e-19   -9.63555e-18  …  4.74293e-16  -7.64605e-17
-  2001Q2 : -1.60785e-17  -9.35184e-18  … -1.16513e-16   7.13116e-17
+  2000Q1 : -8.18879e-17   5.38914e-18  …  1.16768e-16   5.55112e-17
+  2000Q2 : -3.86118e-17  -1.21431e-17  …  2.07582e-16  -6.20892e-17
+  2000Q3 :  3.56144e-17   7.67061e-17  …  7.5955e-17    9.84737e-19
+  2000Q4 :  1.34181e-16   5.20417e-17  …  2.44976e-17   8.37322e-19
+  2001Q1 :  1.91013e-16  -3.1225e-17   …  6.71423e-16  -1.1031e-16
+  2001Q2 :  2.41694e-16   4.08768e-17  … -9.32407e-16   2.73246e-16
            ⋮             ⋮             ⋱ ⋮             ⋮
-  2048Q1 :  0.000892355  -3.79685e-36  …  0.0           0.0
-  2048Q2 :  0.000854608  -8.33132e-37  …  0.0           0.0
-  2048Q3 :  0.000818458  -1.82936e-37  …  0.0           0.0
-  2048Q4 :  0.000783837  -4.0178e-38   …  0.0           0.0
-  2049Q1 :  0.000750681  -8.81621e-39  …  0.0           0.0
-  2049Q2 :  0.000718927  -1.93429e-39  …  0.0           0.0
-  2049Q3 :  0.000688517  -4.24022e-40  …  0.0           0.0
-  2049Q4 :  0.000659392  -9.30911e-41  …  0.0           0.0
-  2050Q1 :  0.000659392  -9.30911e-41  …  0.0           0.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u ≈ back_u</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
+  2048Q1 :  0.000908524   5.05756e-36  …  0.0           0.0
+  2048Q2 :  0.000870094   1.10937e-36  …  0.0           0.0
+  2048Q3 :  0.000833289   2.43364e-37  …  0.0           0.0
+  2048Q4 :  0.000798041   5.34023e-38  …  0.0           0.0
+  2049Q1 :  0.000764283   1.17205e-38  …  0.0           0.0
+  2049Q2 :  0.000731954   2.57139e-39  …  0.0           0.0
+  2049Q3 :  0.000700993   5.64286e-40  …  0.0           0.0
+  2049Q4 :  0.000671341   1.23852e-40  …  0.0           0.0
+  2050Q1 :  0.000671341   1.23852e-40  …  0.0           0.0</code><br/><code class="language-julia-repl hljs" style="display:block;">julia&gt; @test sim_u ≈ back_u</code><code class="nohighlight hljs ansi" style="display:block;">Test Passed
   Expression: sim_u ≈ back_u
    Evaluated: 204×48 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (a,b,c,cf,…):
-           a             b             … eqs        ew
-  1999Q2 :  0.0           0.0          …  0.0        0.0
-  1999Q3 :  0.0           0.0          …  0.0        0.0
-  1999Q4 :  0.0           0.0          …  0.0        0.0
-  2000Q1 :  0.0           0.0          …  0.0        0.0
-  2000Q2 :  0.0           0.0          …  0.0        0.0
-  2000Q3 :  0.0           0.0          …  0.0        0.0
-  2000Q4 :  0.0           0.0          …  0.0        0.0
-  2001Q1 :  0.0           0.0          …  0.0        0.0
-  2001Q2 :  0.0           0.0          …  0.0        0.0
-           ⋮             ⋮             ⋱ ⋮          ⋮
-  2048Q1 :  0.000892355  -6.92912e-112 …  0.0        0.0
-  2048Q2 :  0.000854608  -1.52025e-112 …  0.0        0.0
-  2048Q3 :  0.000818458  -3.33542e-113 …  0.0        0.0
-  2048Q4 :  0.000783837  -7.31792e-114 …  0.0        0.0
-  2049Q1 :  0.000750681  -1.60555e-114 …  0.0        0.0
-  2049Q2 :  0.000718927  -3.52258e-115 …  0.0        0.0
-  2049Q3 :  0.000688517  -7.72854e-116 …  0.0        0.0
-  2049Q4 :  0.000659392  -1.69564e-116 …  0.0        0.0
-  2050Q1 :  0.000659392  -1.69564e-116 …  0.0        0.0       ≈ 204×48 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (a,b,c,cf,…):
-           a             b            … eqs        ew
-  1999Q2 :  0.0           0.0         …  0.0        0.0
-  1999Q3 :  0.0           0.0         …  0.0        0.0
-  1999Q4 :  0.0           0.0         …  0.0        0.0
-  2000Q1 :  0.0           0.0         …  0.0        0.0
-  2000Q2 :  0.0           0.0         …  0.0        0.0
-  2000Q3 :  0.0           0.0         …  0.0        0.0
-  2000Q4 :  0.0           0.0         …  0.0        0.0
-  2001Q1 :  0.0           0.0         …  0.0        0.0
-  2001Q2 :  0.0           0.0         …  0.0        0.0
-           ⋮             ⋮            ⋱ ⋮          ⋮
-  2048Q1 :  0.000892355  -8.23636e-33 …  0.0        0.0
-  2048Q2 :  0.000854608  -1.80688e-33 …  0.0        0.0
-  2048Q3 :  0.000818458  -3.96424e-34 …  0.0        0.0
-  2048Q4 :  0.000783837  -8.69748e-35 …  0.0        0.0
-  2049Q1 :  0.000750681  -1.90812e-35 …  0.0        0.0
-  2049Q2 :  0.000718927  -4.18623e-36 …  0.0        0.0
-  2049Q3 :  0.000688517  -9.18447e-37 …  0.0        0.0
-  2049Q4 :  0.000659392  -2.01487e-37 …  0.0        0.0
-  2050Q1 :  0.000659392  -2.01487e-37 …  0.0        0.0</code></pre><h2 id="Appendix"><a class="docs-heading-anchor" href="#Appendix">Appendix</a><a id="Appendix-1"></a><a class="docs-heading-anchor-permalink" href="#Appendix" title="Permalink"></a></h2><h3 id="replication_data"><a class="docs-heading-anchor" href="#replication_data">Replication Data</a><a id="replication_data-1"></a><a class="docs-heading-anchor-permalink" href="#replication_data" title="Permalink"></a></h3><p>The replication data can be downloaded from <a href="http://doi.org/10.3886/E116269V1">http://doi.org/10.3886/E116269V1</a></p><h3 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h3><p><a href="https://www.aeaweb.org/articles?id=10.1257/aer.97.3.586">Smets, F., Wouters, R., 2007. Shocks and frictions in US business cycles: A bayesian DSGE approach. The American Economic Review 97(3), 586–606.</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../2.simple_RBC/main/">« Simple RBC Model</a><a class="docs-footer-nextpage" href="../../4.FRB-US/main/">FRB/US »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Monday 6 February 2023 13:49">Monday 6 February 2023</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+           a             b             … eqs         ew
+  1999Q2 :  0.0           0.0          …  0.0         0.0
+  1999Q3 :  0.0           0.0          …  0.0         0.0
+  1999Q4 :  0.0           0.0          …  0.0         0.0
+  2000Q1 :  0.0           0.0          …  0.0         0.0
+  2000Q2 :  0.0           0.0          …  0.0         0.0
+  2000Q3 :  0.0           0.0          …  0.0         0.0
+  2000Q4 :  0.0           0.0          …  0.0         0.0
+  2001Q1 :  0.0           0.0          …  0.0         0.0
+  2001Q2 :  0.0           0.0          …  0.0         0.0
+           ⋮             ⋮             ⋱ ⋮           ⋮
+  2048Q1 :  0.000908524   7.35776e-112 …  0.0         0.0
+  2048Q2 :  0.000870094   1.61429e-112 …  0.0         0.0
+  2048Q3 :  0.000833289   3.54176e-113 …  0.0         0.0
+  2048Q4 :  0.000798041   7.77062e-114 …  0.0         0.0
+  2049Q1 :  0.000764283   1.70487e-114 …  0.0         0.0
+  2049Q2 :  0.000731954   3.74049e-115 …  0.0         0.0
+  2049Q3 :  0.000700993   8.20664e-116 …  0.0         0.0
+  2049Q4 :  0.000671341   1.80054e-116 …  0.0         0.0
+  2050Q1 :  0.000671341   1.80054e-116 …  0.0         0.0       ≈ 204×48 MVTSeries{Quarterly} with range 1999Q2:2050Q1 and variables (a,b,c,cf,…):
+           a             b            … eqs         ew
+  1999Q2 :  0.0           0.0         …  0.0         0.0
+  1999Q3 :  0.0           0.0         …  0.0         0.0
+  1999Q4 :  0.0           0.0         …  0.0         0.0
+  2000Q1 :  0.0           0.0         …  0.0         0.0
+  2000Q2 :  0.0           0.0         …  0.0         0.0
+  2000Q3 :  0.0           0.0         …  0.0         0.0
+  2000Q4 :  0.0           0.0         …  0.0         0.0
+  2001Q1 :  0.0           0.0         …  0.0         0.0
+  2001Q2 :  0.0           0.0         …  0.0         0.0
+           ⋮             ⋮            ⋱ ⋮           ⋮
+  2048Q1 :  0.000908524   3.56297e-33 …  0.0         0.0
+  2048Q2 :  0.000870094   7.82409e-34 …  0.0         0.0
+  2048Q3 :  0.000833289   1.73033e-34 …  0.0         0.0
+  2048Q4 :  0.000798041   3.83681e-35 …  0.0         0.0
+  2049Q1 :  0.000764283   8.36952e-36 …  0.0         0.0
+  2049Q2 :  0.000731954   1.83377e-36 …  0.0         0.0
+  2049Q3 :  0.000700993   4.05546e-37 …  0.0         0.0
+  2049Q4 :  0.000671341   8.96314e-38 …  0.0         0.0
+  2050Q1 :  0.000671341   8.96314e-38 …  0.0         0.0</code></pre><h2 id="Appendix"><a class="docs-heading-anchor" href="#Appendix">Appendix</a><a id="Appendix-1"></a><a class="docs-heading-anchor-permalink" href="#Appendix" title="Permalink"></a></h2><h3 id="replication_data"><a class="docs-heading-anchor" href="#replication_data">Replication Data</a><a id="replication_data-1"></a><a class="docs-heading-anchor-permalink" href="#replication_data" title="Permalink"></a></h3><p>The replication data can be downloaded from <a href="http://doi.org/10.3886/E116269V1">http://doi.org/10.3886/E116269V1</a></p><h3 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h3><p><a href="https://www.aeaweb.org/articles?id=10.1257/aer.97.3.586">Smets, F., Wouters, R., 2007. Shocks and frictions in US business cycles: A bayesian DSGE approach. The American Economic Review 97(3), 586–606.</a></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../2.simple_RBC/main/">« Simple RBC Model</a><a class="docs-footer-nextpage" href="../../4.FRB-US/main/">FRB/US »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Wednesday 19 July 2023 18:37">Wednesday 19 July 2023</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
