@@ -83,3 +83,39 @@ Equation keys are automatically assigned to equations without an explicit key. T
 
 ![findequations function](../assets/equation_changes/findequations.png).
 
+## Replacing linked parameters
+It is possible to have parameters in a model which use the `@link` macro to link to a different model. For example, the FRBUS module could have both a main model and a sattelite model. In this case, modifying FRBUS would entail making a copy `m2 = deepcopy(FRBUS.model)` and then using the above function to make changes. Similarly, modifying the sattelite model would entail making a copy `m2sattelite = deepcopy(FRBUS.sattelitemodel)`, and then using the above functions with this model.
+
+However, if there are any parameters in `m2sattelite` which reference parameters in `FRBUS.model`, this would still reference the original model. There are two approaches to fixing this:
+
+### Replacing linked parameters with @replaceparameterlinks
+The macro `@replaceparameterlinks` can be used to replace existing links with an alternative one. The syntax is `@replaceparameterlinks model orig_reference => new_reference`. For example:
+
+```julia
+m2 = deepcopy(FRBUS.model)
+m2sattelite = deepcopy(FRBUS.sattelitemodel)
+@replaceparameterlinks m2sattelite FRBUS.model => m2
+@reinitialize m2sattelite
+```  
+
+This would systematically replace references to the former with the latter in the provided pair. For example, a parameter `p1 = @link FRBUS.model.p1` would become `p1 = @link m2.p1`.
+
+### Replacing a _parent parameter instead.
+Another approach is to the same issue requires changing the models themselves to use an intermediate parameter instead. For example, the FRBUS.sattelitemodel could have the following `@parameters` block:
+
+```julia
+@parameters sattelitemodel begin
+    _parent = @link FRBUS.model
+    p1 = @link _parent.p1
+end
+```
+
+The replacements in `m2sattelite` could then be done relatively simply with:
+```julia
+@parameters m2sattelite begin
+    _parent = @link m2
+end
+@reinitialize m2sattelite
+```
+
+In this case, all paramters linking to `_parent` will subsequently evaluate to the correct model.
