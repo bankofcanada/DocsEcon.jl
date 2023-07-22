@@ -37,6 +37,8 @@ makedocs(
             "DesignPapers/index.md",
             "DesignPapers/final_conditions.md",
             "DesignPapers/log_variables.md",
+            "DesignPapers/equation_changes.md",
+            "DesignPapers/frequency_conversions.md",
         ],
         "Index" => "indexpage.md"
     ]
