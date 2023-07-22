@@ -14,7 +14,8 @@ mypath = dirname(@__FILE__)
 ### Installing the packages
 
 # We start by installing the packages needed for this tutorial.
-using StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon, Test, Plots, Random, Distributions
+using StateSpaceEcon, ModelBaseEcon, TimeSeriesEcon
+using Test, Plots, Random, Distributions
 
 # Suppress xformatter error
 Plots._already_warned[:gr] = Set([:xformatter]);
@@ -158,19 +159,19 @@ check_sstate(m)
 
 # We can access the steady state solution via `m.sstate` using the dot notation.
 
-m.sstate.C
+true_C = m.sstate.C.level
 
 # We can also assign new values to the steady state solution, but we should be
 # careful to make sure it remains a valid steady state solution.
 
-m.sstate.C.level = 1.0050
+m.sstate.C.level = true_C * 1.01
 @test check_sstate(m) > 0
 
 # As the code above shows, a wrong steady state solution (based on the specified
 # precision in the `tol` option) will result in one or more equation not being
 # satisfied. Let's put back the correct value.
 
-m.sstate.C.level = 1.0030433070390223
+m.sstate.C.level = true_C
 @test check_sstate(m) == 0
 
 # We can examine the entire steady state solution with `printsstate`.
@@ -314,7 +315,7 @@ exog[shocks(m)]
 # also specify the type of final condition we want to impose if we want to diverge
 # from the option setting saved in the model.
 
-irf = simulate(m, p, exog; fctype=fcslope)
+irf = simulate(m, p, exog; fctype=fcnatural)
 
 # We can now take a look at how some of the variables in the model have responded
 # to this shock. We use `plot` from the `Plots` package. We specify the variables
@@ -451,7 +452,7 @@ back_u = simulate(m, p, exog; fctype=fcnatural, anticipate=false);
 
 # You can check or change the default variant via `m.variant`.
 
-# Once the linearized model is available, you can use either contnue to use the
+# Once the linearized model is available, you can use either continue to use the
 # stacked time solver or you can start using the first order solver. For this you
 # must first call [`solve!`](@ref) with `solver=:firstorder`, after which you can pass
 # `solver=:firstorder` to `simulate` (and other functions that use a solver).
@@ -483,7 +484,7 @@ m.variant = :default
 
 # In total, there are three variants:
 # 1) `:default`: the model as given through its equations
-# 2) `:linearize`: first-order approximation around itssteady state
+# 2) `:linearize`: first-order approximation around its steady state
 # 3) `:selective_linearize`: first-order approximation around its steady state for the equations preceded by the macro `@lin`..
 
 # In addition to the variant, the command [`simulate`](@ref) requires a solver. `StateSpaceEcon.jl` currently has two solvers:
@@ -505,6 +506,7 @@ exog3 = simulate(m, p, exog; deviation = true, anticipate = false, variant = :li
 plot(exog1, exog2, exog3,
      vars=m.variables,
      labels=("Stacked-Time", "Selective linearization", "Linearized"),
+     linestyle=[:solid :dash :solid],
      legend=[true (false for i = 2:length(m.variables))...],
      linewidth=1.5,   
      size=(900,600),
