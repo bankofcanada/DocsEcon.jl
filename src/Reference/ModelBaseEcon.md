@@ -16,13 +16,6 @@ Modules = [ModelBaseEcon.OptionsMod]
 Private = false
 ```
 
-#### Timer
-
-```@autodocs
-Modules = [ModelBaseEcon.Timer]
-Private = false
-```
-
 ### Internals
 ```@autodocs
 Modules = [ModelBaseEcon]
@@ -33,12 +26,5 @@ Public = false
 
 ```@autodocs
 Modules = [ModelBaseEcon.OptionsMod]
-Public = false
-```
-
-#### Timer
-
-```@autodocs
-Modules = [ModelBaseEcon.Timer]
 Public = false
 ```
