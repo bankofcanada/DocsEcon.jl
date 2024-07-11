@@ -31,6 +31,7 @@ makedocs(
             "TimeSeriesEcon" => "Reference/TimeSeriesEcon.md",
             "ModelBaseEcon" => "Reference/ModelBaseEcon.md",
             "StateSpaceEcon" => "Reference/StateSpaceEcon.md",
+            "StateSpaceEcon ModelingToolkit Extension" => "Reference/StateSpaceEconMTKExt.md",
             "FAME" => "Reference/FAME.md",
         ],
         "Design Papers" => [
